@@ -12,6 +12,8 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   var _isInit = true;
+  final _userNameController = TextEditingController();
+  final _userEmailSettings = TextEditingController();
 
   bool _loadingSpinner = true;
 
@@ -29,8 +31,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     super.didChangeDependencies();
   }
 
+  void _submitData() {}
+
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     Widget text(String text) {
       return Text(text,
           style: TextStyle(
@@ -43,31 +48,105 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final userData =
         authProviderObj.findSingleUserById(authProviderObj.getUserID);
     final appBar = AppBar(
-      title: const Text('User Settings'),
+      title: const Text('Settings'),
     );
+
+    userData == null
+        ? _userNameController.text = ''
+        : _userNameController.text = userData.first_name;
 
     return Scaffold(
       appBar: appBar,
       drawer: MainDrawer(),
-      body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.topRight,
-              stops: const [0, 1],
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                  Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.topRight,
+                stops: const [0, 1],
+              ),
             ),
           ),
-          child: _loadingSpinner == true
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Center(
-                  child: text(userData.first_name),
-                )),
+          Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(50),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Profile Settings',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 15),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: const [
+                                  CircleAvatar(
+                                    radius: 30.0,
+                                    // backgroundImage: NetworkImage(null),
+                                    backgroundImage:
+                                        AssetImage('assets/images/person.png'),
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text('Edit')
+                                ],
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                      labelText: 'First Name'),
+                                  //                onChanged: (inputValue) {
+                                  //   titleInput = inputValue;
+                                  // },
+
+                                  controller: _userNameController,
+                                  onSubmitted: (_) => _submitData(),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

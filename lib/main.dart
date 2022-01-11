@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
+import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.pink,
             ),
             home: authProviderObj.checkauthentication() == true
-                ? ParkingSlotsScreen()
+                ? MapScreen()
                 : FutureBuilder(
                     future: authProviderObj.tryAutoSignIn(),
                     builder: (ctx, authResultSnapshot) =>
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
             routes: {
               ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
               UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
+              MapScreen.routeName: (ctx) => MapScreen(),
             },
           ),
         ));

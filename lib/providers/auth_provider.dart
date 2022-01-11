@@ -127,7 +127,8 @@ class AuthProvider with ChangeNotifier {
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   UserInfo findSingleUserById(String userID) {
-    return _userData.firstWhere((element) => element.id == userID);
+    return _userData.firstWhere((element) => element.id == userID,
+        orElse: () => null); //orElse is made to avoid bad state error
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -149,18 +150,20 @@ class AuthProvider with ChangeNotifier {
 
       List<UserInfo> loadedUsersDataFromFirebase = [];
       userDataRespone.forEach((userId, userData) {
-        loadedUsersDataFromFirebase.add(UserInfo(
-          first_name: userData['first_name'],
-          last_name: userData['last_name'],
-          id: userData['id'],
-          email: userData['email'],
-          password: userData['password'],
-          credit_card_number: userData['credit_card_number'],
-          security_code: userData['security_code'],
-          expiration_date: userData['expiration_date'],
-          address: userData['address'],
-          card_holder: userData['card_holder'],
-        ));
+        loadedUsersDataFromFirebase.add(
+          UserInfo(
+            first_name: userData['first_name'],
+            last_name: userData['last_name'],
+            id: userData['id'],
+            email: userData['email'],
+            password: userData['password'],
+            credit_card_number: userData['credit_card_number'],
+            security_code: userData['security_code'],
+            expiration_date: userData['expiration_date'],
+            address: userData['address'],
+            card_holder: userData['card_holder'],
+          ),
+        );
       });
       _userData = loadedUsersDataFromFirebase;
       print(_userData[0].first_name);

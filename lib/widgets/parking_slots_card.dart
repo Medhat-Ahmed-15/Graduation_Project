@@ -6,7 +6,7 @@ class ParkingSlotscard extends StatelessWidget {
   ParkingSlotscard(this._loadingSpinner);
   @override
   Widget build(BuildContext context) {
-    //Just The container LAyout
+    //Just The container Layout
     return ClipRRect(
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(50), topRight: Radius.circular(50)),
