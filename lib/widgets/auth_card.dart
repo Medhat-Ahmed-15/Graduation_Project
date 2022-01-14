@@ -117,400 +117,403 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    return Stack(children: [
-      Align(
-        alignment: Alignment(0.8, -0.8),
-        child: Container(
-          width: 200,
-          height: 200,
-          child: Image.asset(
-            'assets/images/parking.png',
-            fit: BoxFit.contain,
-          ),
+    return Positioned(
+      left: 0.0,
+      right: 0.0,
+      bottom: 0.0,
+      child: Container(
+        height: isKeyboard
+            ? 700
+            : 530, //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.1)
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 30.0,
+              spreadRadius: 5,
+              offset: Offset(0.7, 0.7),
+            )
+          ],
         ),
-      ),
-      Positioned(
-        width: deviceSize.width,
-        bottom: -25,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-          child: Container(
-            height: 625,
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
+        child: SingleChildScrollView(
+          child: Column(children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  _authMode == AuthMode.Signin ? 'Welcome Back' : 'Get Started',
+                  style: TextStyle(
+                      fontSize: 50,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+
+            // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            _authMode == AuthMode.Signin
+                ?
+                //SigIn....................................................................................................
+                Container(
+                    margin: EdgeInsets.all(12),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          // Email>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'E-mail/Username'),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value.isEmpty || !value.contains('@')) {
+                                return 'Invalid email !';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['email'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value.isEmpty || value.length < 5) {
+                                return 'Password  is too short!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['password'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              'Forgot password?',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : //SignUp........................................................................................................
+                Container(
+                    margin: EdgeInsets.all(15),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          //General Information title>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          Text(
+                            'General Information',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.blueGrey[900],
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          //First Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'First Name'),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['first_name'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          //Last Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Last Name'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['last_name'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Emaill>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            decoration:
+                                const InputDecoration(labelText: 'Email'),
+                            validator: (value) {
+                              if (value.isEmpty || !value.contains('@')) {
+                                return 'Invalid email !';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['email'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            controller: _passwordController,
+                            validator: (value) {
+                              if (value.isEmpty || value.length < 5) {
+                                return 'Password  is too short!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['password'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          //Confirm Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Confirm Password'),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value != _passwordController.text) {
+                                return 'Passwords do not match!';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Address>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Address'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['address'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Billing Information title>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          Text(
+                            'Billing Information',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.blueGrey[900],
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Card Holder>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Card Holder'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['card_holder'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Security Code>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Security Code'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['security_code'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          //Cerdit card number>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Credit Card Number'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['credit_card_number'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
+                          //Expiration date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Expiration Date'),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'The field is empty!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _authData['expiration_date'] = value;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+
+                        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                      ),
+                    ),
+                  ),
+
+            const SizedBox(
+              height: 20,
+            ),
+            //Signin/Signup text and button ...............................................................
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //Title Text>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      _authMode == AuthMode.Signin
-                          ? 'Welcome Back'
-                          : 'Get Started',
-                      style: TextStyle(
-                          fontSize: 50,
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w700),
-                    ),
+                  // Signin/Signup text>>>>>>>>>>>>>>>>
+                  Text(
+                    _authMode == AuthMode.Signin ? 'Sign In' : 'Sign Up',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w700),
                   ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                  _authMode == AuthMode.Signin
-                      ?
-                      //SigIn....................................................................................................
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              // Email>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'E-mail/Username'),
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (value.isEmpty || !value.contains('@')) {
-                                    return 'Invalid email !';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['email'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Password'),
-                                obscureText: true,
-                                validator: (value) {
-                                  if (value.isEmpty || value.length < 5) {
-                                    return 'Password  is too short!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['password'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
 
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(
-                                  'Forgot password?',
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              )
-                            ],
+                  GestureDetector(
+                    onTap: _submit,
+                    child: _isLoading == false
+                        ? CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                                const AssetImage('assets/images/right.png'),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          )
+                        : CircleAvatar(
+                            radius: 30.0,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Color.fromRGBO(44, 62, 80, 1),
+                              ),
+                            ),
                           ),
-                        )
-                      :
-                      //SignUp........................................................................................................
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              //General Information title>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              Text(
-                                'General Information',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.blueGrey[900],
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              //First Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'First Name'),
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['first_name'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              //Last Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Last Name'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['last_name'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Emaill>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                decoration:
-                                    const InputDecoration(labelText: 'Email'),
-                                validator: (value) {
-                                  if (value.isEmpty || !value.contains('@')) {
-                                    return 'Invalid email !';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['email'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Password'),
-                                obscureText: true,
-                                controller: _passwordController,
-                                validator: (value) {
-                                  if (value.isEmpty || value.length < 5) {
-                                    return 'Password  is too short!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['password'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              //Confirm Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Confirm Password'),
-                                obscureText: true,
-                                validator: (value) {
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match!';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Address>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration:
-                                    const InputDecoration(labelText: 'Address'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['address'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Billing Information title>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              Text(
-                                'Billing Information',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.blueGrey[900],
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Card Holder>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Card Holder'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['card_holder'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Security Code>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Security Code'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['security_code'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              //Cerdit card number>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Credit Card Number'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['credit_card_number'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-
-                              //Expiration date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    labelText: 'Expiration Date'),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'The field is empty!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _authData['expiration_date'] = value;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                            ],
-                          ),
-                        ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  //Signin/Signup text and button ...............................................................
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Signin/Signup text>>>>>>>>>>>>>>>>
-                      Text(
-                        _authMode == AuthMode.Signin ? 'Sign In' : 'Sign Up',
-                        style: TextStyle(
-                            fontSize: 25,
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      // Sign/SignUp  button>>>>>>>>>>>>>>>>>>>
-                      GestureDetector(
-                        onTap: _submit,
-                        child: _isLoading == false
-                            ? CircleAvatar(
-                                radius: 30.0,
-                                backgroundImage:
-                                    const AssetImage('assets/images/right.png'),
-                                backgroundColor: Theme.of(context).primaryColor,
-                              )
-                            : CircleAvatar(
-                                radius: 30.0,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color.fromRGBO(44, 62, 80, 1),
-                                  ),
-                                ),
-                              ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 0,
-                  ),
-                  Row(children: [
-                    //The underlined Signup or Signin text
-                    GestureDetector(
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          _authMode == AuthMode.Signin ? 'Sign Up' : 'Sign In',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                      onTap: _switchAuthMode,
-                    ),
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //Facebook Image
-                        Container(
-                            width: 35,
-                            height: 35,
-                            child: Image.asset('assets/images/facebook.png')),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        // Google Image
-                        Container(
-                            width: 35,
-                            height: 35,
-                            child: Image.asset('assets/images/google.png')),
-                      ],
-                    )
-                  ]),
+                  )
                 ],
               ),
             ),
-          ),
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Row(children: [
+                //The underlined Signup or Signin text
+                GestureDetector(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      _authMode == AuthMode.Signin ? 'Sign Up' : 'Sign In',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  onTap: _switchAuthMode,
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //Facebook Image
+                    Container(
+                        width: 35,
+                        height: 35,
+                        child: Image.asset('assets/images/facebook.png')),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    // Google Image
+                    Container(
+                        width: 35,
+                        height: 35,
+                        child: Image.asset('assets/images/google.png')),
+                  ],
+                )
+              ]),
+            ),
+          ]),
         ),
       ),
-    ]);
+    );
   }
 }

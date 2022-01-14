@@ -9,9 +9,10 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           //Container that is responsible for the background color
@@ -28,14 +29,22 @@ class AuthScreen extends StatelessWidget {
               ),
             ),
           ),
-          //The scrollable conntainer that is in it the auth card widget
-          SingleChildScrollView(
+
+          Align(
+            alignment: Alignment.topRight,
             child: Container(
-              height: deviceSize.height,
-              width: deviceSize.width,
-              child: const AuthCard(),
+              width: isKeyboard ? 150 : 300,
+              height: isKeyboard ? 150 : 300,
+              margin: EdgeInsets.all(24.0),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/images/parking.png"),
+                ),
+              ),
             ),
           ),
+          AuthCard()
         ],
       ),
     );
