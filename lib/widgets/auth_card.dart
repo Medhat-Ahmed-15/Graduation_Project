@@ -125,16 +125,16 @@ class _AuthCardState extends State<AuthCard> {
       bottom: 0.0,
       child: Container(
         height: isKeyboard
-            ? 700
+            ? 670
             : 530, //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.1)
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
           boxShadow: [
             BoxShadow(
               color: Colors.white,
-              blurRadius: 30.0,
+              blurRadius: 5.0,
               spreadRadius: 5,
               offset: Offset(0.7, 0.7),
             )
@@ -143,7 +143,7 @@ class _AuthCardState extends State<AuthCard> {
         child: SingleChildScrollView(
           child: Column(children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+              padding: EdgeInsets.all(15),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
@@ -339,7 +339,7 @@ class _AuthCardState extends State<AuthCard> {
                             },
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 50,
                           ),
 
                           //Billing Information title>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
