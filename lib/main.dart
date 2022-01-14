@@ -48,9 +48,9 @@ class MyApp extends StatelessWidget {
                             ? SplashScreen()
                             : AuthScreen()),
             routes: {
+              MapScreen.routeName: (ctx) => MapScreen(),
               ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
               UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
-              MapScreen.routeName: (ctx) => MapScreen(),
             },
           ),
         ));

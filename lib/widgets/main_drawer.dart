@@ -79,6 +79,8 @@ class MainDrawer extends StatelessWidget {
             //>>
             buildListTile(Icons.exit_to_app, 'Signout', context, () {
               Navigator.of(context).pop(context);
+              Navigator.of(context).pushReplacementNamed(
+                  '/'); // inthestructor recommend always go to slash, slash nothing and that is the home route. Since you always go there, you ensure that this logic here in the main.dart file will always run whenever the logout button is pressed and since this always runs and since this home route is always loaded, we will always end up on the AuthScreen when we clear our data in the logout method of the auth provider. So simply add this additional line here and go to your home route to ensure that you never have unexpected behaviors when logging out.
               Provider.of<AuthProvider>(context, listen: false).SignOut();
             }),
           ],
