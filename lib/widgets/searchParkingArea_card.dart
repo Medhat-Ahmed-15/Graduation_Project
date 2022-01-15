@@ -10,7 +10,7 @@ class SearchParkingAreaCard extends StatelessWidget {
       right: 0.0,
       bottom: 0.0,
       child: Container(
-        height: 250,
+        height: 300,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

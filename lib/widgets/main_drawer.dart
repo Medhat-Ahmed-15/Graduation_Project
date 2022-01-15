@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
@@ -11,15 +13,15 @@ class MainDrawer extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: Colors.white,
+        color: Theme.of(context).primaryColor,
       ),
       title: Text(
         text,
         style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white // Theme.of(context).primaryColor,
+            ),
       ),
       onTap: onTapFunction,
     );
@@ -30,32 +32,52 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-              Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-            stops: [0, 1],
-          ),
+          color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
         ),
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              color: Colors.pink,
+              color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
               padding: const EdgeInsets.all(20),
               height: 200,
               alignment: Alignment
                   .centerLeft, //THIS CONTROLS HOW THE CHILD OF THE CONTAINER IS ALIGNNED
-              // child: Text(
-              //   'Cooking Up!',
-              //   style: TextStyle(
-              //       color: Theme.of(context).primaryColor,
-              //       fontWeight: FontWeight.w900,
-              //       fontSize: 30),
-              // ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/person.png',
+                    height: 65.0,
+                    width: 65.0,
+                  ),
+                  const SizedBox(
+                    width: 16.0,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Profile Name',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            color: Colors.white //Theme.of(context).primaryColor
+                            ),
+                      ),
+                      SizedBox(
+                        height: 6.0,
+                      ),
+                      Text(
+                        'Visit Profile',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white //Theme.of(context).primaryColor
+                            ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -80,7 +102,7 @@ class MainDrawer extends StatelessWidget {
             buildListTile(Icons.exit_to_app, 'Signout', context, () {
               Navigator.of(context).pop(context);
               Navigator.of(context).pushReplacementNamed(
-                  '/'); // inthestructor recommend always go to slash, slash nothing and that is the home route. Since you always go there, you ensure that this logic here in the main.dart file will always run whenever the logout button is pressed and since this always runs and since this home route is always loaded, we will always end up on the AuthScreen when we clear our data in the logout method of the auth provider. So simply add this additional line here and go to your home route to ensure that you never have unexpected behaviors when logging out.
+                  '/'); //   always go to slash, slash nothing and that is the home route. Since you always go there, you ensure that this logic here in the main.dart file will always run whenever the logout button is pressed and since this always runs and since this home route is always loaded, we will always end up on the AuthScreen when we clear our data in the logout method of the auth provider. So simply add this additional line here and go to your home route to ensure that you never have unexpected behaviors when logging out.
               Provider.of<AuthProvider>(context, listen: false).SignOut();
             }),
           ],
