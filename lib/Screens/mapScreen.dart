@@ -4,7 +4,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
+import 'package:graduation_project/widgets/searchParkingArea_card.dart';
 
 class MapScreen extends StatefulWidget {
   static const routeName = '/MapScreen';
@@ -26,7 +28,7 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
-        title: Text("Rakane Map"),
+        title: Text("GoPark Map"),
       ),
       body: Stack(
         children: [
@@ -39,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
               newGoogleMapController = controller;
             },
           ),
+          SearchParkingAreaCard()
         ],
       ),
     );
