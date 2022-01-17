@@ -72,22 +72,22 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: 150,
-                            height: 150,
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Search',
-                                  labelStyle: TextStyle(
-                                    color: Colors.white,
-                                  )),
-                            ),
-                          ),
-                          Container(
-                            width: 200,
-                            height: 200,
-                            child: Image.asset('assets/images/search.png'),
-                          ),
+                          // Container(
+                          //   width: 150,
+                          //   height: 150,
+                          //   child: TextFormField(
+                          //     decoration: const InputDecoration(
+                          //         labelText: 'Search',
+                          //         labelStyle: TextStyle(
+                          //           color: Colors.white,
+                          //         )),
+                          //   ),
+                          // ),
+                          // Container(
+                          //   width: 200,
+                          //   height: 200,
+                          //   child: Image.asset('assets/images/search.png'),
+                          // ),
                         ],
                       ),
                     ),
