@@ -3,10 +3,14 @@ import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
+import 'package:graduation_project/models/address.dart';
+import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'Screens/searchScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +34,11 @@ class MyApp extends StatelessWidget {
                     previusParkingSlotsProviderObj.slots),
           ),
 
+          //Providing all address Data
+          ChangeNotifierProvider(
+            create: (context) => AddressDataProvider(),
+          ),
+
           //....
         ],
         child: Consumer<AuthProvider>(
@@ -48,9 +57,10 @@ class MyApp extends StatelessWidget {
                             ? SplashScreen()
                             : AuthScreen()),
             routes: {
-              MapScreen.routeName: (ctx) => MapScreen(),
-              ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
               UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
+              MapScreen.routeName: (ctx) => MapScreen(),
+              SearchScreen.routeName: (ctx) => SearchScreen(),
+              ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
             },
           ),
         ));

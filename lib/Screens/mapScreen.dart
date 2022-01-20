@@ -4,7 +4,9 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
+import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/floatingHamburgerButton.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
@@ -48,6 +50,11 @@ class _MapScreenState extends State<MapScreen> {
     //updating the camera position
     newGoogleMapController
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    //converting latlng to readable addresses
+    String address =
+        await Provider.of<AddressDataProvider>(context, listen: false)
+            .convertToReadableAddress(position, context);
   }
 
   @override
@@ -79,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
               locatePosition();
             },
           ),
-          FloatingHamburgerButton(scaffoldKey),
+          //FloatingHamburgerButton(scaffoldKey),
           SearchParkingAreaCard()
         ],
       ),

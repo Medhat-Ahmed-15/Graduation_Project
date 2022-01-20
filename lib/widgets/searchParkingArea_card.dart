@@ -1,6 +1,10 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Screens/searchScreen.dart';
+import 'package:graduation_project/providers/address_data_provider.dart';
+
+import 'package:provider/provider.dart';
 
 class SearchParkingAreaCard extends StatelessWidget {
   @override
@@ -68,21 +72,63 @@ class SearchParkingAreaCard extends StatelessWidget {
                     )
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: Theme.of(context).primaryColor),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      const Text('Search parking area')
-                    ],
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(SearchScreen.routeName);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.search,
+                            color: Theme.of(context).primaryColor),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        const Text('Search parking area')
+                      ],
+                    ),
                   ),
                 ),
               ),
               const SizedBox(
                 height: 24.0,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.home,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(
+                    width: 12.0,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Provider.of<AddressDataProvider>(context)
+                                    .pickUpLocation !=
+                                null
+                            ? Provider.of<AddressDataProvider>(context)
+                                .pickUpLocation
+                                .placeName
+                            : 'Add Home',
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                      const SizedBox(
+                        height: 4.0,
+                      ),
+                      const Text(
+                        'Your living home address',
+                        style: TextStyle(color: Colors.white, fontSize: 12.0),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10.0,
               ),
             ],
           ),

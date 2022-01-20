@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/map_key.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/models/http_exception.dart';
 import 'package:http/http.dart' as http;
@@ -64,7 +65,7 @@ class AuthProvider with ChangeNotifier {
       String credit_card_number,
       String expiration_date) async {
     String url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyBR8Aa517A9PjaHoBphSVJgiGs_7745HyQ';
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$mapKey';
 
     try {
       final response = await http.post(url,
