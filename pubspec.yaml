@@ -76,6 +76,11 @@ flutter:
     - assets/images/google.png
     - assets/images/person.png
     - assets/images/pickicon.png
+    - assets/images/exit.png
+    - assets/images/help.png
+    - assets/images/information.png
+    - assets/images/setting.png
+    - assets/images/home.png
     - assets/images/desticon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

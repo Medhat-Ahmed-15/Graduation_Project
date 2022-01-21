@@ -8,13 +8,10 @@ import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
-  Widget buildListTile(IconData icon, String text, BuildContext context,
+  Widget buildListTile(String imgDircetory, String text, BuildContext context,
       Function onTapFunction) {
     return ListTile(
-      leading: Icon(
-        icon,
-        color: Theme.of(context).primaryColor,
-      ),
+      leading: Image.asset(imgDircetory),
       title: Text(
         text,
         style: const TextStyle(
@@ -32,13 +29,13 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
         ),
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+              color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
               padding: const EdgeInsets.all(20),
               height: 200,
               alignment: Alignment
@@ -65,12 +62,13 @@ class MainDrawer extends StatelessWidget {
                             ),
                       ),
                       SizedBox(
-                        height: 6.0,
+                        height: 10.0,
                       ),
                       Text(
                         'Visit Profile',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
                             color: Colors.white //Theme.of(context).primaryColor
                             ),
                       )
@@ -82,24 +80,25 @@ class MainDrawer extends StatelessWidget {
             const SizedBox(height: 20),
 
             //>>
-            buildListTile(Icons.home, 'Home', context, () {
+            buildListTile('assets/images/home.png', 'Home', context, () {
               Navigator.of(context).pushReplacementNamed(MapScreen.routeName);
             }),
 
             //>>
-            buildListTile(Icons.settings, 'Settings', context, () {
+            buildListTile('assets/images/setting.png', 'Settings', context, () {
               Navigator.of(context)
                   .pushReplacementNamed(UserProfileScreen.routeName);
             }),
 
             //>>
-            buildListTile(Icons.help_outline, 'Get help', context, () {}),
+            buildListTile('assets/images/help.png', 'Get help', context, () {}),
 
             //>>
-            buildListTile(Icons.info_outline, 'About app', context, () {}),
+            buildListTile(
+                'assets/images/information.png', 'About app', context, () {}),
 
             //>>
-            buildListTile(Icons.exit_to_app, 'Signout', context, () {
+            buildListTile('assets/images/exit.png', 'Signout', context, () {
               Navigator.of(context).pop(context);
               Navigator.of(context).pushReplacementNamed(
                   '/'); //   always go to slash, slash nothing and that is the home route. Since you always go there, you ensure that this logic here in the main.dart file will always run whenever the logout button is pressed and since this always runs and since this home route is always loaded, we will always end up on the AuthScreen when we clear our data in the logout method of the auth provider. So simply add this additional line here and go to your home route to ensure that you never have unexpected behaviors when logging out.

@@ -46,7 +46,7 @@ class PredictionTile extends StatelessWidget {
                     Text(
                       placePredictions.secondary_text,
                       style:
-                          const TextStyle(fontSize: 12.0, color: Colors.grey),
+                          const TextStyle(fontSize: 12.0, color: Colors.white),
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(

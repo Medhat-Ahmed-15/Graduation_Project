@@ -128,19 +128,19 @@ class _SearchScreenState extends State<SearchScreen> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[400],
+                                  color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: TextField(
                                     controller: pickUpTextEditingController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: 'Pickup Location',
-                                      fillColor: Colors.grey[400],
+                                      fillColor: Colors.white,
                                       filled: true,
                                       border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.only(
+                                      contentPadding: EdgeInsets.only(
                                           left: 11.0, top: 8.0, bottom: 8.0),
                                     ),
                                   ),
@@ -163,7 +163,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[400],
+                                  color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 child: Padding(
@@ -173,12 +173,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                       findPlace(val);
                                     },
                                     controller: dropOffTextEditingController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: 'Where to',
-                                      fillColor: Colors.grey[400],
+                                      fillColor: Colors.white,
                                       filled: true,
                                       border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.only(
+                                      contentPadding: EdgeInsets.only(
                                           left: 11.0, top: 8.0, bottom: 8.0),
                                     ),
                                   ),
