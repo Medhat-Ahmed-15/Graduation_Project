@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, missing_return
 
 import 'package:flutter/material.dart';
-import 'package:graduation_project/models/placePridictions%20copy.dart';
+import 'package:graduation_project/models/placePridictions.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:graduation_project/widgets/predictionTile.dart';
@@ -19,33 +19,6 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController pickUpTextEditingController = TextEditingController();
   TextEditingController dropOffTextEditingController = TextEditingController();
   List<PlacePredictions> placePredictionList = [];
-
-  void findPlace(String placeName) async {
-    if (placeName.length > 1) {
-      String autoCompleteUrl =
-          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=1234567890&components=country:eg';
-
-      var res = await Provider.of<AddressDataProvider>(context, listen: false)
-          .getRequest(autoCompleteUrl);
-
-      if (res == "failed") {
-        return;
-      }
-
-      if (res['status'] == 'OK') {
-        var predictions = res['predictions'];
-
-//to convert the json file which contain list of maps to normal list
-        var placesList = (predictions as List)
-            .map((e) => PlacePredictions.fromjson(e))
-            .toList();
-
-        setState(() {
-          placePredictionList = placesList;
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +142,19 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: TextField(
-                                    onChanged: (val) {
-                                      findPlace(val);
+                                    onChanged: (val) async {
+                                      List<PlacePredictions>
+                                          returnedListFromAddressContainer =
+                                          await Provider.of<
+                                                      AddressDataProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .findNearByPlaces(val);
+
+                                      setState(() {
+                                        placePredictionList =
+                                            returnedListFromAddressContainer;
+                                      });
                                     },
                                     controller: dropOffTextEditingController,
                                     decoration: const InputDecoration(

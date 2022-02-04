@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, missing_return
 
 import 'package:flutter/material.dart';
-import 'package:graduation_project/models/placePridictions%20copy.dart';
+import 'package:graduation_project/models/placePridictions.dart';
 
 class PredictionTile extends StatelessWidget {
   PlacePredictions placePredictions;

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/address.dart';
+import 'package:graduation_project/models/placePridictions.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +12,13 @@ import '../map_key.dart';
 
 class AddressDataProvider extends ChangeNotifier {
   Address pickUpLocation;
+  List<PlacePredictions> placePredictionList = [];
 
   void updatePickUpLocationAddress(Address pickUpAddress) {
     pickUpLocation = pickUpAddress;
     notifyListeners();
   }
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   Future<dynamic> getRequest(String url) async {
     try {
@@ -34,6 +36,32 @@ class AddressDataProvider extends ChangeNotifier {
     }
   }
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  Future<List<PlacePredictions>> findNearByPlaces(String placeName) async {
+    if (placeName.length > 1) {
+      //this url link is for bringing nearby places according to the input coming from search
+      String autoCompleteUrl =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=1234567890&components=country:eg';
+
+      var res = await getRequest(autoCompleteUrl);
+
+      if (res['status'] == 'OK') {
+        var predictions = res['predictions'];
+
+//to convert the json file which contain list of maps to normal list
+        var placesList = (predictions as List)
+            .map((index) => PlacePredictions.fromjson(index))
+            .toList();
+
+        placePredictionList = placesList;
+      }
+    }
+
+    return placePredictionList;
+  }
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   Future<String> convertToReadableAddress(
       Position position, BuildContext context) async {
     String placeAddress = "";
@@ -69,4 +97,7 @@ class AddressDataProvider extends ChangeNotifier {
     }
     return placeAddress;
   }
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 }
