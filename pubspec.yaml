@@ -51,6 +51,7 @@ dev_dependencies:
   shared_preferences: ^2.0.8
   google_maps_flutter: ^1.0.3
   geolocator: ^6.1.1
+  flutter_polyline_points: ^0.2.4 
   
     
 
@@ -82,6 +83,7 @@ flutter:
     - assets/images/setting.png
     - assets/images/home.png
     - assets/images/desticon.png
+    - assets/images/parkingSign.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

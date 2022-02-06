@@ -119,7 +119,7 @@ class AddressDataProvider extends ChangeNotifier {
         builder: (BuildContext context) => ProgressDialog(
               message: 'Setting DropOff, PLease wait...',
             ));
-
+//this url returns the lat and lng of the clicked nearby place that was viewed in the listview by passing to it this place id
     String placeDetailsUrl =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey';
 
@@ -143,7 +143,7 @@ class AddressDataProvider extends ChangeNotifier {
       Navigator.pop(context, 'returnedFromSearchScreen');
     }
   }
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//obtaining information details between initial adress and destination address >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   Future<DirectionDetails> obtainPlaceDirectionDetailsBetweenTwoPoints(
       LatLng initialPosition, LatLng finalPosition) async {
@@ -159,6 +159,7 @@ class AddressDataProvider extends ChangeNotifier {
     DirectionDetails directiondetails = DirectionDetails();
 
     directiondetails.encodedPoints =
+        //the encoded points of the line which will be translated on map.
         res['routes'][0]['overview_polyline']['points'];
 
     directiondetails.distanceText =

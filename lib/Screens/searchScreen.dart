@@ -19,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController pickUpTextEditingController = TextEditingController();
   TextEditingController dropOffTextEditingController = TextEditingController();
   List<PlacePredictions> placePredictionList = [];
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +168,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                   padding: const EdgeInsets.all(3.0),
                                   child: TextField(
                                     onChanged: (val) async {
+                                      setState(() {
+                                        loading = true;
+                                      });
                                       List<PlacePredictions>
                                           returnedListFromAddressContainer =
                                           await Provider.of<
@@ -176,6 +180,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               .findNearByPlaces(val);
 
                                       setState(() {
+                                        loading = false;
                                         placePredictionList =
                                             returnedListFromAddressContainer;
                                       });
@@ -209,24 +214,40 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 //displaying predicted places
                 placePredictionList.length > 0
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(0.0),
-                          itemBuilder: (context, index) {
-                            return PredictionTile(
-                                placePredictions: placePredictionList[index]);
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return DividerWidget();
-                          },
-                          itemCount: placePredictionList.length,
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
+                    ? loading == true
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            child: ListView.separated(
+                              padding: const EdgeInsets.all(0.0),
+                              itemBuilder: (context, index) {
+                                return PredictionTile(
+                                    placePredictions:
+                                        placePredictionList[index]);
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return DividerWidget();
+                              },
+                              itemCount: placePredictionList.length,
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                            ),
+                          )
+                    : Container(
+                        margin: EdgeInsets.symmetric(vertical: 100),
+                        width: 200,
+                        height: 200,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage("assets/images/parkingSign.png"),
+                          ),
                         ),
                       )
-                    : Container()
               ],
             ),
           ],

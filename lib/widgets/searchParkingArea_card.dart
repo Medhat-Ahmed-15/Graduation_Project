@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 
 class SearchParkingAreaCard extends StatelessWidget {
   Function getPlaceDirection;
-  SearchParkingAreaCard(this.getPlaceDirection);
+  bool loading;
+  SearchParkingAreaCard(this.getPlaceDirection, this.loading);
 
   @override
   Widget build(BuildContext context) {
@@ -122,16 +123,20 @@ class SearchParkingAreaCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        Provider.of<AddressDataProvider>(context)
-                                    .pickUpLocation !=
-                                null
-                            ? Provider.of<AddressDataProvider>(context)
-                                .pickUpLocation
-                                .placeName
-                            : 'Add Home',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      loading == true
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text(
+                              Provider.of<AddressDataProvider>(context)
+                                          .pickUpLocation !=
+                                      null
+                                  ? Provider.of<AddressDataProvider>(context)
+                                      .pickUpLocation
+                                      .placeName
+                                  : 'Add Home',
+                              style: TextStyle(color: Colors.white),
+                            ),
                       const SizedBox(
                         height: 4.0,
                       ),
