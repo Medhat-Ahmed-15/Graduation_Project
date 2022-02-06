@@ -7,6 +7,9 @@ import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchParkingAreaCard extends StatelessWidget {
+  Function getPlaceDirection;
+  SearchParkingAreaCard(this.getPlaceDirection);
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -16,15 +19,17 @@ class SearchParkingAreaCard extends StatelessWidget {
       child: Container(
         height: 300,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-              const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-            stops: [0, 1],
-          ),
+          // gradient: LinearGradient(
+          //   colors: [
+          //     const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+          //     const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          //   ],
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.topRight,
+          //   stops: [0, 1],
+          // ),
+
+          color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
           boxShadow: const [
@@ -49,43 +54,54 @@ class SearchParkingAreaCard extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 12.0, color: Theme.of(context).primaryColor),
               ),
-              Text(
+              const Text(
                 'Where to? ',
                 style: TextStyle(
                     fontSize: 20.0,
                     fontFamily: 'Brand-semibold',
-                    color: Theme.of(context).primaryColor),
+                    color: Colors.white),
               ),
               const SizedBox(
                 height: 20.0,
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  // boxShadow: const [
+                  //   BoxShadow(
+                  //     color: Colors.pink,
+                  //     blurRadius: 4.0,
+                  //     spreadRadius: 1,
+                  //     offset: Offset(0.7, 0.7),
+                  //   ),
+                  // ],
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(5.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 6.0,
-                      spreadRadius: 0.5,
-                      offset: Offset(0.7, 0.7),
-                    )
-                  ],
                 ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(SearchScreen.routeName);
+                child: FlatButton(
+                  onPressed: () async {
+                    var result = await Navigator.of(context)
+                        .pushNamed(SearchScreen.routeName);
+                    if (result == 'returnedFromSearchScreen') {
+                      //calling function present in mapScreen
+
+                      getPlaceDirection();
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       children: [
-                        Icon(Icons.search,
-                            color: Theme.of(context).primaryColor),
+                        const Icon(Icons.search, color: Colors.white),
                         const SizedBox(
                           width: 10.0,
                         ),
-                        const Text('Search parking area')
+                        Text(
+                          'Search parking area',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white.withOpacity(1),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -97,7 +113,7 @@ class SearchParkingAreaCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    Icons.home,
+                    Icons.location_pin,
                     color: Theme.of(context).primaryColor,
                   ),
                   const SizedBox(
@@ -114,14 +130,16 @@ class SearchParkingAreaCard extends StatelessWidget {
                                 .pickUpLocation
                                 .placeName
                             : 'Add Home',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(
                         height: 4.0,
                       ),
-                      const Text(
-                        'Your living home address',
-                        style: TextStyle(color: Colors.white, fontSize: 12.0),
+                      Text(
+                        'Your current location ',
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12.0),
                       ),
                     ],
                   )

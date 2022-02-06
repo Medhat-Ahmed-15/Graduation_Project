@@ -38,15 +38,16 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                    Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.topRight,
-                  stops: [0, 1],
-                ),
+                // gradient: LinearGradient(
+                //   colors: [
+                //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                //   ],
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.topRight,
+                //   stops: [0, 1],
+                // ),
+                color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
               ),
             ),
             Column(
@@ -57,11 +58,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   height: 215.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22.0),
-                    color: Colors.white,
+                    color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.white,
-                        blurRadius: 3.0,
+                        color: Colors.black,
+                        blurRadius: 10.0,
                         spreadRadius: 0.5,
                         offset: Offset(0.7, 0.7),
                       ),
@@ -81,6 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: Text(
                                 'Set Destination',
                                 style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w900),
                               ),
@@ -100,7 +102,16 @@ class _SearchScreenState extends State<SearchScreen> {
                             const SizedBox(width: 18.0),
                             Expanded(
                               child: Container(
+                                ///////////////////////////////////////////////////////////////////////////////////////////////////
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).primaryColor,
+                                      blurRadius: 4.0,
+                                      spreadRadius: 1,
+                                      offset: const Offset(0.7, 0.7),
+                                    ),
+                                  ],
                                   color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
@@ -108,12 +119,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                   padding: const EdgeInsets.all(3.0),
                                   child: TextField(
                                     controller: pickUpTextEditingController,
-                                    decoration: const InputDecoration(
+                                    style: TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
                                       hintText: 'Pickup Location',
-                                      fillColor: Colors.white,
+                                      hintStyle: const TextStyle(
+                                          color: Colors.white70),
+                                      fillColor:
+                                          const Color.fromRGBO(23, 32, 42, 1)
+                                              .withOpacity(1),
                                       filled: true,
                                       border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(
+                                      contentPadding: const EdgeInsets.only(
                                           left: 11.0, top: 8.0, bottom: 8.0),
                                     ),
                                   ),
@@ -136,6 +152,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Theme.of(context).primaryColor,
+                                      blurRadius: 4.0,
+                                      spreadRadius: 1,
+                                      offset: const Offset(0.7, 0.7),
+                                    ),
+                                  ],
                                   color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
@@ -157,12 +181,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                       });
                                     },
                                     controller: dropOffTextEditingController,
-                                    decoration: const InputDecoration(
+                                    style: TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
                                       hintText: 'Where to',
-                                      fillColor: Colors.white,
+                                      hintStyle: const TextStyle(
+                                          color: Colors.white70),
+                                      fillColor:
+                                          const Color.fromRGBO(23, 32, 42, 1)
+                                              .withOpacity(1),
                                       filled: true,
                                       border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(
+                                      contentPadding: const EdgeInsets.only(
                                           left: 11.0, top: 8.0, bottom: 8.0),
                                     ),
                                   ),

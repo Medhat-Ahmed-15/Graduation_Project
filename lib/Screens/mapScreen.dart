@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
+import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/floatingHamburgerButton.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
@@ -87,9 +88,35 @@ class _MapScreenState extends State<MapScreen> {
             },
           ),
           //FloatingHamburgerButton(scaffoldKey),
-          SearchParkingAreaCard()
+          SearchParkingAreaCard(getPlaceDirection)
         ],
       ),
     );
+  }
+
+  Future<void> getPlaceDirection() async {
+    var initialPos =
+        Provider.of<AddressDataProvider>(context, listen: false).pickUpLocation;
+
+    var finalPos = Provider.of<AddressDataProvider>(context, listen: false)
+        .dropOffLocation;
+
+    var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
+    var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ProgressDialog(
+              message: 'Please wait...',
+            ));
+
+    var details = await Provider.of<AddressDataProvider>(context, listen: false)
+        .obtainPlaceDirectionDetailsBetweenTwoPoints(
+            pickUpLatLng, dropOffLatLng);
+
+    Navigator.pop(context);
+
+    print('This is Encoded Points ::');
+    print(details.encodedPoints);
   }
 }
