@@ -118,10 +118,5 @@ class _MapScreenState extends State<MapScreen> {
 
     print('This is Encoded Points ::');
     print(details.encodedPoints);
-    print('This is Encoded Points ::');
-    print('This is Encoded Points ::');
-    print('This is Encoded Points ::');
-    print('This is Encoded Points ::');
-    print('This is Encoded Points ::');
   }
 }
