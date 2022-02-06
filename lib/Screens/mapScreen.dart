@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/floatingHamburgerButton.dart';
