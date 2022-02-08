@@ -25,11 +25,6 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     var objAddressDataProvider = Provider.of<AddressDataProvider>(context);
 
-    pickUpTextEditingController.text =
-        objAddressDataProvider.pickUpLocation == null
-            ? ''
-            : objAddressDataProvider.pickUpLocation.placeName;
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -118,20 +113,22 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),
-                                  child: TextField(
-                                    controller: pickUpTextEditingController,
-                                    style: TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
-                                      hintText: 'Pickup Location',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.white70),
-                                      fillColor:
-                                          const Color.fromRGBO(23, 32, 42, 1)
-                                              .withOpacity(1),
-                                      filled: true,
-                                      border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.only(
-                                          left: 11.0, top: 8.0, bottom: 8.0),
+                                  child: Container(
+                                    color: const Color.fromRGBO(23, 32, 42, 1)
+                                        .withOpacity(1),
+                                    width: 10,
+                                    height: 45,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                          objAddressDataProvider
+                                                      .pickUpLocation ==
+                                                  null
+                                              ? 'Please wait...'
+                                              : objAddressDataProvider
+                                                  .pickUpLocation.placeName,
+                                          style:
+                                              TextStyle(color: Colors.white)),
                                     ),
                                   ),
                                 ),

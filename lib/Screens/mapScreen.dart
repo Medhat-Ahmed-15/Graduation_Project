@@ -51,10 +51,6 @@ class _MapScreenState extends State<MapScreen> {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    setState(() {
-      loading = false;
-    });
-
     currentPosition = position;
 
     //get latitude and longitude from that position
@@ -72,6 +68,10 @@ class _MapScreenState extends State<MapScreen> {
     String address =
         await Provider.of<AddressDataProvider>(context, listen: false)
             .convertToReadableAddress(position, context);
+
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
