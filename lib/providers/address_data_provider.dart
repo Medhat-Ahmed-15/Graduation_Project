@@ -9,13 +9,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
-
 import '../map_key.dart';
 
 class AddressDataProvider extends ChangeNotifier {
   Address pickUpLocation;
   Address dropOffLocation;
+  PlacePredictions currentPlacePredicted;
   List<PlacePredictions> placePredictionList = [];
+
+//updating the predicted place after clicking on the prediction tile  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  void updateThePredictedPlaceAfterItIsPicked(PlacePredictions predictedPlace) {
+    currentPlacePredicted = predictedPlace;
+    notifyListeners();
+  }
 
 //updating current user Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -112,12 +119,12 @@ class AddressDataProvider extends ChangeNotifier {
 
 //Getting Information of the destination address which is specifically latitude and longitude after choosing it >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  void getParkingSlotAddressDetails(
+  Future<String> getParkingAreaDetails(
       String placeId, BuildContext context) async {
     showDialog(
         context: context,
         builder: (BuildContext context) => ProgressDialog(
-              message: 'Setting DropOff, PLease wait...',
+              message: 'Viewing parking slots, PLease wait...',
             ));
 //this url returns the lat and lng of the clicked nearby place that was viewed in the listview by passing to it this place id
     String placeDetailsUrl =
@@ -126,7 +133,7 @@ class AddressDataProvider extends ChangeNotifier {
     var res = await getRequest(placeDetailsUrl);
     Navigator.pop(context);
     if (res == 'failed') {
-      return;
+      return 'failed';
     }
 
     if (res['status'] == 'OK') {
@@ -136,11 +143,7 @@ class AddressDataProvider extends ChangeNotifier {
       address.latitude = res['result']['geometry']['location']['lat'];
       address.longitude = res['result']['geometry']['location']['lng'];
 
-      updateDropOffLocationAddress(address);
-      print('This Is The Parking Slot Location ::');
-      print(address.placeName);
-
-      Navigator.pop(context, 'returnedFromSearchScreen');
+      return address.placeName;
     }
   }
 //obtaining information details between initial adress and destination address >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

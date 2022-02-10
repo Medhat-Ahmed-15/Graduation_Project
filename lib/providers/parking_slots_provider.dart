@@ -27,11 +27,39 @@ class ParkingSlotsProvider with ChangeNotifier {
       extractedData.forEach((key, slotData) {
         loadedSlots.add(
           ParkingSlotBlueprintProvider(
-              availability: slotData['availability'], id: slotData['id']),
+              availability: slotData['availability'],
+              id: slotData['id'],
+              longitude: slotData['longitude'],
+              latitude: slotData['latitude'],
+              startDateTtime: slotData['start_time'],
+              endDateTime: slotData['end_time'],
+              userId: slotData['userId']),
         );
       });
       _slots = loadedSlots;
       notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  //Function for fetching the data from firebase
+  Future<void> updateParkingSlot(String slotId,
+      ParkingSlotBlueprintProvider parkingSlotBlueprintProvider) async {
+    String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$slotId.json?auth=$_authToken';
+    try {
+      final response = await http.patch(url,
+          body: json.encode({
+            'availability': parkingSlotBlueprintProvider.availability,
+            'id': parkingSlotBlueprintProvider.id,
+            'longitude': parkingSlotBlueprintProvider.longitude,
+            'latitude': parkingSlotBlueprintProvider.latitude,
+            'start_time': parkingSlotBlueprintProvider.startDateTtime,
+            'end_time': parkingSlotBlueprintProvider.endDateTime,
+            'userId': parkingSlotBlueprintProvider.userId
+          }));
     } catch (error) {
       throw (error);
     }

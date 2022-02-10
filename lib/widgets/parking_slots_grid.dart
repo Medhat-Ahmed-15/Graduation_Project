@@ -6,17 +6,16 @@ import 'package:provider/provider.dart';
 class ParkingSlotsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final parkingSlotsProviderObj = Provider.of<ParkingSlotsProvider>(context);
-    final parkingSlots = parkingSlotsProviderObj.slots;
+    final parkingSlotsList = Provider.of<ParkingSlotsProvider>(context).slots;
 
     return GridView.builder(
       padding: const EdgeInsets.all(30),
-      itemCount: parkingSlots.length,
+      itemCount: parkingSlotsList.length,
       itemBuilder: (context, index) => ChangeNotifierProvider.value(
-        value: parkingSlots[index],
+        value: parkingSlotsList[index],
         child: SingleParkingSlot(
           index,
-          parkingSlots[index],
+          parkingSlotsList[index],
         ),
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

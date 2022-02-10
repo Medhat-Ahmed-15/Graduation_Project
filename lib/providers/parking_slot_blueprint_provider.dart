@@ -6,8 +6,20 @@ import 'package:http/http.dart' as http;
 class ParkingSlotBlueprintProvider with ChangeNotifier {
   String id;
   bool availability;
+  String startDateTtime;
+  String endDateTime;
+  double latitude;
+  double longitude;
+  String userId;
 
-  ParkingSlotBlueprintProvider({this.id, this.availability});
+  ParkingSlotBlueprintProvider(
+      {this.id,
+      this.availability,
+      this.startDateTtime,
+      this.latitude,
+      this.longitude,
+      this.endDateTime,
+      this.userId});
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //This Function is called when the user presses on a specific slot

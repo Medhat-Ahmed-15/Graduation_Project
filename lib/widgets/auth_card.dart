@@ -127,13 +127,13 @@ class _AuthCardState extends State<AuthCard> {
         height: isKeyboard
             ? 670
             : 530, //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.1)
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.white,
+              color: Colors.black,
               blurRadius: 5.0,
               spreadRadius: 5,
               offset: Offset(0.7, 0.7),
@@ -148,9 +148,9 @@ class _AuthCardState extends State<AuthCard> {
                 alignment: Alignment.topLeft,
                 child: Text(
                   _authMode == AuthMode.Signin ? 'Welcome Back' : 'Get Started',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 50,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.white,
                       fontWeight: FontWeight.w700),
                 ),
               ),
@@ -168,8 +168,11 @@ class _AuthCardState extends State<AuthCard> {
                         children: [
                           // Email>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
-                                labelText: 'E-mail/Username'),
+                              hintText: 'E-mail/Username',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value.isEmpty || !value.contains('@')) {
@@ -186,8 +189,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Password',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             obscureText: true,
                             validator: (value) {
                               if (value.isEmpty || value.length < 5) {
@@ -228,8 +234,8 @@ class _AuthCardState extends State<AuthCard> {
                           Text(
                             'General Information',
                             style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blueGrey[900],
+                                fontSize: 20,
+                                color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(
@@ -237,8 +243,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           //First Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'First Name'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'First Name',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value.isEmpty) {
@@ -255,8 +264,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           //Last Name>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Last Name'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                                hintText: 'Last Name',
+                                hintStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.white)),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -273,9 +285,12 @@ class _AuthCardState extends State<AuthCard> {
 
                           //Emaill>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             keyboardType: TextInputType.emailAddress,
-                            decoration:
-                                const InputDecoration(labelText: 'Email'),
+                            decoration: const InputDecoration(
+                              hintText: 'Email',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty || !value.contains('@')) {
                                 return 'Invalid email !';
@@ -291,8 +306,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           // Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Password',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             obscureText: true,
                             controller: _passwordController,
                             validator: (value) {
@@ -310,8 +328,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           //Confirm Password>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
-                                labelText: 'Confirm Password'),
+                              hintText: 'Confirm Password',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             obscureText: true,
                             validator: (value) {
                               if (value != _passwordController.text) {
@@ -326,8 +347,11 @@ class _AuthCardState extends State<AuthCard> {
 
                           //Address>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Address'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Address',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -346,8 +370,8 @@ class _AuthCardState extends State<AuthCard> {
                           Text(
                             'Billing Information',
                             style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blueGrey[900],
+                                fontSize: 20,
+                                color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(
@@ -356,8 +380,11 @@ class _AuthCardState extends State<AuthCard> {
 
                           //Card Holder>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
-                            decoration:
-                                const InputDecoration(labelText: 'Card Holder'),
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Card Holder',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -374,8 +401,11 @@ class _AuthCardState extends State<AuthCard> {
 
                           //Security Code>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
-                                labelText: 'Security Code'),
+                              hintText: 'Security Code',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -391,8 +421,11 @@ class _AuthCardState extends State<AuthCard> {
                           ),
                           //Cerdit card number>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
-                                labelText: 'Credit Card Number'),
+                              hintText: 'Credit Card Number',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -409,8 +442,11 @@ class _AuthCardState extends State<AuthCard> {
 
                           //Expiration date>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                           TextFormField(
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
-                                labelText: 'Expiration Date'),
+                              hintText: 'Expiration Date',
+                              hintStyle: TextStyle(color: Colors.white),
+                            ),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'The field is empty!';
@@ -443,9 +479,9 @@ class _AuthCardState extends State<AuthCard> {
                   // Signin/Signup text>>>>>>>>>>>>>>>>
                   Text(
                     _authMode == AuthMode.Signin ? 'Sign In' : 'Sign Up',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 25,
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.white,
                         fontWeight: FontWeight.w700),
                   ),
 
@@ -461,9 +497,10 @@ class _AuthCardState extends State<AuthCard> {
                         : CircleAvatar(
                             radius: 30.0,
                             backgroundColor: Theme.of(context).primaryColor,
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
-                                color: Color.fromRGBO(44, 62, 80, 1),
+                                color: const Color.fromRGBO(23, 32, 42, 1)
+                                    .withOpacity(1),
                               ),
                             ),
                           ),
@@ -472,22 +509,21 @@ class _AuthCardState extends State<AuthCard> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(15),
+              margin: EdgeInsets.all(0),
               child: Row(children: [
                 //The underlined Signup or Signin text
-                GestureDetector(
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      _authMode == AuthMode.Signin ? 'Sign Up' : 'Sign In',
-                      style: TextStyle(
+
+                FlatButton(
+                  child: Text(
+                    _authMode == AuthMode.Signin ? 'Sign Up' : 'Sign In',
+                    style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Theme.of(context).primaryColor,
-                      ),
-                    ),
+                        fontSize: 17),
                   ),
-                  onTap: _switchAuthMode,
+                  onPressed: _switchAuthMode,
                 ),
+
                 const SizedBox(
                   width: 50,
                 ),

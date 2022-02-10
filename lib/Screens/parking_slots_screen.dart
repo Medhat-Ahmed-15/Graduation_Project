@@ -35,7 +35,7 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
-      title: const Text('Parking Slots'),
+      title: const Text('Choose you slot'),
     );
 
     return Scaffold(
@@ -43,66 +43,35 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
         appBar: appBar,
         body: Stack(
           children: [
-            //Container that is responsible for the background color
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                    Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.topRight,
-                  stops: [0, 1],
+                // gradient: LinearGradient(
+                //   colors: [
+                //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                //   ],
+                //   begin: Alignment.topLeft,
+                //   end: Alignment.topRight,
+                //   stops: [0, 1],
+                // ),
+                color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 250,
+                height: 250,
+                margin: EdgeInsets.all(20.0),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: AssetImage("assets/images/parkingSlotsArea.png"),
+                  ),
                 ),
               ),
             ),
-            Column(
-              children: [
-                //Search Image>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                Container(
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      (0.2),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Container(
-                          //   width: 150,
-                          //   height: 150,
-                          //   child: TextFormField(
-                          //     decoration: const InputDecoration(
-                          //         labelText: 'Search',
-                          //         labelStyle: TextStyle(
-                          //           color: Colors.white,
-                          //         )),
-                          //   ),
-                          // ),
-                          // Container(
-                          //   width: 200,
-                          //   height: 200,
-                          //   child: Image.asset('assets/images/search.png'),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                //ParkingSlotscard>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                Container(
-                  child: ParkingSlotscard(_loadingSpinner),
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      (0.8),
-                ),
-              ],
-            )
+            ParkingSlotscard(_loadingSpinner)
           ],
         ));
   }

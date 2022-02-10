@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
+import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
@@ -43,6 +44,14 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<AuthProvider>(
           builder: (ctx, authProviderObj, _) => MaterialApp(
+            builder: (context, child) => MediaQuery(
+
+                //*Just for convertinf the time picker to be 24H instead of 12 H
+                data: MediaQuery.of(context)
+                    .copyWith(alwaysUse24HourFormat: true),
+                child: child),
+            //*Just for convertinf the time picker to be 24H instead of 12 H
+
             theme: ThemeData(
               primarySwatch: Colors.pink,
               accentColor: Colors.pink,
@@ -63,6 +72,7 @@ class MyApp extends StatelessWidget {
               MapScreen.routeName: (ctx) => MapScreen(),
               SearchScreen.routeName: (ctx) => SearchScreen(),
               ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
+              BookingSlotScreen.routeName: (ctx) => BookingSlotScreen(),
             },
           ),
         ));

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:graduation_project/widgets/auth_card.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
@@ -18,15 +17,16 @@ class AuthScreen extends StatelessWidget {
           //Container that is responsible for the background color
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                  Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                stops: [0, 1],
-              ),
+              // gradient: LinearGradient(
+              //   colors: [
+              //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+              //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+              //   ],
+              //   begin: Alignment.topLeft,
+              //   end: Alignment.topRight,
+              //   stops: [0, 1],
+              // ),
+              color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
             ),
           ),
 

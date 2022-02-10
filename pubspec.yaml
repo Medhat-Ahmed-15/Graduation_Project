@@ -52,6 +52,9 @@ dev_dependencies:
   google_maps_flutter: ^1.0.3
   geolocator: ^6.1.1
   flutter_polyline_points: ^0.2.4 
+  fluttertoast: ^8.0.8
+  flutter_custom_clippers: ^2.0.0
+  date_time_picker: ^2.1.0
   
     
 
@@ -72,7 +75,9 @@ flutter:
     - assets/images/parking.png
     - assets/images/right.png
     - assets/images/search.png
-    - assets/images/car.png
+    - assets/images/myCar.png
+    - assets/images/otherCars.png
+    - assets/images/emptyCar.png
     - assets/images/facebook.png
     - assets/images/google.png
     - assets/images/person.png
@@ -84,6 +89,10 @@ flutter:
     - assets/images/home.png
     - assets/images/desticon.png
     - assets/images/parkingSign.png
+    - assets/images/parkingSlotsArea.png
+    - assets/images/location.png
+    - assets/images/clock.png
+    - assets/images/calendar.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

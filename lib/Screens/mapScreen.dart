@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,17 @@ class _MapScreenState extends State<MapScreen> {
 
 //Locating current location
   void locatePosition() async {
+    //temporarly******************👇
+    Address userPickUpAddress = new Address();
+    userPickUpAddress.longitude = /*position.longitude*/ 31.233334;
+    userPickUpAddress.latitude = /*position.latitude*/ 30.033333;
+    userPickUpAddress.placeName = 'cairo';
+
+    Provider.of<AddressDataProvider>(context, listen: false)
+        .updatePickUpLocationAddress(userPickUpAddress);
+
+    //temporarly******************☝
+
     //get current position
 
     setState(() {
@@ -76,6 +88,13 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var resultAfterBooking =
+        ModalRoute.of(context).settings.arguments as String;
+
+    if (resultAfterBooking == 'returned after booking') {
+      getPlaceDirection();
+    }
+
     return Scaffold(
       key: scaffoldKey,
       drawer: MainDrawer(),

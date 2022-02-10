@@ -82,7 +82,10 @@ class SearchParkingAreaCard extends StatelessWidget {
                   onPressed: () async {
                     var result = await Navigator.of(context)
                         .pushNamed(SearchScreen.routeName);
-                    if (result == 'returnedFromSearchScreen') {
+
+//don't get confused how I returned from returnedFromSinglePrkingSlot.dart with a single pop, I managed the stack of screens using pushNamed and pushNAmedReplacement so that when i return from SinglePrkingSlot I come back to searchParkingArea which is Map screen
+
+                    if (result == 'returnedFromSinglePrkingSlot') {
                       //calling function present in mapScreen
 
                       getPlaceDirection();

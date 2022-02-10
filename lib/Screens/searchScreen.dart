@@ -222,7 +222,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               padding: const EdgeInsets.all(0.0),
                               itemBuilder: (context, index) {
                                 return PredictionTile(
-                                    placePredictions:
+                                    currentPlacePredicted:
                                         placePredictionList[index]);
                               },
                               separatorBuilder:
@@ -241,7 +241,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         decoration: const BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: AssetImage("assets/images/parkingSign.png"),
+                            image: AssetImage("assets/images/search.png"),
                           ),
                         ),
                       )
