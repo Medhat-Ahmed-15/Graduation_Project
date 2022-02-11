@@ -95,21 +95,24 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         latitude: pickedParkingSlotDetails.latitude,
         longitude: pickedParkingSlotDetails.longitude);
 
+    print(startingDateAndTime);
+    print(endingDateAndTime);
+    print(addressName);
+
     showDialog(
         context: context,
         builder: (BuildContext context) => ProgressDialog(
               message: 'Booking your slot, PLease wait...',
             ));
 
-    await pickedParkingSlotDetails.switchAvailability(
-        Provider.of<AuthProvider>(context, listen: false).token);
-
-    await Provider.of<ParkingSlotsProvider>(context, listen: false)
-        .updateParkingSlot(
-            pickedParkingSlotDetails.id, pickedParkingSlotDetails);
-
     Provider.of<AddressDataProvider>(context, listen: false)
         .updateDropOffLocationAddress(address);
+
+    await pickedParkingSlotDetails.switchAvailability(
+        Provider.of<AuthProvider>(context, listen: false).token,
+        startingDateAndTime,
+        endingDateAndTime,
+        Provider.of<AuthProvider>(context, listen: false).getUserID);
 
     Navigator.of(context).pushReplacementNamed(MapScreen.routeName,
         arguments: 'returned after booking');

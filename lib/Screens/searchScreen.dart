@@ -118,17 +118,20 @@ class _SearchScreenState extends State<SearchScreen> {
                                         .withOpacity(1),
                                     width: 10,
                                     height: 45,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                          objAddressDataProvider
-                                                      .pickUpLocation ==
-                                                  null
-                                              ? 'Please wait...'
-                                              : objAddressDataProvider
-                                                  .pickUpLocation.placeName,
-                                          style:
-                                              TextStyle(color: Colors.white)),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(6),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            objAddressDataProvider
+                                                        .pickUpLocation ==
+                                                    null
+                                                ? 'Please wait...'
+                                                : objAddressDataProvider
+                                                    .pickUpLocation.placeName,
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ),
                                     ),
                                   ),
                                 ),

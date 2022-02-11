@@ -9,13 +9,10 @@ class SingleParkingSlot extends StatelessWidget {
   //according to this index i'm gonna decide wheather to make the box opened from left side or right side
   int index;
   ParkingSlotBlueprintProvider parkingSlotBlueprintProvider;
+
   SingleParkingSlot(this.index, this.parkingSlotBlueprintProvider);
   @override
   Widget build(BuildContext context) {
-    final parkingSlotBlueprintPrividerObj =
-        Provider.of<ParkingSlotBlueprintProvider>(context);
-    final authProviderObj = Provider.of<AuthProvider>(context);
-
     //Designing the single parking slot box
     return GestureDetector(
       child: Container(
@@ -70,7 +67,15 @@ class SingleParkingSlot extends StatelessWidget {
           Navigator.of(context).pushNamed(BookingSlotScreen.routeName,
               arguments: parkingSlotBlueprintProvider);
         } else {
-          print('THIS PARKING SLOT IS BOOKED BY ANOTHER USER');
+          print('Showing Data');
+
+          // print(parkingSlotBlueprintProvider.availability);
+          // print(parkingSlotBlueprintProvider.endDateTime);
+          // print(parkingSlotBlueprintProvider.id);
+          // print(parkingSlotBlueprintProvider.latitude);
+          // print(parkingSlotBlueprintProvider.longitude);
+          // print(parkingSlotBlueprintProvider.startDateTtime);
+          // print(parkingSlotBlueprintProvider.userId);
         }
       },
     );

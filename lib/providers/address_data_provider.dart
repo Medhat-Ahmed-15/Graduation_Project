@@ -102,7 +102,7 @@ class AddressDataProvider extends ChangeNotifier {
       placeAddress2 =
           response["results"][0]["address_components"][2]["long_name"];
       placeAddress4 =
-          response["results"][0]["address_components"][5]["long_name"];
+          response["results"][0]["address_components"][3]["long_name"];
 
       placeAddress =
           placeAddress1 + ", " + placeAddress2 + ", " + placeAddress4;

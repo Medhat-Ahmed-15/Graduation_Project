@@ -28,12 +28,12 @@ class ParkingSlotsProvider with ChangeNotifier {
         loadedSlots.add(
           ParkingSlotBlueprintProvider(
               availability: slotData['availability'],
-              id: slotData['id'],
-              longitude: slotData['longitude'],
-              latitude: slotData['latitude'],
-              startDateTtime: slotData['start_time'],
-              endDateTime: slotData['end_time'],
-              userId: slotData['userId']),
+              endDateTime: slotData['end_time'] as String,
+              id: slotData['id'] as String,
+              latitude: slotData['latitude'] as double,
+              longitude: slotData['longitude'] as double,
+              startDateTtime: slotData['start_time'] as String,
+              userId: slotData['userId'] as String),
         );
       });
       _slots = loadedSlots;
@@ -45,25 +45,7 @@ class ParkingSlotsProvider with ChangeNotifier {
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   //Function for fetching the data from firebase
-  Future<void> updateParkingSlot(String slotId,
-      ParkingSlotBlueprintProvider parkingSlotBlueprintProvider) async {
-    String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$slotId.json?auth=$_authToken';
-    try {
-      final response = await http.patch(url,
-          body: json.encode({
-            'availability': parkingSlotBlueprintProvider.availability,
-            'id': parkingSlotBlueprintProvider.id,
-            'longitude': parkingSlotBlueprintProvider.longitude,
-            'latitude': parkingSlotBlueprintProvider.latitude,
-            'start_time': parkingSlotBlueprintProvider.startDateTtime,
-            'end_time': parkingSlotBlueprintProvider.endDateTime,
-            'userId': parkingSlotBlueprintProvider.userId
-          }));
-    } catch (error) {
-      throw (error);
-    }
-  }
+
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 }

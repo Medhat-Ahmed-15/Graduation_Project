@@ -23,17 +23,25 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //This Function is called when the user presses on a specific slot
-  Future<void> switchAvailability(String authToken) async {
+  Future<void> switchAvailability(String authToken, String startDateTime,
+      String endDateTime, String userId) async {
     final String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$id.json?auth=$authToken';
     bool oldAvailability = availability;
     availability = !availability;
-    notifyListeners();
 
     var response = await http.patch(
       url,
       body: json.encode(
-        {'availability': availability},
+        {
+          'availability': availability,
+          'end_time': endDateTime,
+          'id': id,
+          'latitude': latitude,
+          'longitude': longitude,
+          'start_time': startDateTime,
+          'userId': userId
+        },
       ),
     );
 

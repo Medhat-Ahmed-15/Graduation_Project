@@ -43,18 +43,7 @@ class _MapScreenState extends State<MapScreen> {
   double bottomPaddingOfMap = 0;
 
 //Locating current location
-  void locatePosition() async {
-    //temporarly******************👇
-    Address userPickUpAddress = new Address();
-    userPickUpAddress.longitude = /*position.longitude*/ 31.233334;
-    userPickUpAddress.latitude = /*position.latitude*/ 30.033333;
-    userPickUpAddress.placeName = 'cairo';
-
-    Provider.of<AddressDataProvider>(context, listen: false)
-        .updatePickUpLocationAddress(userPickUpAddress);
-
-    //temporarly******************☝
-
+  Future<void> locatePosition(BuildContext context) async {
     //get current position
 
     setState(() {
@@ -103,27 +92,30 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: Stack(
         children: [
-          GoogleMap(
-            padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            myLocationEnabled: true,
-            markers: markersSet,
-            circles: circlesSet,
-            polylines: polyLineSet,
-            initialCameraPosition: _kGooglePlex,
-            mapType: MapType.normal,
-            myLocationButtonEnabled: true,
-            onMapCreated: (GoogleMapController controller) {
-              _controllerGoogleMap.complete(controller);
-              newGoogleMapController = controller;
+          RefreshIndicator(
+            onRefresh: () => locatePosition(context),
+            child: GoogleMap(
+              padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              myLocationEnabled: true,
+              markers: markersSet,
+              circles: circlesSet,
+              polylines: polyLineSet,
+              initialCameraPosition: _kGooglePlex,
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              onMapCreated: (GoogleMapController controller) {
+                _controllerGoogleMap.complete(controller);
+                newGoogleMapController = controller;
 
-              setState(() {
-                bottomPaddingOfMap = 300.0;
-              });
+                setState(() {
+                  bottomPaddingOfMap = 300.0;
+                });
 
-              locatePosition();
-            },
+                locatePosition(context);
+              },
+            ),
           ),
           //FloatingHamburgerButton(scaffoldKey),
           SearchParkingAreaCard(getPlaceDirection, loading)
@@ -141,21 +133,6 @@ class _MapScreenState extends State<MapScreen> {
 
     var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
     var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => ProgressDialog(
-              message: 'Please wait...',
-            ));
-
-    var details = await Provider.of<AddressDataProvider>(context, listen: false)
-        .obtainPlaceDirectionDetailsBetweenTwoPoints(
-            pickUpLatLng, dropOffLatLng);
-
-    Navigator.pop(context);
-
-    print('This is Encoded Points ::');
-    print(details.encodedPoints);
 
     PolylinePoints polylinePoints = PolylinePoints();
 
