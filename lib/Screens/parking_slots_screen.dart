@@ -35,6 +35,7 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Choose you slot'),
     );
 

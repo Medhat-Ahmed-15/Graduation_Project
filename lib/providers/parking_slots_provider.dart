@@ -33,6 +33,7 @@ class ParkingSlotsProvider with ChangeNotifier {
               latitude: slotData['latitude'] as double,
               longitude: slotData['longitude'] as double,
               startDateTtime: slotData['start_time'] as String,
+              vip: slotData['vip'],
               userId: slotData['userId'] as String),
         );
       });

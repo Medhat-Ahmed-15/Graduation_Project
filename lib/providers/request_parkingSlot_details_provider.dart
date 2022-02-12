@@ -3,14 +3,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:http/http.dart' as http;
 
 class RequestParkingSlotDetailsProvider with ChangeNotifier {
   final String _authToken;
+  final String _userId;
 
-  RequestParkingSlotDetailsProvider(this._authToken);
+  RequestParkingSlotDetailsProvider(this._authToken, this._userId);
 
-  Future<void> postRequestPArkingDetails(
+  //Add Request////////////////////////////////////////////////
+
+  Future<void> postRequestParkingDetails(
       {String userId,
       String paymentMethod,
       String parkingAreaAddressName,
@@ -20,7 +24,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
       String endDateTime,
       Map destinationLocMap}) async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
 
     try {
       var response = await http.post(
@@ -41,5 +45,14 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
+  }
+
+//Delete Request////////////////////////////////////////////////
+
+  Future<void> cancelRequest(BuildContext context) async {
+    final String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
+
+    await http.delete(url);
   }
 }

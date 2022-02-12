@@ -28,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text("Search"),
         ),
         body: Stack(
@@ -167,6 +168,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: TextField(
+                                    cursorColor: Theme.of(context).primaryColor,
                                     onChanged: (val) async {
                                       setState(() {
                                         loading = true;
@@ -215,8 +217,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 //displaying predicted places
                 placePredictionList.length > 0
                     ? loading == true
-                        ? const Center(
-                            child: CircularProgressIndicator(),
+                        ? Center(
+                            child: CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor),
                           )
                         : Padding(
                             padding: const EdgeInsets.symmetric(

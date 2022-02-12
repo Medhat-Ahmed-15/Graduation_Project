@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
+import 'package:graduation_project/widgets/floatingHamburgerButton.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
@@ -32,6 +33,7 @@ class _MapScreenState extends State<MapScreen> {
   Position currentPosition;
   var geoLocator = Geolocator();
   bool loading = false;
+  bool showCancelButton = false;
 
   //The main difference between List and Set is that Set is unordered and contains different elements, whereas the list is ordered and can contain the same elements in it.
   List<LatLng> pLineCoordinates = [];
@@ -81,6 +83,7 @@ class _MapScreenState extends State<MapScreen> {
         ModalRoute.of(context).settings.arguments as String;
 
     if (resultAfterBooking == 'returned after booking') {
+      showCancelButton = true;
       getPlaceDirection();
     }
 
@@ -88,6 +91,7 @@ class _MapScreenState extends State<MapScreen> {
       key: scaffoldKey,
       drawer: MainDrawer(),
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text("GoPark Map"),
       ),
       body: Stack(
@@ -117,7 +121,9 @@ class _MapScreenState extends State<MapScreen> {
               },
             ),
           ),
-          //FloatingHamburgerButton(scaffoldKey),
+          showCancelButton == true
+              ? FloatingCancelButton(scaffoldKey)
+              : const Text(''),
           SearchParkingAreaCard(getPlaceDirection, loading)
         ],
       ),
@@ -157,7 +163,7 @@ class _MapScreenState extends State<MapScreen> {
 //Now we have to create an instance of the fully line and we have to pass the required parameters to it in order to redraw the polyline.
 
       Polyline polyline = Polyline(
-          color: Colors.pink,
+          color: Theme.of(context).primaryColor,
           polylineId: PolylineId('PolylineID'),
           jointType: JointType.round,
           points: pLineCoordinates,

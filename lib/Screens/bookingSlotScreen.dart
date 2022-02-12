@@ -35,8 +35,19 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   int totalCost;
   ParkingSlotBlueprintProvider pickedParkingSlotDetails;
 
-  void setDateValuesAftePicked(String flag) {
+  void setDateValuesAftePicked(String flag, BuildContext context) {
     showDatePicker(
+      builder: (context, child) => Theme(
+          data: ThemeData().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Theme.of(context).primaryColor,
+              onPrimary: Colors.white,
+              surface: Theme.of(context).primaryColor,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          ),
+          child: child),
       context: context,
       firstDate: DateTime.now(),
       lastDate: DateTime(DateTime.now().year, DateTime.now().month, 30),
@@ -60,6 +71,16 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
   void setTimeValuesAftePicked(String flag) {
     showTimePicker(
+      builder: (context, child) => Theme(
+          data: ThemeData().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context).primaryColor,
+              surface: Color.fromRGBO(44, 62, 80, 1)
+                  .withOpacity(1), //Theme.of(context).primaryColor,
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child),
       context: context,
       initialTime: TimeOfDay.now(),
     ).then((pickedTime) {
@@ -162,7 +183,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     };
 
     await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
-        .postRequestPArkingDetails(
+        .postRequestParkingDetails(
             userId: userId,
             parkingAreaAddressName: parkingAreaAddressName,
             destinationLocMap: destinationLocMap,
@@ -176,6 +197,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Book your slot'),
     );
 
@@ -284,7 +306,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     //initial Date****************
                     FlatButton(
                       onPressed: () {
-                        setDateValuesAftePicked('initialDate');
+                        setDateValuesAftePicked('initialDate', context);
                       },
                       child: Container(
                         width: 110,
@@ -427,7 +449,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     //Final Date****************
                     FlatButton(
                       onPressed: () {
-                        setDateValuesAftePicked('finalDate');
+                        setDateValuesAftePicked('finalDate', context);
                       },
                       child: Container(
                         width: 110,
@@ -550,9 +572,9 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
                   final choice = ChoiceDialog(
                     dialogBackgroundColor:
-                        Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                        Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
                     title: 'Total Cost: $totalCost EG',
-                    titleColor: Colors.white,
+                    titleColor: Theme.of(context).primaryColor,
                     message:
                         'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
                     messageColor: Colors.white,
@@ -562,7 +584,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                       saveParkingRequestDetails();
                     },
                   );
-                  choice.show(context);
+                  choice.show(context, barrierColor: Colors.white);
                   //;
                 },
                 child: Container(

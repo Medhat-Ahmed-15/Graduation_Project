@@ -11,6 +11,7 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
   double latitude;
   double longitude;
   String userId;
+  bool vip;
 
   ParkingSlotBlueprintProvider(
       {this.id,
@@ -18,6 +19,7 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
       this.startDateTtime,
       this.latitude,
       this.longitude,
+      this.vip,
       this.endDateTime,
       this.userId});
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -40,7 +42,8 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
           'latitude': latitude,
           'longitude': longitude,
           'start_time': startDateTime,
-          'userId': userId
+          'userId': userId,
+          'vip': vip
         },
       ),
     );

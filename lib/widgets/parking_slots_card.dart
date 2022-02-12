@@ -27,8 +27,9 @@ class ParkingSlotscard extends StatelessWidget {
             ],
           ),
           child: _loadingSpinner == true
-              ? const Center(
-                  child: CircularProgressIndicator(),
+              ? Center(
+                  child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor),
                 )
               : ParkingSlotsGrid(),
         ));

@@ -48,6 +48,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final userData =
         authProviderObj.findSingleUserById(authProviderObj.getUserID);
     final appBar = AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Settings'),
     );
 

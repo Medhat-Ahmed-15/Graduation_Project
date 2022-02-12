@@ -1,16 +1,29 @@
+import 'package:dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
+import 'package:graduation_project/widgets/progressDialog.dart' as myDialog;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
+import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:provider/provider.dart';
 
-class SingleParkingSlot extends StatelessWidget {
+class SingleParkingSlot extends StatefulWidget {
   //according to this index i'm gonna decide wheather to make the box opened from left side or right side
   int index;
+
   ParkingSlotBlueprintProvider parkingSlotBlueprintProvider;
 
   SingleParkingSlot(this.index, this.parkingSlotBlueprintProvider);
+
+  @override
+  State<SingleParkingSlot> createState() => _SingleParkingSlotState();
+}
+
+class _SingleParkingSlotState extends State<SingleParkingSlot> {
+  bool cancel = false;
+
   @override
   Widget build(BuildContext context) {
     //Designing the single parking slot box
@@ -33,8 +46,8 @@ class SingleParkingSlot extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-              image: parkingSlotBlueprintProvider.availability == true
-                  ? parkingSlotBlueprintProvider.userId ==
+              image: widget.parkingSlotBlueprintProvider.availability == true
+                  ? widget.parkingSlotBlueprintProvider.userId ==
                           Provider.of<AuthProvider>(context, listen: false)
                               .getUserID
                       ? const DecorationImage(
@@ -60,81 +73,134 @@ class SingleParkingSlot extends StatelessWidget {
                     BorderSide(color: Theme.of(context).primaryColor, width: 2),
               ),
             ),
-            child: Container(
-              margin: EdgeInsets.all(5),
-              child: Align(
-                alignment:
-                    index % 2 == 0 ? Alignment.topRight : Alignment.topLeft,
-                child: Text(
-                  parkingSlotBlueprintProvider.id,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w900),
+            child: Stack(
+              children: [
+                //ID Text
+                Container(
+                  margin: EdgeInsets.all(5),
+                  child: Align(
+                    alignment: widget.index % 2 == 0
+                        ? Alignment.topRight
+                        : Alignment.topLeft,
+                    child: Text(
+                      widget.parkingSlotBlueprintProvider.id,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w900),
+                    ),
+                  ),
                 ),
-              ),
+
+                //VIP Text
+                Container(
+                  margin: EdgeInsets.all(5),
+                  child: Align(
+                    alignment: widget.index % 2 == 0
+                        ? Alignment.bottomLeft
+                        : Alignment.bottomRight,
+                    child: Text(
+                      widget.parkingSlotBlueprintProvider.vip == true
+                          ? 'VIP'
+                          : '',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w900),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
-
-      // child: Container(
-      //   height: 5,
-      //   width: 50,
-      //   decoration: BoxDecoration(
-      //     image: parkingSlotBlueprintProvider.availability == true
-      //         ? parkingSlotBlueprintProvider.userId ==
-      //                 Provider.of<AuthProvider>(context, listen: false)
-      //                     .getUserID
-      //             ? const DecorationImage(
-      //                 image: ExactAssetImage('assets/images/myCar.png'),
-      //                 //fit: BoxFit.fitHeight,
-      //               )
-      //             : const DecorationImage(
-      //                 image: ExactAssetImage('assets/images/otherCars.png'),
-      //                 //fit: BoxFit.fitHeight,
-      //               )
-      //         : const DecorationImage(
-      //             image: ExactAssetImage('assets/images/parkingSign.png'),
-      //             // fit: BoxFit.fitHeight,
-      //           ),
-      //     border: Border(
-      //       left: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-      //       bottom: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-      //       top: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-      //       right: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-      //     ),
-      //   ),
-      //   child: Container(
-      //     margin: EdgeInsets.all(5),
-      //     child: Align(
-      //       alignment: index % 2 == 0 ? Alignment.topRight : Alignment.topLeft,
-      //       child: Text(
-      //         parkingSlotBlueprintProvider.id,
-      //         style: TextStyle(
-      //             color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-      //             fontWeight: FontWeight.w900),
-      //       ),
-      //     ),
-      //   ),
-      // ),
       onTap: () {
-        if (Provider.of<AuthProvider>(context, listen: false).getUserID ==
-                parkingSlotBlueprintProvider.userId ||
-            parkingSlotBlueprintProvider.availability == false) {
+        if (widget.parkingSlotBlueprintProvider.availability == false) {
           //go to bookingParkingSlotScreen
           print('I AM GOING TO BOOK NOW');
 
           Navigator.of(context).pushNamed(BookingSlotScreen.routeName,
-              arguments: parkingSlotBlueprintProvider);
+              arguments: widget.parkingSlotBlueprintProvider);
+        } else if (Provider.of<AuthProvider>(context, listen: false)
+                .getUserID ==
+            widget.parkingSlotBlueprintProvider.userId) {
+          print('Showing my request Data');
+
+          ChoiceDialog messageDialog = ChoiceDialog(
+            dialogBackgroundColor: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            buttonOkColor: Theme.of(context).primaryColor,
+            title:
+                'Your booked Slot: ${widget.parkingSlotBlueprintProvider.id}',
+            titleColor: Theme.of(context).primaryColor,
+            message:
+                'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
+            messageColor: Colors.white,
+            buttonOkText: 'Ok',
+            dialogRadius: 15.0,
+            buttonRadius: 18.0,
+            buttonCancelText: 'Cancel Request',
+            buttonOkOnPressed: () {
+              Navigator.of(context).pop();
+            },
+            buttonCancelOnPressed: () async {
+              showDialog(
+                  context: context,
+                  //myDIalog is jaust prefix i made it while importing the libraries up
+                  builder: (BuildContext context) => myDialog.ProgressDialog(
+                        message: 'Cancelling Request',
+                      ));
+
+              //switching availability
+              await widget.parkingSlotBlueprintProvider.switchAvailability(
+                  Provider.of<AuthProvider>(context, listen: false).token,
+                  'empty',
+                  'empty',
+                  'empty');
+              //Deleting request
+              await Provider.of<RequestParkingSlotDetailsProvider>(context,
+                      listen: false)
+                  .cancelRequest(context);
+
+              Navigator.pop(context);
+
+              Fluttertoast.showToast(
+                  msg: 'Request cancelled',
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 5,
+                  backgroundColor:
+                      const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+
+              setState(() {});
+            },
+          );
+          messageDialog.show(context, barrierColor: Colors.white);
         } else {
-          print('Showing Data');
+          print('Showing others Data');
 
           // print(parkingSlotBlueprintProvider.availability);
-          // print(parkingSlotBlueprintProvider.endDateTime);
+          // print();
           // print(parkingSlotBlueprintProvider.id);
           // print(parkingSlotBlueprintProvider.latitude);
           // print(parkingSlotBlueprintProvider.longitude);
-          // print(parkingSlotBlueprintProvider.startDateTtime);
           // print(parkingSlotBlueprintProvider.userId);
+
+          MessageDialog messageDialog = MessageDialog(
+            dialogBackgroundColor: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            buttonOkColor: Theme.of(context).primaryColor,
+            title: 'Parking Slot: ${widget.parkingSlotBlueprintProvider.id}',
+            titleColor: Theme.of(context).primaryColor,
+            message:
+                'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
+            messageColor: Colors.white,
+            buttonOkText: 'Notify me when available',
+            dialogRadius: 15.0,
+            buttonRadius: 18.0,
+            buttonOkOnPressed: () {
+              //going to notify you here
+            },
+          );
+          messageDialog.show(context, barrierColor: Colors.white);
         }
       },
     );

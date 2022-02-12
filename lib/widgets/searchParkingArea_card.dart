@@ -127,8 +127,10 @@ class SearchParkingAreaCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       loading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).primaryColor,
+                              ),
                             )
                           : Text(
                               Provider.of<AddressDataProvider>(context)

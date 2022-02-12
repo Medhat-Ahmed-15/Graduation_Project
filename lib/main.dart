@@ -43,10 +43,11 @@ class MyApp extends StatelessWidget {
 
           ChangeNotifierProxyProvider<AuthProvider,
               RequestParkingSlotDetailsProvider>(
-            create: (ctx) => RequestParkingSlotDetailsProvider(''),
+            create: (ctx) => RequestParkingSlotDetailsProvider('', ''),
             update: (ctx, authProviderObj,
                     previusRequestParkingSlotDetailsProviderObj) =>
-                RequestParkingSlotDetailsProvider(authProviderObj.token),
+                RequestParkingSlotDetailsProvider(
+                    authProviderObj.token, authProviderObj.getUserID),
           ),
 
           //....
@@ -60,10 +61,10 @@ class MyApp extends StatelessWidget {
                     .copyWith(alwaysUse24HourFormat: true),
                 child: child),
             //*Just for convertinf the time picker to be 24H instead of 12 H
-
+//241, 101, 115
             theme: ThemeData(
-              primarySwatch: Colors.pink,
-              accentColor: Colors.pink,
+              primaryColor: Color.fromRGBO(241, 101, 115, 1).withOpacity(1),
+              accentColor: Color.fromRGBO(241, 101, 115, 1).withOpacity(1),
             ),
             debugShowCheckedModeBanner:
                 true, //if i make true it will display that this application is in debug model plus hathot el debug banner el bayb2 fal top right corner of the screen ,false hatsheel el debug banner

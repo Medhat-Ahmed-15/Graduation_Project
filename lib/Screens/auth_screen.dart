@@ -31,10 +31,10 @@ class AuthScreen extends StatelessWidget {
           ),
 
           Align(
-            alignment: Alignment.topRight,
+            alignment: Alignment.topCenter,
             child: Container(
-              width: isKeyboard ? 150 : 300,
-              height: isKeyboard ? 150 : 300,
+              width: isKeyboard ? 200 : 350,
+              height: isKeyboard ? 200 : 350,
               margin: EdgeInsets.all(24.0),
               decoration: const BoxDecoration(
                 image: DecorationImage(
