@@ -1,11 +1,14 @@
 // ignore_for_file: file_names
+import 'package:dialogs/dialogs/choice_dialog.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
+import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +29,11 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   TimeOfDay startingTime;
   DateTime endingDate;
   TimeOfDay endingTime;
+
+  DateTime endDateTime;
+  DateTime startDateTime;
+  int totalCost;
+  ParkingSlotBlueprintProvider pickedParkingSlotDetails;
 
   void setDateValuesAftePicked(String flag) {
     showDatePicker(
@@ -90,14 +98,10 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             .currentPlacePredicted
             .main_text;
 
-    Address address = Address(
+    Address destinationAddress = Address(
         placeName: addressName,
         latitude: pickedParkingSlotDetails.latitude,
         longitude: pickedParkingSlotDetails.longitude);
-
-    print(startingDateAndTime);
-    print(endingDateAndTime);
-    print(addressName);
 
     showDialog(
         context: context,
@@ -106,7 +110,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             ));
 
     Provider.of<AddressDataProvider>(context, listen: false)
-        .updateDropOffLocationAddress(address);
+        .updateDestinationLocationAddress(destinationAddress);
 
     await pickedParkingSlotDetails.switchAvailability(
         Provider.of<AuthProvider>(context, listen: false).token,
@@ -118,13 +122,64 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         arguments: 'returned after booking');
   }
 
+  void calculateCost() {
+    int year = startingDate.year;
+    int month = startingDate.month;
+
+    int startingDay = startingDate.day;
+    int endingDay = endingDate.day;
+
+    int startingHour = startingTime.hour;
+    int endingHour = endingTime.hour;
+
+    int startingMinute = startingTime.minute;
+    int endingMinute = endingTime.minute;
+
+    startDateTime =
+        DateTime(year, month, startingDay, startingHour, startingMinute);
+
+    endDateTime = DateTime(year, month, endingDay, endingHour, endingMinute);
+
+    int timeInMinutesBetween = endDateTime.difference(startDateTime).inMinutes;
+
+    totalCost = ((timeInMinutesBetween / 60) * 0.5).round();
+  }
+
+  void saveParkingRequestDetails() async {
+    String userId = Provider.of<AuthProvider>(context, listen: false).getUserID;
+    String parkingAreaAddressName =
+        Provider.of<AddressDataProvider>(context, listen: false)
+            .currentPlacePredicted
+            .main_text;
+    String parkingSlotId = pickedParkingSlotDetails.id;
+    int cost = totalCost;
+    String initialtDateTime = startDateTime.toString();
+    String finalDateTime = endDateTime.toString();
+
+    Map destinationLocMap = {
+      'latitude': pickedParkingSlotDetails.latitude.toString(),
+      'longitude': pickedParkingSlotDetails.longitude.toString(),
+    };
+
+    await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
+        .postRequestPArkingDetails(
+            userId: userId,
+            parkingAreaAddressName: parkingAreaAddressName,
+            destinationLocMap: destinationLocMap,
+            endDateTime: finalDateTime,
+            parkingSlotId: parkingSlotId,
+            paymentMethod: 'visa',
+            startDateTime: initialtDateTime,
+            totalCost: cost);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
       title: const Text('Book your slot'),
     );
 
-    var pickedParkingSlotDetails = ModalRoute.of(context).settings.arguments
+    pickedParkingSlotDetails = ModalRoute.of(context).settings.arguments
         as ParkingSlotBlueprintProvider;
 
     return Scaffold(
@@ -491,7 +546,24 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
               FlatButton(
                 onPressed: () {
-                  requestBookingSlot(pickedParkingSlotDetails);
+                  calculateCost();
+
+                  final choice = ChoiceDialog(
+                    dialogBackgroundColor:
+                        Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                    title: 'Total Cost: $totalCost EG',
+                    titleColor: Colors.white,
+                    message:
+                        'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
+                    messageColor: Colors.white,
+                    buttonOkText: 'Confirm',
+                    buttonOkOnPressed: () {
+                      requestBookingSlot(pickedParkingSlotDetails);
+                      saveParkingRequestDetails();
+                    },
+                  );
+                  choice.show(context);
+                  //;
                 },
                 child: Container(
                   height: 50,

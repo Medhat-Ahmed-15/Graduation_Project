@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
-import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
 import '../map_key.dart';
+import 'package:dialogs/dialogs.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapScreen extends StatefulWidget {
@@ -129,7 +129,7 @@ class _MapScreenState extends State<MapScreen> {
         Provider.of<AddressDataProvider>(context, listen: false).pickUpLocation;
 
     var finalPos = Provider.of<AddressDataProvider>(context, listen: false)
-        .dropOffLocation;
+        .destinationLocation;
 
     var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
     var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);

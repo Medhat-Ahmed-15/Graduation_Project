@@ -10,17 +10,50 @@ import 'package:provider/provider.dart';
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(String imgDircetory, String text, BuildContext context,
       Function onTapFunction) {
-    return ListTile(
-      leading: Image.asset(imgDircetory),
-      title: Text(
-        text,
-        style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white // Theme.of(context).primaryColor,
-            ),
-      ),
-      onTap: onTapFunction,
+    return Column(
+      children: [
+        SizedBox(
+          height: 5,
+        ),
+        ListTile(
+          leading: Container(
+            width: 35,
+            height: 35,
+            child: Image.asset(imgDircetory),
+          ),
+          title: Text(
+            text,
+            style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white // Theme.of(context).primaryColor,
+                ),
+          ),
+          onTap: onTapFunction,
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          height: 2,
+          width: 300,
+          decoration: BoxDecoration(
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 0.2,
+                spreadRadius: 0.2,
+                offset: Offset(0.2, 0.2),
+              ),
+            ],
+            color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+      ],
     );
   }
 
@@ -91,11 +124,11 @@ class MainDrawer extends StatelessWidget {
             }),
 
             //>>
-            buildListTile('assets/images/help.png', 'Get help', context, () {}),
-
-            //>>
             buildListTile(
                 'assets/images/information.png', 'About app', context, () {}),
+
+            //>>
+            buildListTile('assets/images/help.png', 'Get help', context, () {}),
 
             //>>
             buildListTile('assets/images/exit.png', 'Signout', context, () {

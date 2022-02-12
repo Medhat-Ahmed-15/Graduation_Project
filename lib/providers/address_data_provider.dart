@@ -13,7 +13,7 @@ import '../map_key.dart';
 
 class AddressDataProvider extends ChangeNotifier {
   Address pickUpLocation;
-  Address dropOffLocation;
+  Address destinationLocation;
   PlacePredictions currentPlacePredicted;
   List<PlacePredictions> placePredictionList = [];
 
@@ -31,10 +31,10 @@ class AddressDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-//updating dropOff Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//updating destination Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  void updateDropOffLocationAddress(Address dropOffAddress) {
-    dropOffLocation = dropOffAddress;
+  void updateDestinationLocationAddress(Address destinationLocationAddress) {
+    destinationLocation = destinationLocationAddress;
     notifyListeners();
   }
 //Sending to this method any url to handle it and return the result  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -126,6 +126,7 @@ class AddressDataProvider extends ChangeNotifier {
         builder: (BuildContext context) => ProgressDialog(
               message: 'Viewing parking slots, PLease wait...',
             ));
+
 //this url returns the lat and lng of the clicked nearby place that was viewed in the listview by passing to it this place id
     String placeDetailsUrl =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$mapKey';

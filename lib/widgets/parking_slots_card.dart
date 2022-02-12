@@ -12,7 +12,7 @@ class ParkingSlotscard extends StatelessWidget {
         right: 0.0,
         bottom: 0.0,
         child: Container(
-          height: 530, //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.1)
+          height: 530,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
             borderRadius: const BorderRadius.only(

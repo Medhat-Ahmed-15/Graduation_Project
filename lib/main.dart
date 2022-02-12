@@ -8,6 +8,7 @@ import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
+import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +39,14 @@ class MyApp extends StatelessWidget {
           //Providing all address Data
           ChangeNotifierProvider(
             create: (context) => AddressDataProvider(),
+          ),
+
+          ChangeNotifierProxyProvider<AuthProvider,
+              RequestParkingSlotDetailsProvider>(
+            create: (ctx) => RequestParkingSlotDetailsProvider(''),
+            update: (ctx, authProviderObj,
+                    previusRequestParkingSlotDetailsProviderObj) =>
+                RequestParkingSlotDetailsProvider(authProviderObj.token),
           ),
 
           //....
