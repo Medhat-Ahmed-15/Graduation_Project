@@ -5,8 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/models/address.dart';
+import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
-import 'package:graduation_project/widgets/floatingHamburgerButton.dart';
+import 'package:graduation_project/widgets/floatingCancelButton.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
@@ -77,14 +78,27 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  resetApp(BuildContext context) {
+    setState(() {
+      polyLineSet.clear();
+      markersSet.clear();
+      circlesSet.clear();
+      pLineCoordinates.clear();
+    });
+
+    locatePosition(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    var resultAfterBooking =
-        ModalRoute.of(context).settings.arguments as String;
+    var resultAfterBooking = ModalRoute.of(context).settings.arguments
+        as ArgumentsPassedFromBookingScreen;
 
-    if (resultAfterBooking == 'returned after booking') {
-      showCancelButton = true;
-      getPlaceDirection();
+    if (resultAfterBooking != null) {
+      if (resultAfterBooking.flag == 'returned after booking') {
+        showCancelButton = true;
+        getPlaceDirection();
+      }
     }
 
     return Scaffold(
@@ -122,7 +136,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
           showCancelButton == true
-              ? FloatingCancelButton(scaffoldKey)
+              ? FloatingCancelButton(scaffoldKey, resultAfterBooking, resetApp)
               : const Text(''),
           SearchParkingAreaCard(getPlaceDirection, loading)
         ],

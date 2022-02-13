@@ -2,6 +2,7 @@
 import 'package:dialogs/dialogs/choice_dialog.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/models/address.dart';
+import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
@@ -139,8 +140,11 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         endingDateAndTime,
         Provider.of<AuthProvider>(context, listen: false).getUserID);
 
-    Navigator.of(context).pushReplacementNamed(MapScreen.routeName,
-        arguments: 'returned after booking');
+    ArgumentsPassedFromBookingScreen obj = ArgumentsPassedFromBookingScreen(
+        "returned after booking", pickedParkingSlotDetails);
+
+    Navigator.of(context)
+        .pushReplacementNamed(MapScreen.routeName, arguments: obj);
   }
 
   void calculateCost() {

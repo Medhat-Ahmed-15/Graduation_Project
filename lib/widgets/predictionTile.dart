@@ -43,7 +43,7 @@ class PredictionTile extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         } else {
           showToast("GoPark isn't available in this area yet");
-          //FocusManager.instance.primaryFocus?.unfocus();
+          FocusManager.instance.primaryFocus?.unfocus();
         }
       },
       child: Container(
