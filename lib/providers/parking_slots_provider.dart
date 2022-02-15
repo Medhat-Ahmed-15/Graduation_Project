@@ -28,6 +28,7 @@ class ParkingSlotsProvider with ChangeNotifier {
         loadedSlots.add(
           ParkingSlotBlueprintProvider(
               availability: slotData['availability'],
+              sensorDetect: slotData['sensorDetect'],
               endDateTime: slotData['end_time'] as String,
               id: slotData['id'] as String,
               latitude: slotData['latitude'] as double,
@@ -45,7 +46,23 @@ class ParkingSlotsProvider with ChangeNotifier {
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  //Function for fetching the data from firebase
+  //Function for fetching  single parking slot data from firebase
+
+  Future<bool> fetchSingleParkingSlot(String parkingSlotId) async {
+    String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$parkingSlotId.json?auth=$_authToken';
+    try {
+      final response = await http.get(url);
+
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      print('Slot Id' + '  ' + parkingSlotId);
+
+      return (extractedData['sensorDetect']);
+    } catch (error) {
+      throw (error);
+    }
+  }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

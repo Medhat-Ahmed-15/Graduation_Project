@@ -134,10 +134,10 @@ class SearchParkingAreaCard extends StatelessWidget {
                             )
                           : Text(
                               Provider.of<AddressDataProvider>(context)
-                                          .pickUpLocation !=
+                                          .currentLocation !=
                                       null
                                   ? Provider.of<AddressDataProvider>(context)
-                                      .pickUpLocation
+                                      .currentLocation
                                       .placeName
                                   : 'Add Home',
                               style: TextStyle(color: Colors.white),

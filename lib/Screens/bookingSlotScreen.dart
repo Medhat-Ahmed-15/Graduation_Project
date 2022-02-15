@@ -1,4 +1,6 @@
 // ignore_for_file: file_names
+import 'dart:async';
+
 import 'package:dialogs/dialogs/choice_dialog.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/models/address.dart';
@@ -35,6 +37,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   DateTime startDateTime;
   int totalCost;
   ParkingSlotBlueprintProvider pickedParkingSlotDetails;
+
+  Timer cancelRequestTimer;
 
   void setDateValuesAftePicked(String flag, BuildContext context) {
     showDatePicker(
@@ -101,7 +105,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     });
   }
 
-  void requestBookingSlot(
+  void requestAndUpdateBookingSlot(
       ParkingSlotBlueprintProvider pickedParkingSlotDetails) async {
     String startingDateAndTime = DateFormat.yMd().format(startingDate) +
         " " +
@@ -196,6 +200,28 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             paymentMethod: 'visa',
             startDateTime: initialtDateTime,
             totalCost: cost);
+  }
+
+  void cancelRequest() async {
+    //cancel
+
+    var sensorDetectSingleSlot =
+        await Provider.of<ParkingSlotsProvider>(context, listen: false)
+            .fetchSingleParkingSlot(pickedParkingSlotDetails.id);
+
+    if (sensorDetectSingleSlot == false) {
+      //switching availability
+      pickedParkingSlotDetails.switchAvailability(
+          Provider.of<AuthProvider>(context, listen: false).token,
+          'empty',
+          'empty',
+          'empty');
+
+      //Deleting request
+      await Provider.of<RequestParkingSlotDetailsProvider>(context,
+              listen: false)
+          .cancelRequest(context);
+    }
   }
 
   @override
@@ -584,7 +610,10 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     messageColor: Colors.white,
                     buttonOkText: 'Confirm',
                     buttonOkOnPressed: () {
-                      requestBookingSlot(pickedParkingSlotDetails);
+                      cancelRequestTimer =
+                          Timer(Duration(seconds: 10), cancelRequest);
+
+                      requestAndUpdateBookingSlot(pickedParkingSlotDetails);
                       saveParkingRequestDetails();
                     },
                   );

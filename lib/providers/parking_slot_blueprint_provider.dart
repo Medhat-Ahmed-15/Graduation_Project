@@ -6,12 +6,13 @@ import 'package:http/http.dart' as http;
 class ParkingSlotBlueprintProvider with ChangeNotifier {
   String id;
   bool availability;
+  bool vip;
+  bool sensorDetect;
   String startDateTtime;
   String endDateTime;
   double latitude;
   double longitude;
   String userId;
-  bool vip;
 
   ParkingSlotBlueprintProvider(
       {this.id,
@@ -20,6 +21,7 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
       this.latitude,
       this.longitude,
       this.vip,
+      this.sensorDetect,
       this.endDateTime,
       this.userId});
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

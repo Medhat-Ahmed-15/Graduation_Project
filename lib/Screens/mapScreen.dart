@@ -4,15 +4,17 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
+import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/floatingCancelButton.dart';
 import 'package:provider/provider.dart';
+import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
 import '../map_key.dart';
-import 'package:dialogs/dialogs.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapScreen extends StatefulWidget {
@@ -44,9 +46,10 @@ class _MapScreenState extends State<MapScreen> {
   Set<Circle> circlesSet = {};
 
   double bottomPaddingOfMap = 0;
+  bool _isInit = true;
 
 //Locating current location
-  Future<void> locatePosition(BuildContext context) async {
+  Future<void> locatePosition() async {
     //get current position
 
     setState(() {
@@ -71,22 +74,37 @@ class _MapScreenState extends State<MapScreen> {
     //converting latlng to readable addresses
     String address =
         await Provider.of<AddressDataProvider>(context, listen: false)
-            .convertToReadableAddress(position, context);
+            .convertToReadableAddress(position);
 
     setState(() {
       loading = false;
     });
   }
 
-  resetApp(BuildContext context) {
+  resetApp() {
     setState(() {
       polyLineSet.clear();
       markersSet.clear();
       circlesSet.clear();
       pLineCoordinates.clear();
+      showCancelButton = false;
     });
 
-    locatePosition(context);
+    locatePosition();
+  }
+
+  void displayRoute(ArgumentsPassedFromBookingScreen resultAfterBooking) async {
+    if (_isInit) {
+      if (resultAfterBooking != null) {
+        if (resultAfterBooking.flag == 'returned after booking') {
+          await getPlaceDirection();
+          setState(() {
+            showCancelButton = true;
+          });
+        }
+      }
+    }
+    _isInit = false;
   }
 
   @override
@@ -94,12 +112,7 @@ class _MapScreenState extends State<MapScreen> {
     var resultAfterBooking = ModalRoute.of(context).settings.arguments
         as ArgumentsPassedFromBookingScreen;
 
-    if (resultAfterBooking != null) {
-      if (resultAfterBooking.flag == 'returned after booking') {
-        showCancelButton = true;
-        getPlaceDirection();
-      }
-    }
+    displayRoute(resultAfterBooking);
 
     return Scaffold(
       key: scaffoldKey,
@@ -111,7 +124,7 @@ class _MapScreenState extends State<MapScreen> {
       body: Stack(
         children: [
           RefreshIndicator(
-            onRefresh: () => locatePosition(context),
+            onRefresh: () => locatePosition(),
             child: GoogleMap(
               padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
               zoomGesturesEnabled: true,
@@ -131,13 +144,17 @@ class _MapScreenState extends State<MapScreen> {
                   bottomPaddingOfMap = 300.0;
                 });
 
-                locatePosition(context);
+                locatePosition();
               },
             ),
           ),
-          showCancelButton == true
-              ? FloatingCancelButton(scaffoldKey, resultAfterBooking, resetApp)
-              : const Text(''),
+
+// *******************************************************Floating Cancel Button ************************************************************************************************************
+
+          FloatingCancelButton(resultAfterBooking, resetApp, showCancelButton),
+
+// *******************************************************Floating Cancel Button ************************************************************************************************************
+
           SearchParkingAreaCard(getPlaceDirection, loading)
         ],
       ),
@@ -145,8 +162,8 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> getPlaceDirection() async {
-    var initialPos =
-        Provider.of<AddressDataProvider>(context, listen: false).pickUpLocation;
+    var initialPos = Provider.of<AddressDataProvider>(context, listen: false)
+        .currentLocation;
 
     var finalPos = Provider.of<AddressDataProvider>(context, listen: false)
         .destinationLocation;

@@ -125,11 +125,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                         alignment: Alignment.center,
                                         child: Text(
                                             objAddressDataProvider
-                                                        .pickUpLocation ==
+                                                        .currentLocation ==
                                                     null
                                                 ? 'Please wait...'
                                                 : objAddressDataProvider
-                                                    .pickUpLocation.placeName,
+                                                    .currentLocation.placeName,
                                             style:
                                                 TextStyle(color: Colors.white)),
                                       ),

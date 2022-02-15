@@ -12,7 +12,7 @@ import 'package:graduation_project/widgets/progressDialog.dart';
 import '../map_key.dart';
 
 class AddressDataProvider extends ChangeNotifier {
-  Address pickUpLocation;
+  Address currentLocation;
   Address destinationLocation;
   PlacePredictions currentPlacePredicted;
   List<PlacePredictions> placePredictionList = [];
@@ -26,8 +26,8 @@ class AddressDataProvider extends ChangeNotifier {
 
 //updating current user Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  void updatePickUpLocationAddress(Address pickUpAddress) {
-    pickUpLocation = pickUpAddress;
+  void updateCurrentLocationAddress(Address pickUpAddress) {
+    currentLocation = pickUpAddress;
     notifyListeners();
   }
 
@@ -81,8 +81,7 @@ class AddressDataProvider extends ChangeNotifier {
   }
 
 // Converting My Current address which contains of latitude and longitude to readable address I can understand  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  Future<String> convertToReadableAddress(
-      Position position, BuildContext context) async {
+  Future<String> convertToReadableAddress(Position position) async {
     String placeAddress = "";
 
     String placeAddress1;
@@ -107,12 +106,12 @@ class AddressDataProvider extends ChangeNotifier {
       placeAddress =
           placeAddress1 + ", " + placeAddress2 + ", " + placeAddress4;
 
-      Address userPickUpAddress = new Address();
-      userPickUpAddress.longitude = position.longitude;
-      userPickUpAddress.latitude = position.latitude;
-      userPickUpAddress.placeName = placeAddress;
+      Address userCurrentAddress = new Address();
+      userCurrentAddress.longitude = position.longitude;
+      userCurrentAddress.latitude = position.latitude;
+      userCurrentAddress.placeName = placeAddress;
 
-      updatePickUpLocationAddress(userPickUpAddress);
+      updateCurrentLocationAddress(userCurrentAddress);
     }
     return placeAddress;
   }

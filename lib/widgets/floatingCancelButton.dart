@@ -3,31 +3,27 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
-import 'package:graduation_project/widgets/progressDialog.dart' as myDialog;
+import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FloatingCancelButton extends StatefulWidget {
-  GlobalKey<ScaffoldState> scaffoldKey;
-  ArgumentsPassedFromBookingScreen argumentsPassedFromBookingScreen;
+  ArgumentsPassedFromBookingScreen resultAfterBooking;
   Function resetApp;
+  bool showCancelButton;
   FloatingCancelButton(
-      this.scaffoldKey, this.argumentsPassedFromBookingScreen, this.resetApp);
+      this.resultAfterBooking, this.resetApp, this.showCancelButton);
 
   @override
   State<FloatingCancelButton> createState() => _FloatingCancelButtonState();
 }
 
 class _FloatingCancelButtonState extends State<FloatingCancelButton> {
-  bool disappearCancelButton = false;
-
   @override
   Widget build(BuildContext context) {
-    return disappearCancelButton == true
-        ? const Text('')
-        : Positioned(
+    return widget.showCancelButton == true
+        ? Positioned(
             top: 45.0,
             left: 22.0,
             child: GestureDetector(
@@ -35,12 +31,12 @@ class _FloatingCancelButtonState extends State<FloatingCancelButton> {
                 showDialog(
                     context: context,
                     //myDIalog is jaust prefix i made it while importing the libraries up
-                    builder: (BuildContext context) => myDialog.ProgressDialog(
+                    builder: (BuildContext context) => ProgressDialog(
                           message: 'Cancelling Request',
                         ));
 
                 //switching availability
-                widget.argumentsPassedFromBookingScreen.pickedParkingSlotDetails
+                widget.resultAfterBooking.pickedParkingSlotDetails
                     .switchAvailability(
                         Provider.of<AuthProvider>(context, listen: false).token,
                         'empty',
@@ -64,11 +60,11 @@ class _FloatingCancelButtonState extends State<FloatingCancelButton> {
                     textColor: Colors.white,
                     fontSize: 16.0);
 
-                widget.resetApp(context);
+                widget.resetApp();
 
-                setState(() {
-                  disappearCancelButton = true;
-                });
+                // setState(() {
+                //   showCancelButton = false;
+                // });
               },
               child: CircleAvatar(
                 backgroundColor: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
@@ -80,6 +76,7 @@ class _FloatingCancelButtonState extends State<FloatingCancelButton> {
                 radius: 20.0,
               ),
             ),
-          );
+          )
+        : const Text('');
   }
 }
