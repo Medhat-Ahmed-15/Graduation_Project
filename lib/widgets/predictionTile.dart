@@ -5,6 +5,7 @@ import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/models/placePridictions.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class PredictionTile extends StatelessWidget {
@@ -12,26 +13,29 @@ class PredictionTile extends StatelessWidget {
 
   PredictionTile({Key key, this.currentPlacePredicted}) : super(key: key);
 
-  void showToast(String message) {
+  void showToast(String message, BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
-        backgroundColor: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-        textColor: Colors.white,
+        backgroundColor: colorProviderObj.genralBackgroundColor,
+        textColor: colorProviderObj.textColor,
         fontSize: 16.0);
   }
 
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return FlatButton(
       onPressed: () async {
         var result =
             await Provider.of<AddressDataProvider>(context, listen: false)
                 .getParkingAreaDetails(currentPlacePredicted.place_id, context);
 
-        if (result == 'Alexandria Sporting Club') {
+        if (result == 'Alexandria Sporting Club' ||
+            result == 'Smouha Sporting Club') {
           Navigator.of(context)
               .pushReplacementNamed(ParkingSlotsScreen.routeName);
 
@@ -39,10 +43,11 @@ class PredictionTile extends StatelessWidget {
               .updateThePredictedPlaceAfterItIsPicked(currentPlacePredicted);
         } else if (result == 'failed') {
           showToast(
-              "Something went wrong, Please check you internet connection and try again");
+              "Something went wrong, Please check you internet connection and try again",
+              context);
           FocusManager.instance.primaryFocus?.unfocus();
         } else {
-          showToast("GoPark isn't available in this area yet");
+          showToast("GoPark isn't available in this area yet", context);
           FocusManager.instance.primaryFocus?.unfocus();
         }
       },
@@ -81,8 +86,8 @@ class PredictionTile extends StatelessWidget {
                       ),
                       Text(
                         currentPlacePredicted.secondary_text,
-                        style: const TextStyle(
-                            fontSize: 12.0, color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 12.0, color: colorProviderObj.textColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(

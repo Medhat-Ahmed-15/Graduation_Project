@@ -3,16 +3,19 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
+import 'package:graduation_project/Screens/settings_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget buildListTile(String imgDircetory, String text, BuildContext context,
       Function onTapFunction) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         ListTile(
@@ -23,15 +26,14 @@ class MainDrawer extends StatelessWidget {
           ),
           title: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white // Theme.of(context).primaryColor,
-                ),
+                color: colorProviderObj.textColor),
           ),
           onTap: onTapFunction,
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Container(
@@ -46,7 +48,7 @@ class MainDrawer extends StatelessWidget {
                 offset: Offset(0.2, 0.2),
               ),
             ],
-            color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            color: colorProviderObj.genralBackgroundColor,
             borderRadius: BorderRadius.circular(5.0),
           ),
         ),
@@ -57,18 +59,25 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
+  Future<void> checkThemeMode(BuildContext context) async {
+    await Provider.of<ColorProvider>(context, listen: false)
+        .checkThemeMethodInThisScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
+    checkThemeMode(context);
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+          color: colorProviderObj.generalCardColor,
         ),
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+              color: colorProviderObj.genralBackgroundColor,
               padding: const EdgeInsets.all(20),
               height: 200,
               alignment: Alignment
@@ -85,16 +94,15 @@ class MainDrawer extends StatelessWidget {
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Profile Name',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,
-                            color: Colors.white //Theme.of(context).primaryColor
-                            ),
+                            color: colorProviderObj.textColor),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10.0,
                       ),
                       Text(
@@ -102,8 +110,7 @@ class MainDrawer extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
-                            color: Colors.white //Theme.of(context).primaryColor
-                            ),
+                            color: colorProviderObj.textColor),
                       )
                     ],
                   )
@@ -120,7 +127,7 @@ class MainDrawer extends StatelessWidget {
             //>>
             buildListTile('assets/images/setting.png', 'Settings', context, () {
               Navigator.of(context)
-                  .pushReplacementNamed(UserProfileScreen.routeName);
+                  .pushReplacementNamed(SettingsScreen.routeName);
             }),
 
             //>>

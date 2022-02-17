@@ -1,6 +1,7 @@
 import 'package:dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart' as myDialog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
@@ -27,6 +28,7 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
   @override
   Widget build(BuildContext context) {
     //Designing the single parking slot box
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return GestureDetector(
       child: Container(
         decoration: BoxDecoration(
@@ -45,7 +47,7 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
           padding: const EdgeInsets.all(1.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+              color: colorProviderObj.generalCardColor,
               image: widget.parkingSlotBlueprintProvider.availability == true
                   ? widget.parkingSlotBlueprintProvider.userId ==
                           Provider.of<AuthProvider>(context, listen: false)
@@ -84,8 +86,9 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
                         : Alignment.topLeft,
                     child: Text(
                       widget.parkingSlotBlueprintProvider.id,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w900),
+                      style: TextStyle(
+                          color: colorProviderObj.textColor,
+                          fontWeight: FontWeight.w900),
                     ),
                   ),
                 ),
@@ -125,14 +128,14 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
           print('Showing my request Data');
 
           ChoiceDialog messageDialog = ChoiceDialog(
-            dialogBackgroundColor: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            dialogBackgroundColor: colorProviderObj.generalCardColor,
             buttonOkColor: Theme.of(context).primaryColor,
             title:
                 'Your booked Slot: ${widget.parkingSlotBlueprintProvider.id}',
             titleColor: Theme.of(context).primaryColor,
             message:
                 'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
-            messageColor: Colors.white,
+            messageColor: colorProviderObj.textColor,
             buttonOkText: 'Ok',
             dialogRadius: 15.0,
             buttonRadius: 18.0,
@@ -186,13 +189,13 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
           // print(parkingSlotBlueprintProvider.userId);
 
           MessageDialog messageDialog = MessageDialog(
-            dialogBackgroundColor: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+            dialogBackgroundColor: colorProviderObj.generalCardColor,
             buttonOkColor: Theme.of(context).primaryColor,
             title: 'Parking Slot: ${widget.parkingSlotBlueprintProvider.id}',
             titleColor: Theme.of(context).primaryColor,
             message:
                 'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
-            messageColor: Colors.white,
+            messageColor: colorProviderObj.textColor,
             buttonOkText: 'Notify me when available',
             dialogRadius: 15.0,
             buttonRadius: 18.0,

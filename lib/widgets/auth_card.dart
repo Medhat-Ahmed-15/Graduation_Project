@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/models/http_exception.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Signin }
@@ -34,16 +35,27 @@ class _AuthCardState extends State<AuthCard> {
 
   void showErrorDialog(String errorMessage) {
     showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-              title: Text('An Error Occurred!'),
-              content: Text(errorMessage),
-              actions: [
-                FlatButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Okay'))
-              ],
-            ));
+      barrierColor: Colors.white10,
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Provider.of<ColorProvider>(context, listen: true)
+            .genralBackgroundColor,
+        title: const Text('An Error Occurred!'),
+        titleTextStyle: TextStyle(color: Theme.of(context).primaryColor),
+        content: Text(
+          errorMessage,
+          style: TextStyle(
+              color:
+                  Provider.of<ColorProvider>(context, listen: true).textColor),
+        ),
+        actions: [
+          FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Okay',
+                  style: TextStyle(color: Theme.of(context).primaryColor)))
+        ],
+      ),
+    );
   }
 
 //Submit Function>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -117,6 +129,8 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
+
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Positioned(
@@ -124,14 +138,12 @@ class _AuthCardState extends State<AuthCard> {
       right: 0.0,
       bottom: 0.0,
       child: Container(
-        height: isKeyboard
-            ? 670
-            : 530, //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.1)
+        height: isKeyboard ? 670 : 530,
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          color: colorProviderObj.genralBackgroundColor,
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
               color: Colors.black,
               blurRadius: 5.0,
@@ -140,7 +152,6 @@ class _AuthCardState extends State<AuthCard> {
             )
           ],
         ),
-
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
@@ -150,9 +161,9 @@ class _AuthCardState extends State<AuthCard> {
                 alignment: Alignment.topLeft,
                 child: Text(
                   _authMode == AuthMode.Signin ? 'Welcome Back' : 'Get Started',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 50,
-                      color: Colors.white,
+                      color: colorProviderObj.textColor,
                       fontWeight: FontWeight.w900),
                 ),
               ),
@@ -178,8 +189,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -189,20 +199,26 @@ class _AuthCardState extends State<AuthCard> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(3.0),
+
+                              //Signin Email TextField///////////////////////////////////////////////////////////
+
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color.fromRGBO(23, 32, 42, 1)
-                                            .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Email:',
-                                  hintStyle: TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 validator: (value) {
@@ -233,8 +249,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -246,20 +261,20 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Password:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                      color: colorProviderObj.textColor),
                                 ),
                                 obscureText: true,
                                 validator: (value) {
@@ -311,8 +326,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -324,20 +338,21 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'First name:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 validator: (value) {
@@ -366,8 +381,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -379,20 +393,21 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Last name:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 validator: (value) {
                                   if (value.isEmpty) {
@@ -421,8 +436,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -435,20 +449,21 @@ class _AuthCardState extends State<AuthCard> {
                               child: TextFormField(
                                 keyboardType: TextInputType.emailAddress,
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Email:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 validator: (value) {
                                   if (value.isEmpty || !value.contains('@')) {
@@ -476,8 +491,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -489,20 +503,21 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Password:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 obscureText: true,
                                 controller: _passwordController,
@@ -532,8 +547,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -545,20 +559,21 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Confirm password:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 obscureText: true,
                                 validator: (value) {
@@ -585,8 +600,7 @@ class _AuthCardState extends State<AuthCard> {
                                   offset: const Offset(0.7, 0.7),
                                 ),
                               ],
-                              color:
-                                  Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                              color: colorProviderObj.generalCardColor,
                               border: Border.all(
                                 color: Theme.of(context).primaryColor,
                                 width: 2,
@@ -598,20 +612,21 @@ class _AuthCardState extends State<AuthCard> {
                               padding: const EdgeInsets.all(3.0),
                               child: TextFormField(
                                 cursorColor: Theme.of(context).primaryColor,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                  color: colorProviderObj.textColor,
+                                ),
                                 decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(23, 32, 42, 1)
-                                                .withOpacity(1)),
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
                                   hintText: 'Address:',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(
+                                    color: colorProviderObj.textColor,
+                                  ),
                                 ),
                                 validator: (value) {
                                   if (value.isEmpty) {
@@ -644,9 +659,9 @@ class _AuthCardState extends State<AuthCard> {
                   // Signin/Signup text>>>>>>>>>>>>>>>>
                   Text(
                     _authMode == AuthMode.Signin ? 'Sign In' : 'Sign Up',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 30,
-                        color: Colors.white,
+                        color: colorProviderObj.textColor,
                         fontWeight: FontWeight.w900),
                   ),
 

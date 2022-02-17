@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/parking_slots_card.dart';
@@ -32,8 +33,14 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
     super.didChangeDependencies();
   }
 
+  Future<void> checkThemeMode(BuildContext context) async {
+    await Provider.of<ColorProvider>(context, listen: false)
+        .checkThemeMethodInThisScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     final appBar = AppBar(
       backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Choose you slot'),
@@ -55,7 +62,7 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
                 //   end: Alignment.topRight,
                 //   stops: [0, 1],
                 // ),
-                color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                color: colorProviderObj.generalCardColor,
               ),
             ),
             Align(

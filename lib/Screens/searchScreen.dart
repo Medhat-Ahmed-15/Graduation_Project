@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/placePridictions.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:graduation_project/widgets/predictionTile.dart';
 import 'package:provider/provider.dart';
@@ -21,8 +22,14 @@ class _SearchScreenState extends State<SearchScreen> {
   List<PlacePredictions> placePredictionList = [];
   bool loading = false;
 
+  Future<void> checkThemeMode(BuildContext context) async {
+    await Provider.of<ColorProvider>(context, listen: false)
+        .checkThemeMethodInThisScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     var objAddressDataProvider = Provider.of<AddressDataProvider>(context);
 
     return Scaffold(
@@ -44,7 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 //   end: Alignment.topRight,
                 //   stops: [0, 1],
                 // ),
-                color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                color: colorProviderObj.generalCardColor,
               ),
             ),
             Column(
@@ -55,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   height: 215.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(22.0),
-                    color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                    color: colorProviderObj.genralBackgroundColor,
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black,
@@ -74,12 +81,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 5.0,
                         ),
                         Stack(
-                          children: const [
+                          children: [
                             Center(
                               child: Text(
                                 'Set Destination',
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: colorProviderObj.textColor,
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w900),
                               ),
@@ -115,8 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),
                                   child: Container(
-                                    color: const Color.fromRGBO(23, 32, 42, 1)
-                                        .withOpacity(1),
+                                    color: colorProviderObj.generalCardColor,
                                     width: 10,
                                     height: 45,
                                     child: Padding(
@@ -130,8 +136,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 ? 'Please wait...'
                                                 : objAddressDataProvider
                                                     .currentLocation.placeName,
-                                            style:
-                                                TextStyle(color: Colors.white)),
+                                            style: TextStyle(
+                                                color: colorProviderObj
+                                                    .textColor)),
                                       ),
                                     ),
                                   ),
@@ -188,14 +195,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                       });
                                     },
                                     controller: dropOffTextEditingController,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor),
                                     decoration: InputDecoration(
                                       hintText: 'Where to',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.white70),
+                                      hintStyle: TextStyle(
+                                          color: colorProviderObj.textColor),
                                       fillColor:
-                                          const Color.fromRGBO(23, 32, 42, 1)
-                                              .withOpacity(1),
+                                          colorProviderObj.generalCardColor,
                                       filled: true,
                                       border: InputBorder.none,
                                       contentPadding: const EdgeInsets.only(

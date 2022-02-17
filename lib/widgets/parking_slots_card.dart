@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/parking_slots_grid.dart';
+import 'package:provider/provider.dart';
 
 class ParkingSlotscard extends StatelessWidget {
   final bool _loadingSpinner;
   ParkingSlotscard(this._loadingSpinner);
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     //Just The container Layout
     return Positioned(
         left: 0.0,
@@ -14,7 +17,7 @@ class ParkingSlotscard extends StatelessWidget {
         child: Container(
           height: 530,
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+            color: colorProviderObj.genralBackgroundColor,
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(50), topRight: Radius.circular(50)),
             boxShadow: const [

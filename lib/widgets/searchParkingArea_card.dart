@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/searchScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
-
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
 class SearchParkingAreaCard extends StatelessWidget {
@@ -13,6 +13,7 @@ class SearchParkingAreaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return Positioned(
       left: 0.0,
       right: 0.0,
@@ -30,7 +31,7 @@ class SearchParkingAreaCard extends StatelessWidget {
           //   stops: [0, 1],
           // ),
 
-          color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+          color: colorProviderObj.generalCardColor,
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
           boxShadow: const [
@@ -55,12 +56,12 @@ class SearchParkingAreaCard extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 12.0, color: Theme.of(context).primaryColor),
               ),
-              const Text(
+              Text(
                 'Where to? ',
                 style: TextStyle(
                     fontSize: 20.0,
                     fontFamily: 'Brand-semibold',
-                    color: Colors.white),
+                    color: colorProviderObj.textColor),
               ),
               const SizedBox(
                 height: 20.0,
@@ -140,7 +141,8 @@ class SearchParkingAreaCard extends StatelessWidget {
                                       .currentLocation
                                       .placeName
                                   : 'Add Home',
-                              style: TextStyle(color: Colors.white),
+                              style:
+                                  TextStyle(color: colorProviderObj.textColor),
                             ),
                       const SizedBox(
                         height: 4.0,

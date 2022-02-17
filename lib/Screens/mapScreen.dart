@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/floatingCancelButton.dart';
@@ -47,6 +48,8 @@ class _MapScreenState extends State<MapScreen> {
 
   double bottomPaddingOfMap = 0;
   bool _isInit = true;
+
+  Timer cancelRequestTimer;
 
 //Locating current location
   Future<void> locatePosition() async {
@@ -101,14 +104,22 @@ class _MapScreenState extends State<MapScreen> {
           setState(() {
             showCancelButton = true;
           });
+          cancelRequestTimer = Timer(Duration(seconds: 10), resetApp);
         }
       }
     }
     _isInit = false;
   }
 
+  Future<void> checkThemeMode(BuildContext context) async {
+    await Provider.of<ColorProvider>(context, listen: false)
+        .checkThemeMethodInThisScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
+    checkThemeMode(context);
+
     var resultAfterBooking = ModalRoute.of(context).settings.arguments
         as ArgumentsPassedFromBookingScreen;
 

@@ -7,6 +7,7 @@ import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
@@ -41,6 +42,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   Timer cancelRequestTimer;
 
   void setDateValuesAftePicked(String flag, BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: false);
     showDatePicker(
       builder: (context, child) => Theme(
           data: ThemeData().copyWith(
@@ -48,9 +50,9 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
               primary: Theme.of(context).primaryColor,
               onPrimary: Colors.white,
               surface: Theme.of(context).primaryColor,
-              onSurface: Colors.white,
+              onSurface: colorProviderObj.textColor,
             ),
-            dialogBackgroundColor: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+            dialogBackgroundColor: colorProviderObj.generalCardColor,
           ),
           child: child),
       context: context,
@@ -74,15 +76,15 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     });
   }
 
-  void setTimeValuesAftePicked(String flag) {
+  void setTimeValuesAftePicked(String flag, BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: false);
     showTimePicker(
       builder: (context, child) => Theme(
           data: ThemeData().copyWith(
             colorScheme: ColorScheme.light(
               primary: Theme.of(context).primaryColor,
-              surface: Color.fromRGBO(44, 62, 80, 1)
-                  .withOpacity(1), //Theme.of(context).primaryColor,
-              onSurface: Colors.white,
+              surface: colorProviderObj.generalCardColor,
+              onSurface: colorProviderObj.textColor,
             ),
           ),
           child: child),
@@ -224,8 +226,14 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     }
   }
 
+  Future<void> checkThemeMode(BuildContext context) async {
+    await Provider.of<ColorProvider>(context, listen: false)
+        .checkThemeMethodInThisScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     final appBar = AppBar(
       backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Book your slot'),
@@ -250,7 +258,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
               //   end: Alignment.topRight,
               //   stops: [0, 1],
               // ),
-              color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+              color: colorProviderObj.generalCardColor,
             ),
           ),
           Column(
@@ -260,7 +268,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                 child: Container(
                   height: 250.0,
                   decoration: BoxDecoration(
-                    color: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                    color: colorProviderObj.genralBackgroundColor,
                   ),
                   child: Column(children: [
                     Container(
@@ -282,10 +290,10 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                                   listen: false)
                               .currentPlacePredicted
                               .main_text,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w900,
-                              color: Colors.white),
+                              color: colorProviderObj.textColor),
                         ),
                       ),
                     ),
@@ -306,13 +314,13 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                 height: 25,
               ),
               Container(
-                child: const Center(
+                child: Center(
                   child: Text(
                     'Pick your initial Date and Time',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white),
+                        color: colorProviderObj.textColor),
                   ),
                 ),
               ),
@@ -356,7 +364,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Container(
-                            color: const Color.fromRGBO(23, 32, 42, 1)
+                            color: colorProviderObj.genralBackgroundColor
                                 .withOpacity(1),
                             child: Padding(
                               padding: EdgeInsets.all(5.0),
@@ -366,8 +374,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                                     startingDate == null
                                         ? 'Initial Date'
                                         : DateFormat.yMd().format(startingDate),
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor)),
                               ),
                             ),
                           ),
@@ -383,7 +391,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     //initial Time****************
                     FlatButton(
                       onPressed: () {
-                        setTimeValuesAftePicked('initialTime');
+                        setTimeValuesAftePicked('initialTime', context);
                       },
                       child: Container(
                         width: 110,
@@ -403,8 +411,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Container(
-                            color: const Color.fromRGBO(23, 32, 42, 1)
-                                .withOpacity(1),
+                            color: colorProviderObj.genralBackgroundColor,
                             child: Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Align(
@@ -415,8 +422,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                                         : startingTime.hour.toString() +
                                             ":" +
                                             startingTime.minute.toString(),
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor)),
                               ),
                             ),
                           ),
@@ -442,7 +449,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                       offset: Offset(0.2, 0.2),
                     ),
                   ],
-                  color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                  color: colorProviderObj.generalCardColor,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
@@ -451,13 +458,13 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                 height: 25,
               ),
               Container(
-                child: const Center(
+                child: Center(
                   child: Text(
                     'Pick your final Date and Time',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
-                        color: Colors.white),
+                        color: colorProviderObj.textColor),
                   ),
                 ),
               ),
@@ -499,8 +506,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Container(
-                            color: const Color.fromRGBO(23, 32, 42, 1)
-                                .withOpacity(1),
+                            color: colorProviderObj.genralBackgroundColor,
                             child: Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Align(
@@ -509,8 +515,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                                     endingDate == null
                                         ? 'Final Date'
                                         : DateFormat.yMd().format(endingDate),
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor)),
                               ),
                             ),
                           ),
@@ -526,7 +532,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     //FInal Time****************
                     FlatButton(
                       onPressed: () {
-                        setTimeValuesAftePicked('finalTime');
+                        setTimeValuesAftePicked('finalTime', context);
                       },
                       child: Container(
                         width: 110,
@@ -546,8 +552,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Container(
-                            color: const Color.fromRGBO(23, 32, 42, 1)
-                                .withOpacity(1),
+                            color: colorProviderObj.genralBackgroundColor,
                             child: Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Align(
@@ -558,8 +563,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                                         : endingTime.hour.toString() +
                                             ":" +
                                             endingTime.minute.toString(),
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor)),
                               ),
                             ),
                           ),
@@ -585,7 +590,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                       offset: Offset(0.2, 0.2),
                     ),
                   ],
-                  color: Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                  color: colorProviderObj.generalCardColor,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
@@ -601,18 +606,14 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                   calculateCost();
 
                   final choice = ChoiceDialog(
-                    dialogBackgroundColor:
-                        Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                    dialogBackgroundColor: colorProviderObj.generalCardColor,
                     title: 'Total Cost: $totalCost EG',
                     titleColor: Theme.of(context).primaryColor,
                     message:
                         'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
-                    messageColor: Colors.white,
+                    messageColor: colorProviderObj.textColor,
                     buttonOkText: 'Confirm',
                     buttonOkOnPressed: () {
-                      cancelRequestTimer =
-                          Timer(Duration(seconds: 10), cancelRequest);
-
                       requestAndUpdateBookingSlot(pickedParkingSlotDetails);
                       saveParkingRequestDetails();
                     },
@@ -632,7 +633,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                         offset: Offset(0.2, 0.2),
                       ),
                     ],
-                    color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                    color: colorProviderObj.genralBackgroundColor,
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: Align(

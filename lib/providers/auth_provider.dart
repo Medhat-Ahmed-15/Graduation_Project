@@ -245,8 +245,17 @@ class AuthProvider with ChangeNotifier {
       logOutTimer = null;
     }
     notifyListeners();
+
     final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+
+    final userData = json.encode({
+      'token': null,
+      'userId': null,
+      'expiryDate': null,
+    });
+
+    prefs.setString('userData', userData);
+    // prefs.clear();
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

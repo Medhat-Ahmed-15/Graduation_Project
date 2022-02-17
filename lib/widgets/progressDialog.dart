@@ -1,6 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:graduation_project/providers/color_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProgressDialog extends StatelessWidget {
   String message;
@@ -8,16 +10,18 @@ class ProgressDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      backgroundColor: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+      backgroundColor: colorProviderObj.genralBackgroundColor,
       child: Container(
         margin: EdgeInsets.all(10.0),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+          color: colorProviderObj.genralBackgroundColor,
           borderRadius: BorderRadius.circular(6.0),
         ),
         child: Padding(
@@ -35,7 +39,8 @@ class ProgressDialog extends StatelessWidget {
               ),
               Text(
                 message,
-                style: const TextStyle(color: Colors.white, fontSize: 10.0),
+                style: TextStyle(
+                    color: colorProviderObj.textColor, fontSize: 10.0),
               )
             ],
           ),

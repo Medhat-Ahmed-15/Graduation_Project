@@ -3,10 +3,12 @@ import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
+import 'package:graduation_project/Screens/settings_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
@@ -23,6 +25,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          //Providing all Theme Colors Data
+          ChangeNotifierProvider(
+            create: (context) => ColorProvider(),
+          ),
+
+          //....
+
           //Providing Auth Data
           ChangeNotifierProvider(
             create: (ctx) => AuthProvider(),
@@ -41,6 +50,7 @@ class MyApp extends StatelessWidget {
             create: (context) => AddressDataProvider(),
           ),
 
+          //Providing all Request Parking Slot Details Data
           ChangeNotifierProxyProvider<AuthProvider,
               RequestParkingSlotDetailsProvider>(
             create: (ctx) => RequestParkingSlotDetailsProvider('', ''),
@@ -49,8 +59,6 @@ class MyApp extends StatelessWidget {
                 RequestParkingSlotDetailsProvider(
                     authProviderObj.token, authProviderObj.getUserID),
           ),
-
-          //....
         ],
         child: Consumer<AuthProvider>(
           builder: (ctx, authProviderObj, _) => MaterialApp(
@@ -61,7 +69,7 @@ class MyApp extends StatelessWidget {
                     .copyWith(alwaysUse24HourFormat: true),
                 child: child),
             //*Just for convertinf the time picker to be 24H instead of 12 H
-//241, 101, 115
+
             theme: ThemeData(
               primaryColor: Color.fromRGBO(241, 101, 115, 1).withOpacity(1),
               accentColor: Color.fromRGBO(241, 101, 115, 1).withOpacity(1),
@@ -83,6 +91,7 @@ class MyApp extends StatelessWidget {
               SearchScreen.routeName: (ctx) => SearchScreen(),
               ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
               BookingSlotScreen.routeName: (ctx) => BookingSlotScreen(),
+              SettingsScreen.routeName: (ctx) => SettingsScreen(),
             },
           ),
         ));
