@@ -204,28 +204,6 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             totalCost: cost);
   }
 
-  void cancelRequest() async {
-    //cancel
-
-    var sensorDetectSingleSlot =
-        await Provider.of<ParkingSlotsProvider>(context, listen: false)
-            .fetchSingleParkingSlot(pickedParkingSlotDetails.id);
-
-    if (sensorDetectSingleSlot == false) {
-      //switching availability
-      pickedParkingSlotDetails.switchAvailability(
-          Provider.of<AuthProvider>(context, listen: false).token,
-          'empty',
-          'empty',
-          'empty');
-
-      //Deleting request
-      await Provider.of<RequestParkingSlotDetailsProvider>(context,
-              listen: false)
-          .cancelRequest(context);
-    }
-  }
-
   Future<void> checkThemeMode(BuildContext context) async {
     await Provider.of<ColorProvider>(context, listen: false)
         .checkThemeMethodInThisScreen();

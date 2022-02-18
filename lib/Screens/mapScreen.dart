@@ -8,6 +8,7 @@ import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart'
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
+import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/floatingCancelButton.dart';
@@ -48,8 +49,12 @@ class _MapScreenState extends State<MapScreen> {
 
   double bottomPaddingOfMap = 0;
   bool _isInit = true;
+  bool isInit = true;
+  bool alreadyCancelled = false;
 
   Timer cancelRequestTimer;
+
+  ArgumentsPassedFromBookingScreen resultAfterBooking;
 
 //Locating current location
   Future<void> locatePosition() async {
@@ -85,6 +90,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   resetApp() {
+    alreadyCancelled = true;
     setState(() {
       polyLineSet.clear();
       markersSet.clear();
@@ -96,15 +102,68 @@ class _MapScreenState extends State<MapScreen> {
     locatePosition();
   }
 
-  void displayRoute(ArgumentsPassedFromBookingScreen resultAfterBooking) async {
-    if (_isInit) {
+  Future<void> cancelRequest() async {
+    if (alreadyCancelled != true) {
+      //switching availability
+      var sensorDetectSingleSlot =
+          await Provider.of<ParkingSlotsProvider>(context, listen: false)
+              .fetchSingleParkingSlot(
+                  resultAfterBooking.pickedParkingSlotDetails.id);
+
+      if (sensorDetectSingleSlot == false) {
+        showDialog(
+            context: context,
+            //myDIalog is jaust prefix i made it while importing the libraries up
+            builder: (BuildContext context) => ProgressDialog(
+                  message: 'Cancelling Request',
+                ));
+
+        if (isInit == true) {
+          //switching availability
+          resultAfterBooking.pickedParkingSlotDetails.switchAvailability(
+              Provider.of<AuthProvider>(context, listen: false).token,
+              'empty',
+              'empty',
+              'empty');
+        }
+        isInit = false;
+
+        //Deleting request
+        await Provider.of<RequestParkingSlotDetailsProvider>(context,
+                listen: false)
+            .cancelRequest(context);
+
+        Navigator.pop(context);
+
+        Fluttertoast.showToast(
+            msg: 'Request cancelled',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 5,
+            backgroundColor: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+            textColor: Colors.white,
+            fontSize: 16.0);
+
+        resetApp();
+      }
+    }
+  }
+
+  void displayRoute() async {
+    if (_isInit == true) {
       if (resultAfterBooking != null) {
         if (resultAfterBooking.flag == 'returned after booking') {
           await getPlaceDirection();
+
           setState(() {
             showCancelButton = true;
           });
-          cancelRequestTimer = Timer(Duration(seconds: 10), resetApp);
+
+          cancelRequestTimer = Timer(const Duration(seconds: 10), () {
+            if (alreadyCancelled != true) {
+              cancelRequest();
+            }
+          });
         }
       }
     }
@@ -120,10 +179,10 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     checkThemeMode(context);
 
-    var resultAfterBooking = ModalRoute.of(context).settings.arguments
+    resultAfterBooking = ModalRoute.of(context).settings.arguments
         as ArgumentsPassedFromBookingScreen;
 
-    displayRoute(resultAfterBooking);
+    displayRoute();
 
     return Scaffold(
       key: scaffoldKey,
@@ -137,7 +196,7 @@ class _MapScreenState extends State<MapScreen> {
           RefreshIndicator(
             onRefresh: () => locatePosition(),
             child: GoogleMap(
-              padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+              padding: EdgeInsets.only(bottom: 300.0),
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
               myLocationEnabled: true,
@@ -150,10 +209,6 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (GoogleMapController controller) {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
-
-                setState(() {
-                  bottomPaddingOfMap = 300.0;
-                });
 
                 locatePosition();
               },
@@ -201,22 +256,20 @@ class _MapScreenState extends State<MapScreen> {
 
     polyLineSet.clear();
 
-    setState(() {
 //Now we have to create an instance of the fully line and we have to pass the required parameters to it in order to redraw the polyline.
 
-      Polyline polyline = Polyline(
-          color: Theme.of(context).primaryColor,
-          polylineId: PolylineId('PolylineID'),
-          jointType: JointType.round,
-          points: pLineCoordinates,
-          width: 5,
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap,
-          geodesic: true);
+    Polyline polyline = Polyline(
+        color: Theme.of(context).primaryColor,
+        polylineId: PolylineId('PolylineID'),
+        jointType: JointType.round,
+        points: pLineCoordinates,
+        width: 5,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true);
 
 //but before we add a new one we have to make it clear that polyline is empty when ever we add a polyline to polyline set that why I cleared the set and aslo the list
-      polyLineSet.add(polyline);
-    });
+    polyLineSet.add(polyline);
 
 //showayt tazbeetat for animating the camera when drawing the line
     LatLngBounds latLngBounds;

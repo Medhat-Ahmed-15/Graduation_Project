@@ -14,7 +14,7 @@ class PredictionTile extends StatelessWidget {
   PredictionTile({Key key, this.currentPlacePredicted}) : super(key: key);
 
   void showToast(String message, BuildContext context) {
-    var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
+    var colorProviderObj = Provider.of<ColorProvider>(context, listen: false);
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_LONG,
