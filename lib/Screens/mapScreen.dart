@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,7 +12,8 @@ import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:graduation_project/widgets/floatingCancelButton.dart';
+import 'package:graduation_project/widgets/confirmArrival_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
@@ -38,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
   Position currentPosition;
   var geoLocator = Geolocator();
   bool loading = false;
-  bool showCancelButton = false;
+  bool showConfirmationCard = false;
 
   //The main difference between List and Set is that Set is unordered and contains different elements, whereas the list is ordered and can contain the same elements in it.
   List<LatLng> pLineCoordinates = [];
@@ -89,14 +91,21 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  resetApp() {
+  resetApp() async {
+    final tunnelToStorage = await SharedPreferences.getInstance();
+
+    final inProgress = json.encode({
+      'inProgress': false,
+    });
+
+    tunnelToStorage.setString('inProgress', inProgress); //this to write data
     alreadyCancelled = true;
     setState(() {
       polyLineSet.clear();
       markersSet.clear();
       circlesSet.clear();
       pLineCoordinates.clear();
-      showCancelButton = false;
+      showConfirmationCard = false;
     });
 
     locatePosition();
@@ -153,17 +162,26 @@ class _MapScreenState extends State<MapScreen> {
     if (_isInit == true) {
       if (resultAfterBooking != null) {
         if (resultAfterBooking.flag == 'returned after booking') {
-          await getPlaceDirection();
-
           setState(() {
-            showCancelButton = true;
+            showConfirmationCard = true;
           });
+          await getPlaceDirection();
 
           cancelRequestTimer = Timer(const Duration(seconds: 10), () {
             if (alreadyCancelled != true) {
               cancelRequest();
             }
           });
+
+          final tunnelToStorage = await SharedPreferences.getInstance();
+
+          final inProgress = json.encode({
+            'inProgress': true,
+          });
+
+          tunnelToStorage.setString(
+              'inProgress', inProgress); //this to write data
+
         }
       }
     }
@@ -175,6 +193,18 @@ class _MapScreenState extends State<MapScreen> {
         .checkThemeMethodInThisScreen();
   }
 
+  Future<void> checkInStorageTheProgress() async {
+    final tunnelToStorage = await SharedPreferences.getInstance();
+
+    final extractedUserData = json
+        .decode(tunnelToStorage.getString('inProgress')) as Map<String, Object>;
+
+    if (extractedUserData['inProgress'] == true) {
+      _isInit = true;
+      displayRoute();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     checkThemeMode(context);
@@ -182,6 +212,7 @@ class _MapScreenState extends State<MapScreen> {
     resultAfterBooking = ModalRoute.of(context).settings.arguments
         as ArgumentsPassedFromBookingScreen;
 
+    checkInStorageTheProgress();
     displayRoute();
 
     return Scaffold(
@@ -217,11 +248,13 @@ class _MapScreenState extends State<MapScreen> {
 
 // *******************************************************Floating Cancel Button ************************************************************************************************************
 
-          FloatingCancelButton(resultAfterBooking, resetApp, showCancelButton),
+          //FloatingCancelButton(resultAfterBooking, resetApp, showCancelButton),
 
 // *******************************************************Floating Cancel Button ************************************************************************************************************
 
-          SearchParkingAreaCard(getPlaceDirection, loading)
+          showConfirmationCard == false
+              ? SearchParkingAreaCard(getPlaceDirection, loading)
+              : ConfirmArrivalCard(resultAfterBooking, resetApp),
         ],
       ),
     );
