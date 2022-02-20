@@ -41,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
   var geoLocator = Geolocator();
   bool loading = false;
   bool showConfirmationCard = false;
+  bool showHamburgerIcon = true;
 
   //The main difference between List and Set is that Set is unordered and contains different elements, whereas the list is ordered and can contain the same elements in it.
   List<LatLng> pLineCoordinates = [];
@@ -92,13 +93,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   resetApp() async {
-    final tunnelToStorage = await SharedPreferences.getInstance();
-
-    final inProgress = json.encode({
-      'inProgress': false,
-    });
-
-    tunnelToStorage.setString('inProgress', inProgress); //this to write data
     alreadyCancelled = true;
     setState(() {
       polyLineSet.clear();
@@ -106,6 +100,7 @@ class _MapScreenState extends State<MapScreen> {
       circlesSet.clear();
       pLineCoordinates.clear();
       showConfirmationCard = false;
+      showHamburgerIcon = true;
     });
 
     locatePosition();
@@ -164,24 +159,15 @@ class _MapScreenState extends State<MapScreen> {
         if (resultAfterBooking.flag == 'returned after booking') {
           setState(() {
             showConfirmationCard = true;
+            showHamburgerIcon = false;
           });
           await getPlaceDirection();
 
-          cancelRequestTimer = Timer(const Duration(seconds: 10), () {
+          cancelRequestTimer = Timer(const Duration(seconds: 15), () {
             if (alreadyCancelled != true) {
               cancelRequest();
             }
           });
-
-          final tunnelToStorage = await SharedPreferences.getInstance();
-
-          final inProgress = json.encode({
-            'inProgress': true,
-          });
-
-          tunnelToStorage.setString(
-              'inProgress', inProgress); //this to write data
-
         }
       }
     }
@@ -193,18 +179,6 @@ class _MapScreenState extends State<MapScreen> {
         .checkThemeMethodInThisScreen();
   }
 
-  Future<void> checkInStorageTheProgress() async {
-    final tunnelToStorage = await SharedPreferences.getInstance();
-
-    final extractedUserData = json
-        .decode(tunnelToStorage.getString('inProgress')) as Map<String, Object>;
-
-    if (extractedUserData['inProgress'] == true) {
-      _isInit = true;
-      displayRoute();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     checkThemeMode(context);
@@ -212,16 +186,17 @@ class _MapScreenState extends State<MapScreen> {
     resultAfterBooking = ModalRoute.of(context).settings.arguments
         as ArgumentsPassedFromBookingScreen;
 
-    checkInStorageTheProgress();
     displayRoute();
 
     return Scaffold(
       key: scaffoldKey,
       drawer: MainDrawer(),
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text("GoPark Map"),
-      ),
+      appBar: showHamburgerIcon == true
+          ? AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Text("GoPark Map"),
+            )
+          : null,
       body: Stack(
         children: [
           RefreshIndicator(
