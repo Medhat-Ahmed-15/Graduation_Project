@@ -49,17 +49,20 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
             decoration: BoxDecoration(
               color: colorProviderObj.generalCardColor,
               image: widget.parkingSlotBlueprintProvider.availability == true
-                  ? widget.parkingSlotBlueprintProvider.userId ==
-                          Provider.of<AuthProvider>(context, listen: false)
-                              .getUserID
-                      ? const DecorationImage(
-                          image: ExactAssetImage('assets/images/myCar.png'),
-                          fit: BoxFit.contain,
-                        )
-                      : const DecorationImage(
-                          image: ExactAssetImage('assets/images/otherCars.png'),
-                          //fit: BoxFit.fitHeight,
-                        )
+                  ?
+
+                  // widget.parkingSlotBlueprintProvider.userId ==
+                  //         Provider.of<AuthProvider>(context, listen: false)
+                  //             .getUserID
+                  //     ? const DecorationImage(
+                  //         image: ExactAssetImage('assets/images/myCar.png'),
+                  //         fit: BoxFit.contain,
+                  //       )
+                  //     :
+                  const DecorationImage(
+                      image: ExactAssetImage('assets/images/otherCars.png'),
+                      //fit: BoxFit.fitHeight,
+                    )
                   : const DecorationImage(
                       image: ExactAssetImage('assets/images/parkingSign.png'),
                       // fit: BoxFit.fitHeight,
@@ -122,63 +125,65 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
 
           Navigator.of(context).pushNamed(BookingSlotScreen.routeName,
               arguments: widget.parkingSlotBlueprintProvider);
-        } else if (Provider.of<AuthProvider>(context, listen: false)
-                .getUserID ==
-            widget.parkingSlotBlueprintProvider.userId) {
-          print('Showing my request Data');
+        }
+        // else if (Provider.of<AuthProvider>(context, listen: false)
+        //         .getUserID ==
+        //     widget.parkingSlotBlueprintProvider.userId) {
+        //   print('Showing my request Data');
 
-          ChoiceDialog messageDialog = ChoiceDialog(
-            dialogBackgroundColor: colorProviderObj.generalCardColor,
-            buttonOkColor: Theme.of(context).primaryColor,
-            title:
-                'Your booked Slot: ${widget.parkingSlotBlueprintProvider.id}',
-            titleColor: Theme.of(context).primaryColor,
-            message:
-                'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
-            messageColor: colorProviderObj.textColor,
-            buttonOkText: 'Ok',
-            dialogRadius: 15.0,
-            buttonRadius: 18.0,
-            buttonCancelText: 'Cancel Request',
-            buttonOkOnPressed: () {
-              Navigator.of(context).pop();
-            },
-            buttonCancelOnPressed: () async {
-              showDialog(
-                  context: context,
-                  //myDIalog is jaust prefix i made it while importing the libraries up
-                  builder: (BuildContext context) => myDialog.ProgressDialog(
-                        message: 'Cancelling Request',
-                      ));
+        //   ChoiceDialog messageDialog = ChoiceDialog(
+        //     dialogBackgroundColor: colorProviderObj.generalCardColor,
+        //     buttonOkColor: Theme.of(context).primaryColor,
+        //     title:
+        //         'Your booked Slot: ${widget.parkingSlotBlueprintProvider.id}',
+        //     titleColor: Theme.of(context).primaryColor,
+        //     message:
+        //         'Starting Date \n ${widget.parkingSlotBlueprintProvider.startDateTtime.toString()}\n\n Ending Date \n ${widget.parkingSlotBlueprintProvider.endDateTime.toString()}',
+        //     messageColor: colorProviderObj.textColor,
+        //     buttonOkText: 'Ok',
+        //     dialogRadius: 15.0,
+        //     buttonRadius: 18.0,
+        //     buttonCancelText: 'Cancel Request',
+        //     buttonOkOnPressed: () {
+        //       Navigator.of(context).pop();
+        //     },
+        //     buttonCancelOnPressed: () async {
+        //       showDialog(
+        //           context: context,
+        //           //myDIalog is jaust prefix i made it while importing the libraries up
+        //           builder: (BuildContext context) => myDialog.ProgressDialog(
+        //                 message: 'Cancelling Request',
+        //               ));
 
-              //switching availability
-              await widget.parkingSlotBlueprintProvider.switchAvailability(
-                  Provider.of<AuthProvider>(context, listen: false).token,
-                  'empty',
-                  'empty',
-                  'empty');
-              //Deleting request
-              await Provider.of<RequestParkingSlotDetailsProvider>(context,
-                      listen: false)
-                  .cancelRequest(context);
+        //       //switching availability
+        //       await widget.parkingSlotBlueprintProvider.switchAvailability(
+        //           Provider.of<AuthProvider>(context, listen: false).token,
+        //           'empty',
+        //           'empty',
+        //           'empty');
+        //       //Deleting request
+        //       await Provider.of<RequestParkingSlotDetailsProvider>(context,
+        //               listen: false)
+        //           .cancelRequest(context);
 
-              Navigator.pop(context);
+        //       Navigator.pop(context);
 
-              Fluttertoast.showToast(
-                  msg: 'Request cancelled',
-                  toastLength: Toast.LENGTH_LONG,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 5,
-                  backgroundColor:
-                      const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                  textColor: Colors.white,
-                  fontSize: 16.0);
+        //       Fluttertoast.showToast(
+        //           msg: 'Request cancelled',
+        //           toastLength: Toast.LENGTH_LONG,
+        //           gravity: ToastGravity.BOTTOM,
+        //           timeInSecForIosWeb: 5,
+        //           backgroundColor:
+        //               const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+        //           textColor: Colors.white,
+        //           fontSize: 16.0);
 
-              setState(() {});
-            },
-          );
-          messageDialog.show(context, barrierColor: Colors.white);
-        } else {
+        //       setState(() {});
+        //     },
+        //   );
+        //   messageDialog.show(context, barrierColor: Colors.white);
+        // }
+        else {
           print('Showing others Data');
 
           // print(parkingSlotBlueprintProvider.availability);

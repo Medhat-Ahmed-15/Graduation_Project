@@ -2,12 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
+import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ConfirmArrivalCard extends StatefulWidget {
   ArgumentsPassedFromBookingScreen resultAfterBooking;
@@ -19,6 +22,7 @@ class ConfirmArrivalCard extends StatefulWidget {
 }
 
 class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
+  bool loading;
   @override
   Widget build(BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
@@ -61,7 +65,37 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
                   //Confirm Arrival button////////////////////////////////////////////////////////////////////////////////
 
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        loading = true;
+                      });
+
+                      Position position = await Geolocator.getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.high);
+
+                      LatLng latlngPosition =
+                          LatLng(position.latitude, position.longitude);
+
+                      String address = await Provider.of<AddressDataProvider>(
+                              context,
+                              listen: false)
+                          .convertToReadableAddress(position);
+
+                      setState(() {
+                        loading = false;
+                      });
+
+                      Fluttertoast.showToast(
+                          msg:
+                              'Address: $address   Latitude: ${position.latitude}  Longitude: ${position.longitude}',
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 5,
+                          backgroundColor:
+                              colorProviderObj.genralBackgroundColor,
+                          textColor: colorProviderObj.textColor,
+                          fontSize: 16.0);
+                    },
                     child: Container(
                       height: 50,
                       width: 300,
@@ -79,13 +113,19 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
                       ),
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          'Confirm Arrival',
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).primaryColor),
-                        ),
+                        child: loading == true
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              )
+                            : Text(
+                                'Confirm Arrival',
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).primaryColor),
+                              ),
                       ),
                     ),
                   ),

@@ -144,7 +144,8 @@ class _MapScreenState extends State<MapScreen> {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 5,
-            backgroundColor: const Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+            backgroundColor:
+                Provider.of<ColorProvider>(context, listen: false).textColor,
             textColor: Colors.white,
             fontSize: 16.0);
 
@@ -197,40 +198,44 @@ class _MapScreenState extends State<MapScreen> {
               title: Text("GoPark Map"),
             )
           : null,
-      body: Stack(
-        children: [
-          RefreshIndicator(
-            onRefresh: () => locatePosition(),
-            child: GoogleMap(
-              padding: EdgeInsets.only(bottom: 300.0),
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
-              myLocationEnabled: true,
-              markers: markersSet,
-              circles: circlesSet,
-              polylines: polyLineSet,
-              initialCameraPosition: _kGooglePlex,
-              mapType: MapType.normal,
-              myLocationButtonEnabled: true,
-              onMapCreated: (GoogleMapController controller) {
-                _controllerGoogleMap.complete(controller);
-                newGoogleMapController = controller;
+      body: WillPopScope(
+        onWillPop: () async =>
+            false, //this line is for avoiding the user to go to the previous page when he is in the map screen
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () => locatePosition(),
+              child: GoogleMap(
+                padding: EdgeInsets.only(bottom: 300.0),
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: true,
+                myLocationEnabled: true,
+                markers: markersSet,
+                circles: circlesSet,
+                polylines: polyLineSet,
+                initialCameraPosition: _kGooglePlex,
+                mapType: MapType.normal,
+                myLocationButtonEnabled: true,
+                onMapCreated: (GoogleMapController controller) {
+                  _controllerGoogleMap.complete(controller);
+                  newGoogleMapController = controller;
 
-                locatePosition();
-              },
+                  locatePosition();
+                },
+              ),
             ),
-          ),
 
-// *******************************************************Floating Cancel Button ************************************************************************************************************
+            // *******************************************************Floating Cancel Button ************************************************************************************************************
 
-          //FloatingCancelButton(resultAfterBooking, resetApp, showCancelButton),
+            //FloatingCancelButton(resultAfterBooking, resetApp, showCancelButton),
 
-// *******************************************************Floating Cancel Button ************************************************************************************************************
+            // *******************************************************Floating Cancel Button ************************************************************************************************************
 
-          showConfirmationCard == false
-              ? SearchParkingAreaCard(getPlaceDirection, loading)
-              : ConfirmArrivalCard(resultAfterBooking, resetApp),
-        ],
+            showConfirmationCard == false
+                ? SearchParkingAreaCard(getPlaceDirection, loading)
+                : ConfirmArrivalCard(resultAfterBooking, resetApp),
+          ],
+        ),
       ),
     );
   }

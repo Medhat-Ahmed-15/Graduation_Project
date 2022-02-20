@@ -36,8 +36,7 @@ class PredictionTile extends StatelessWidget {
 
         if (result == 'Alexandria Sporting Club' ||
             result == 'Smouha Sporting Club') {
-          Navigator.of(context)
-              .pushReplacementNamed(ParkingSlotsScreen.routeName);
+          Navigator.of(context).pushNamed(ParkingSlotsScreen.routeName);
 
           Provider.of<AddressDataProvider>(context, listen: false)
               .updateThePredictedPlaceAfterItIsPicked(currentPlacePredicted);
