@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/map_key.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/models/http_exception.dart';
@@ -11,14 +12,9 @@ class AuthProvider with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   String _userId;
+  String userKey;
   Timer logOutTimer;
-  List<UserInfo> _userData = [];
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-  List<UserInfo> get getAllUserdata {
-    return [..._userData];
-  }
+  UserInfo singleUserInfo;
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -88,7 +84,7 @@ class AuthProvider with ChangeNotifier {
 
       if (urlSegment == 'signUp') {
         String url =
-            'https://rakane-13d27-default-rtdb.firebaseio.com/Users.json?auth=$_token';
+            'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
         var response = await http.post(url,
             body: json.encode({
@@ -127,47 +123,79 @@ class AuthProvider with ChangeNotifier {
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  UserInfo findSingleUserById(String userID) {
-    return _userData.firstWhere((element) => element.id == userID,
-        orElse: () => null); //orElse is made to avoid bad state error
-  }
-
-  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   Future<void> fetchUsers() async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Users.json?auth=$_token';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
     try {
       var response = await http.get(url);
 
-      print(json.decode(response.body));
+      var singleUserDataRespone =
+          json.decode(response.body) as Map<String, dynamic>;
 
-      var userDataRespone = json.decode(response.body) as Map<String, dynamic>;
-
-      if (userDataRespone == null) {
+      if (singleUserDataRespone == null) {
         return;
       }
 
-      List<UserInfo> loadedUsersDataFromFirebase = [];
-      userDataRespone.forEach((userId, userData) {
-        loadedUsersDataFromFirebase.add(
-          UserInfo(
-            first_name: userData['first_name'],
-            last_name: userData['last_name'],
-            id: userData['id'],
-            email: userData['email'],
-            password: userData['password'],
-            credit_card_number: userData['credit_card_number'],
-            security_code: userData['security_code'],
-            expiration_date: userData['expiration_date'],
-            address: userData['address'],
-            card_holder: userData['card_holder'],
-          ),
-        );
-      });
-      _userData = loadedUsersDataFromFirebase;
-      print(_userData[0].first_name);
+      userKey = singleUserDataRespone.keys.first.toString();
+
+      UserInfo currentSingleUserInfo = new UserInfo();
+      currentSingleUserInfo.first_name =
+          singleUserDataRespone.values.first['first_name'];
+
+      currentSingleUserInfo.last_name =
+          singleUserDataRespone.values.first['last_name'];
+
+      currentSingleUserInfo.email = singleUserDataRespone.values.first['email'];
+
+      currentSingleUserInfo.password =
+          singleUserDataRespone.values.first['password'];
+
+      currentSingleUserInfo.address =
+          singleUserDataRespone.values.first['address'];
+
+      currentSingleUserInfo.id = singleUserDataRespone.values.first['id'];
+
+      singleUserInfo = currentSingleUserInfo;
+
+      // print(singleUserInfo.first_name +
+      //     ' ' +
+      //     singleUserInfo.last_name +
+      //     ' ' +
+      //     singleUserInfo.email +
+      //     ' ' +
+      //     singleUserInfo.password +
+      //     ' ' +
+      //     singleUserInfo.address);
+
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  Future<void> updateUserData(UserInfo updatedUserData) async {
+    String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId/$userKey.json?auth=$_token';
+
+    try {
+      await http.put(
+          url, //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
+          body: json.encode({
+            'first_name': updatedUserData.first_name,
+            'last_name': updatedUserData.last_name,
+            'id': updatedUserData.id,
+            'email': updatedUserData.email,
+            'password': updatedUserData.password,
+            'address': updatedUserData.address,
+            'card_holder': updatedUserData.card_holder,
+            'security_code': updatedUserData.security_code,
+            'credit_card_number': updatedUserData.credit_card_number,
+            'expiration_date': updatedUserData.expiration_date,
+          }));
+
       notifyListeners();
     } catch (error) {
       throw error;

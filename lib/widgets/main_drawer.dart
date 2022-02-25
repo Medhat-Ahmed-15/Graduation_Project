@@ -33,27 +33,9 @@ class MainDrawer extends StatelessWidget {
           ),
           onTap: onTapFunction,
         ),
-        const SizedBox(
-          height: 5,
-        ),
-        Container(
-          height: 2,
-          width: 300,
-          decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 0.2,
-                spreadRadius: 0.2,
-                offset: Offset(0.2, 0.2),
-              ),
-            ],
-            color: colorProviderObj.genralBackgroundColor,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-        ),
-        SizedBox(
-          height: 5,
+        Divider(
+          color: colorProviderObj.genralBackgroundColor,
+          thickness: 1,
         ),
       ],
     );
@@ -84,10 +66,16 @@ class MainDrawer extends StatelessWidget {
                   .centerLeft, //THIS CONTROLS HOW THE CHILD OF THE CONTAINER IS ALIGNNED
               child: Row(
                 children: [
-                  Image.asset(
-                    'assets/images/person.png',
-                    height: 65.0,
-                    width: 65.0,
+                  CircleAvatar(
+                    backgroundColor: colorProviderObj.generalCardColor,
+                    radius: 40,
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 30,
+                      backgroundImage: AssetImage(
+                        'assets/images/person.png',
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     width: 16.0,
@@ -99,21 +87,24 @@ class MainDrawer extends StatelessWidget {
                         'Profile Name',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
+                            fontSize: 20.0,
                             color: colorProviderObj.textColor),
                       ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Visit Profile',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: colorProviderObj.textColor),
+                      FlatButton(
+                        child: Text(
+                          'Visit Profile',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacementNamed(
+                              UserProfileScreen.routeName);
+                        },
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

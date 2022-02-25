@@ -97,6 +97,9 @@ flutter:
     - assets/images/location.png
     - assets/images/clock.png
     - assets/images/calendar.png
+    - assets/images/id.png
+    - assets/images/email.png
+    - assets/images/address.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

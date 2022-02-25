@@ -15,14 +15,14 @@ class UserInfo {
   String expiration_date;
 
   UserInfo(
-      {@required this.first_name,
-      @required this.last_name,
-      @required this.id,
-      @required this.email,
-      @required this.password,
-      @required this.address,
-      @required this.card_holder,
-      @required this.security_code,
-      @required this.credit_card_number,
-      @required this.expiration_date});
+      {this.first_name,
+      this.last_name,
+      this.id,
+      this.email,
+      this.password,
+      this.address,
+      this.card_holder,
+      this.security_code,
+      this.credit_card_number,
+      this.expiration_date});
 }
