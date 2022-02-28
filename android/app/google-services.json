@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "268325159636",
+    "firebase_url": "https://rakane-13d27-default-rtdb.firebaseio.com",
+    "project_id": "rakane-13d27",
+    "storage_bucket": "rakane-13d27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268325159636:android:307e10bf2afc2f622af141",
+        "android_client_info": {
+          "package_name": "com.example.graduationproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268325159636-nskjo5dn93d3m9ha3bftq9trtjs177uh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDun2cntjoUt6EG10jbgt3_VM9AQYsbgGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268325159636-nskjo5dn93d3m9ha3bftq9trtjs177uh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

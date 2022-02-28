@@ -143,7 +143,7 @@ class _AuthCardState extends State<AuthCard> {
           color: colorProviderObj.genralBackgroundColor,
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black,
               blurRadius: 5.0,
@@ -160,7 +160,7 @@ class _AuthCardState extends State<AuthCard> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  _authMode == AuthMode.Signin ? 'Welcome Back' : 'Get Started',
+                  _authMode == AuthMode.Signin ? 'GoPark' : 'Get Started',
                   style: TextStyle(
                       fontSize: 50,
                       color: colorProviderObj.textColor,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = '/userProfileScreen';
@@ -19,7 +22,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   bool _loadingSpinner = true;
   bool _saveLoadinfSpinner = false;
   final addressController = TextEditingController();
+  File _pickedImage;
 
+//didChangeDependencies*********************************************************
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -33,6 +38,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _isInit = false;
     super.didChangeDependencies();
   }
+//build Non Editable Fields*********************************************************
 
   Widget buildNonEditableFields(
       UserInfo singleUserData, String flag, String umlImage) {
@@ -66,6 +72,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ],
     );
   }
+//build Editable Fields Container*********************************************************
 
   Widget buildEditableFieldsContainer(UserInfo singleUserData,
       ColorProvider colorProviderObj, String umlImage) {
@@ -115,9 +122,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ],
     );
   }
+//update User Data Method*********************************************************
 
   void updateUserData(
       UserInfo singleUserData, AuthProvider authProviderObj) async {
+    var userId = Provider.of<AuthProvider>(context, listen: false).getUserID;
+
     String updatedAddress = addressController.text == ""
         ? singleUserData.address
         : addressController.text;
@@ -144,11 +154,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _saveLoadinfSpinner = false;
     });
   }
+//check Theme Mode*********************************************************
 
   void checkThemeMode(BuildContext context) {
     Provider.of<ColorProvider>(context, listen: false)
         .checkThemeMethodInThisScreen();
   }
+
+  //pick Image *********************************************************
+
+  void _pickImage() async {
+    final pickedImagefile = await ImagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality:
+            50, //since 2n el  default size of the captured image is a littlt bit high so I made the quality  50
+        maxWidth: 150 //to ensure that the image is small
+        );
+    setState(() {
+      _pickedImage = pickedImagefile;
+    });
+    //widget._pickedImageFunction(pickedImagefile);
+  }
+
+  //build*********************************************************
 
   @override
   Widget build(BuildContext context) {
@@ -201,29 +229,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const SizedBox(
-                            height: 45,
+                            height: 20,
                           ),
                           CircleAvatar(
                             backgroundColor: colorProviderObj.generalCardColor,
                             radius: 50,
-                            child: const CircleAvatar(
+                            child: CircleAvatar(
                               backgroundColor: Colors.transparent,
                               radius: 40,
-                              backgroundImage: AssetImage(
-                                'assets/images/person.png',
-                              ),
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(
+                                      _pickedImage,
+                                    )
+                                  : const AssetImage(
+                                      'assets/images/person.png',
+                                    ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Edit',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 16,
-                                decoration: TextDecoration.underline,
-                                color: Theme.of(context).primaryColor),
+                          FlatButton(
+                            onPressed:
+                                _pickImage, //=================================================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  color: Theme.of(context).primaryColor),
+                            ),
                           ),
                           const Expanded(
                             child: Text(''),

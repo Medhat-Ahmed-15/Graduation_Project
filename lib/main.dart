@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
               accentColor: Color.fromRGBO(241, 101, 115, 1).withOpacity(1),
             ),
             debugShowCheckedModeBanner:
-                true, //if i make true it will display that this application is in debug model plus hathot el debug banner el bayb2 fal top right corner of the screen ,false hatsheel el debug banner
+                false, //if i make true it will display that this application is in debug model plus hathot el debug banner el bayb2 fal top right corner of the screen ,false hatsheel el debug banner
             home: authProviderObj.checkauthentication() == true
                 ? MapScreen()
                 : FutureBuilder(
