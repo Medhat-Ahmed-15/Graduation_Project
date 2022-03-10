@@ -9,6 +9,7 @@ import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart'
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
+import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -89,15 +90,9 @@ class _MapScreenState extends State<MapScreen> {
             .convertToReadableAddress(position);
 
 //sending to Machine Learning current position
-    //url to send the post request to
-    final url = 'http://10.0.2.2:5000/name';
 
-    //sending a post request to the url
-    final response = await http.post(Uri.parse(url),
-        body: json.encode({
-          'name':
-              '${position.latitude.toString()},${position.longitude.toString()}'
-        }));
+    // await Provider.of<MachineLeraningProvider>(context, listen: false)
+    //     .sendCurrentLocation(position);
 
     setState(() {
       loading = false;

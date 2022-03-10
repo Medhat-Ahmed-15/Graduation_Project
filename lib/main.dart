@@ -9,6 +9,7 @@ import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
+import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
@@ -35,6 +36,11 @@ class MyApp extends StatelessWidget {
           //Providing Auth Data
           ChangeNotifierProvider(
             create: (ctx) => AuthProvider(),
+          ),
+
+          //Providing Machine Learning Data
+          ChangeNotifierProvider(
+            create: (ctx) => MachineLeraningProvider(),
           ),
 
           //Providing parking slots  Data

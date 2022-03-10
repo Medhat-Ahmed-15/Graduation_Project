@@ -7,6 +7,7 @@ import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/searchScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
+import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -182,13 +183,9 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
                   setState(() {
                     loading2 = true;
                   });
-                  final response =
-                      await http.get(Uri.parse('http://10.0.2.2:5000/name'));
-
-                  //converting the fetched data from json to key value pair that can be displayed on the screen
-                  final decodedResponse =
-                      json.decode(response.body) as Map<String, dynamic>;
-                  print(decodedResponse);
+                  // await Provider.of<MachineLeraningProvider>(context,
+                  //         listen: false)
+                  //     .machineLearningResult();
 
                   setState(() {
                     loading2 = false;
