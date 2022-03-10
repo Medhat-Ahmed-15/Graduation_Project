@@ -20,6 +20,7 @@ import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
 import '../map_key.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   static const routeName = '/MapScreen';
@@ -86,6 +87,17 @@ class _MapScreenState extends State<MapScreen> {
     String address =
         await Provider.of<AddressDataProvider>(context, listen: false)
             .convertToReadableAddress(position);
+
+//sending to Machine Learning current position
+    //url to send the post request to
+    final url = 'http://10.0.2.2:5000/name';
+
+    //sending a post request to the url
+    final response = await http.post(Uri.parse(url),
+        body: json.encode({
+          'name':
+              '${position.latitude.toString()},${position.longitude.toString()}'
+        }));
 
     setState(() {
       loading = false;
@@ -206,7 +218,7 @@ class _MapScreenState extends State<MapScreen> {
             RefreshIndicator(
               onRefresh: () => locatePosition(),
               child: GoogleMap(
-                padding: EdgeInsets.only(bottom: 300.0),
+                padding: EdgeInsets.only(bottom: 350.0),
                 zoomGesturesEnabled: true,
                 zoomControlsEnabled: true,
                 myLocationEnabled: true,

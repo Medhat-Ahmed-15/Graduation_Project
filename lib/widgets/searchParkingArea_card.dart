@@ -1,15 +1,27 @@
 // ignore_for_file: file_names
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/searchScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
-class SearchParkingAreaCard extends StatelessWidget {
+class SearchParkingAreaCard extends StatefulWidget {
   Function getPlaceDirection;
   bool loading;
+
   SearchParkingAreaCard(this.getPlaceDirection, this.loading);
+
+  @override
+  State<SearchParkingAreaCard> createState() => _SearchParkingAreaCardState();
+}
+
+class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
+  bool loading2;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +31,7 @@ class SearchParkingAreaCard extends StatelessWidget {
       right: 0.0,
       bottom: 0.0,
       child: Container(
-        height: 300,
+        height: 350,
         decoration: BoxDecoration(
           // gradient: LinearGradient(
           //   colors: [
@@ -89,7 +101,7 @@ class SearchParkingAreaCard extends StatelessWidget {
                     if (result == 'returnedFromSinglePrkingSlot') {
                       //calling function present in mapScreen
 
-                      getPlaceDirection();
+                      widget.getPlaceDirection();
                     }
                   },
                   child: Padding(
@@ -127,22 +139,25 @@ class SearchParkingAreaCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      loading == true
+                      widget.loading == true
                           ? Center(
                               child: CircularProgressIndicator(
                                 color: Theme.of(context).primaryColor,
                               ),
                             )
-                          : Text(
-                              Provider.of<AddressDataProvider>(context)
-                                          .currentLocation !=
-                                      null
-                                  ? Provider.of<AddressDataProvider>(context)
-                                      .currentLocation
-                                      .placeName
-                                  : 'Add Home',
-                              style:
-                                  TextStyle(color: colorProviderObj.textColor),
+                          : Container(
+                              width: 200,
+                              child: Text(
+                                Provider.of<AddressDataProvider>(context)
+                                            .currentLocation !=
+                                        null
+                                    ? Provider.of<AddressDataProvider>(context)
+                                        .currentLocation
+                                        .placeName
+                                    : 'Add Home',
+                                style: TextStyle(
+                                    color: colorProviderObj.textColor),
+                              ),
                             ),
                       const SizedBox(
                         height: 4.0,
@@ -157,8 +172,62 @@ class SearchParkingAreaCard extends StatelessWidget {
                   )
                 ],
               ),
-              const SizedBox(
-                height: 10.0,
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              FlatButton(
+                onPressed: () async {
+                  //Navigator.pushNamed(context, ParkingSlotsScreen.routeName);
+
+                  setState(() {
+                    loading2 = true;
+                  });
+                  final response =
+                      await http.get(Uri.parse('http://10.0.2.2:5000/name'));
+
+                  //converting the fetched data from json to key value pair that can be displayed on the screen
+                  final decodedResponse =
+                      json.decode(response.body) as Map<String, dynamic>;
+                  print(decodedResponse);
+
+                  setState(() {
+                    loading2 = false;
+                  });
+                },
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 200,
+                    margin: EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      color: colorProviderObj.generalCardColor,
+                      border: Border.all(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: loading2 == true
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              )
+                            : Text(
+                                'Park now',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w900),
+                              ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
