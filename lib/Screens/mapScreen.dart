@@ -91,8 +91,8 @@ class _MapScreenState extends State<MapScreen> {
 
 //sending to Machine Learning current position
 
-    // await Provider.of<MachineLeraningProvider>(context, listen: false)
-    //     .sendCurrentLocation(position);
+    await Provider.of<MachineLeraningProvider>(context, listen: false)
+        .sendCurrentLocation(position);
 
     setState(() {
       loading = false;

@@ -183,9 +183,8 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
                   setState(() {
                     loading2 = true;
                   });
-                  // await Provider.of<MachineLeraningProvider>(context,
-                  //         listen: false)
-                  //     .machineLearningResult();
+                  Provider.of<MachineLeraningProvider>(context, listen: false)
+                      .machineLearningResult();
 
                   setState(() {
                     loading2 = false;
