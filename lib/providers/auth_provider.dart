@@ -13,8 +13,14 @@ class AuthProvider with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
   String userKey;
+  String userEmail;
+  String userPassword;
   Timer logOutTimer;
   UserInfo singleUserInfo;
+
+  void notifyListnersToSwitchToMapScreen() {
+    notifyListeners();
+  }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -48,18 +54,12 @@ class AuthProvider with ChangeNotifier {
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-//Authentication User
+// Signin/Signup User
   Future<void> _authenticate(
-      String email,
-      String password,
-      String urlSegment,
-      String first_name,
-      String last_name,
-      String address,
-      String card_holder,
-      String security_code,
-      String credit_card_number,
-      String expiration_date) async {
+    String email,
+    String password,
+    String urlSegment,
+  ) async {
     String url =
         'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$mapKey';
 
@@ -71,6 +71,9 @@ class AuthProvider with ChangeNotifier {
             'returnSecureToken': true
           }));
 
+      userEmail = email;
+      userPassword = password;
+
       final responseData = json.decode(response.body);
 
       if (responseData['error'] != null) {
@@ -81,27 +84,6 @@ class AuthProvider with ChangeNotifier {
       _expiryDate = DateTime.now().add(Duration(
           seconds: int.parse(responseData[
               'expiresIn']))); //must be calculated because the only thing we get back  is expiresIn which only contains a string but in that string we have the number the seconds So we'll have to parse that string and turn it into a number but then after turning it into a number, we have to derive a date from that. So expiry date should be a datetime object so we take the dateTime of now and add to it the amount of seconds that will expire in to generate a future date the token will expire in it
-
-      if (urlSegment == 'signUp') {
-        String url =
-            'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
-
-        var response = await http.post(url,
-            body: json.encode({
-              'first_name': first_name,
-              'last_name': last_name,
-              'id': _userId,
-              'email': email,
-              'password': password,
-              'address': address,
-              'card_holder': card_holder,
-              'security_code': security_code,
-              'credit_card_number': credit_card_number,
-              'expiration_date': expiration_date,
-            }));
-      }
-
-      notifyListeners();
 
       final prefs = await SharedPreferences
           .getInstance(); //Now this here actually returns a future which eventually will return a shared preferences instance and that is then basically your tunnel to that on device storage. So we should await that so that we don't store the future in here but the real access to shared preferences and now we can use prefs to write and read data to and from the shared preferences device storage
@@ -116,6 +98,37 @@ class AuthProvider with ChangeNotifier {
       prefs.setString('userData', userData); //this to write data
 
       print(responseData);
+    } catch (error) {
+      throw error;
+    }
+  }
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  // Add user to firebase realtime database
+
+  Future<void> addUserDataToRealTimeDataBase(
+      String name,
+      String address,
+      String card_holder,
+      String security_code,
+      String credit_card_number,
+      String expiration_date) async {
+    String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
+
+    try {
+      var response = await http.post(url,
+          body: json.encode({
+            'name': name,
+            'id': _userId,
+            'email': userEmail,
+            'password': userPassword,
+            'address': address,
+            'card_holder': card_holder,
+            'security_code': security_code,
+            'credit_card_number': credit_card_number,
+            'expiration_date': expiration_date,
+          }));
     } catch (error) {
       throw error;
     }
@@ -141,10 +154,10 @@ class AuthProvider with ChangeNotifier {
 
       UserInfo currentSingleUserInfo = new UserInfo();
       currentSingleUserInfo.first_name =
-          singleUserDataRespone.values.first['first_name'];
+          singleUserDataRespone.values.first['name'];
 
       currentSingleUserInfo.last_name =
-          singleUserDataRespone.values.first['last_name'];
+          singleUserDataRespone.values.first['name'];
 
       currentSingleUserInfo.email = singleUserDataRespone.values.first['email'];
 
@@ -206,34 +219,21 @@ class AuthProvider with ChangeNotifier {
 
 //User Signup
   Future<void> signUp(
-      String email,
-      String password,
-      String first_name,
-      String last_name,
-      String address,
-      String card_holder,
-      String security_code,
-      String credit_card_number,
-      String expiration_date) async {
+    String email,
+    String password,
+  ) async {
     return _authenticate(
-        email,
-        password,
-        'signUp',
-        first_name,
-        last_name,
-        address,
-        card_holder,
-        security_code,
-        credit_card_number,
-        expiration_date);
+      email,
+      password,
+      'signUp',
+    );
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //User signin
   Future<void> signIn(String email, String password) async {
-    return _authenticate(
-        email, password, 'signInWithPassword', '', '', '', '', '', '', '');
+    return _authenticate(email, password, 'signInWithPassword');
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

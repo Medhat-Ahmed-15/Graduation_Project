@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
+import 'package:graduation_project/Screens/complete_profile_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
@@ -16,6 +17,8 @@ import 'package:graduation_project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'Screens/searchScreen.dart';
+import 'Screens/signin_screen.dart';
+import 'Screens/signup_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -90,7 +93,7 @@ class MyApp extends StatelessWidget {
                         authResultSnapshot.connectionState ==
                                 ConnectionState.waiting
                             ? SplashScreen()
-                            : AuthScreen()),
+                            : SigninScreen()),
             routes: {
               UserProfileScreen.routeName: (ctx) => UserProfileScreen(),
               MapScreen.routeName: (ctx) => MapScreen(),
@@ -98,6 +101,8 @@ class MyApp extends StatelessWidget {
               ParkingSlotsScreen.routeName: (ctx) => ParkingSlotsScreen(),
               BookingSlotScreen.routeName: (ctx) => BookingSlotScreen(),
               SettingsScreen.routeName: (ctx) => SettingsScreen(),
+              SignupScreen.routeName: (ctx) => SignupScreen(),
+              CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
             },
           ),
         ));

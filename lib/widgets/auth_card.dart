@@ -59,60 +59,60 @@ class _AuthCardState extends State<AuthCard> {
   }
 
 //Submit Function>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  Future<void> _submit() async {
-    if (!_formKey.currentState.validate()) {
-      // Invalid!
-      return;
-    }
-    _formKey.currentState.save();
-    setState(() {
-      _isLoading = true;
-    });
+  // Future<void> _submit() async {
+  //   if (!_formKey.currentState.validate()) {
+  //     // Invalid!
+  //     return;
+  //   }
+  //   _formKey.currentState.save();
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
 
-    try {
-      // Sign user in
-      if (_authMode == AuthMode.Signin) {
-        await Provider.of<AuthProvider>(context, listen: false).signIn(
-          _authData['email'],
-          _authData['password'],
-        );
-        // Sign user up
-      } else {
-        await Provider.of<AuthProvider>(context, listen: false).signUp(
-          _authData['email'],
-          _authData['password'],
-          _authData['first_name'],
-          _authData['last_name'],
-          _authData['address'],
-          _authData['card_holder'],
-          _authData['security_code'],
-          _authData['credit_card_number'],
-          _authData['expiration_date'],
-        );
-      }
-    } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak.';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
-      }
-      showErrorDialog(errorMessage);
-    } catch (error) {
-      const errorMessage =
-          'Could not authenticate you. Please try again later.';
-      showErrorDialog(errorMessage);
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  //   try {
+  //     // Sign user in
+  //     if (_authMode == AuthMode.Signin) {
+  //       await Provider.of<AuthProvider>(context, listen: false).signIn(
+  //         _authData['email'],
+  //         _authData['password'],
+  //       );
+  //       // Sign user up
+  //     } else {
+  //       await Provider.of<AuthProvider>(context, listen: false).signUp(
+  //         _authData['email'],
+  //         _authData['password'],
+  //         _authData['first_name'],
+  //         _authData['last_name'],
+  //         _authData['address'],
+  //         _authData['card_holder'],
+  //         _authData['security_code'],
+  //         _authData['credit_card_number'],
+  //         _authData['expiration_date'],
+  //       );
+  //     }
+  //   } on HttpException catch (error) {
+  //     var errorMessage = 'Authentication failed';
+  //     if (error.toString().contains('EMAIL_EXISTS')) {
+  //       errorMessage = 'This email address is already in use.';
+  //     } else if (error.toString().contains('INVALID_EMAIL')) {
+  //       errorMessage = 'This is not a valid email address';
+  //     } else if (error.toString().contains('WEAK_PASSWORD')) {
+  //       errorMessage = 'This password is too weak.';
+  //     } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+  //       errorMessage = 'Could not find a user with that email.';
+  //     } else if (error.toString().contains('INVALID_PASSWORD')) {
+  //       errorMessage = 'Invalid password.';
+  //     }
+  //     showErrorDialog(errorMessage);
+  //   } catch (error) {
+  //     const errorMessage =
+  //         'Could not authenticate you. Please try again later.';
+  //     showErrorDialog(errorMessage);
+  //   }
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  // }
 
 //Switch Authentication Function>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   void _switchAuthMode() {
@@ -666,7 +666,7 @@ class _AuthCardState extends State<AuthCard> {
                   ),
 
                   GestureDetector(
-                    onTap: _submit,
+                    onTap: null, //_submit,
                     child: _isLoading == false
                         ? CircleAvatar(
                             radius: 30.0,
