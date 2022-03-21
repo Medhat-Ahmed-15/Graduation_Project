@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/widgets/single_parking_slot.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,8 @@ class ParkingSlotsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final parkingSlotsList = Provider.of<ParkingSlotsProvider>(context).slots;
+    final recommendedSlotsListIds =
+        Provider.of<MachineLeraningProvider>(context).recommendedIds;
 
     return GridView.builder(
       padding: const EdgeInsets.all(30),
@@ -14,9 +17,7 @@ class ParkingSlotsGrid extends StatelessWidget {
       itemBuilder: (context, index) => ChangeNotifierProvider.value(
         value: parkingSlotsList[index],
         child: SingleParkingSlot(
-          index,
-          parkingSlotsList[index],
-        ),
+            index, parkingSlotsList[index], recommendedSlotsListIds),
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

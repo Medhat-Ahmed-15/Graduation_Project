@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
-import '../map_key.dart';
+import '../global_variables.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 
@@ -91,8 +91,8 @@ class _MapScreenState extends State<MapScreen> {
 
 //sending to Machine Learning current position
 
-    // await Provider.of<MachineLeraningProvider>(context, listen: false)
-    //     .sendCurrentLocation(position);
+    await Provider.of<MachineLeraningProvider>(context, listen: false)
+        .sendCurrentLocation(position);
 
     setState(() {
       loading = false;

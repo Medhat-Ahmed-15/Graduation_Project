@@ -3,8 +3,15 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'parking_slot_blueprint_provider.dart';
+
 class MachineLeraningProvider with ChangeNotifier {
   List<String> recommendedSlotsIds = [];
+
+  List<String> get recommendedIds {
+    return [...recommendedSlotsIds];
+  }
+
   Future<void> sendCurrentLocation(Position position) async {
     //url to send the post request to
     final url = 'http://10.0.2.2:5000/name';

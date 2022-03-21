@@ -11,6 +11,8 @@ import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../global_variables.dart';
+
 class SearchParkingAreaCard extends StatefulWidget {
   Function getPlaceDirection;
   bool loading;
@@ -185,6 +187,8 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
                   });
                   Provider.of<MachineLeraningProvider>(context, listen: false)
                       .machineLearningResult();
+                  pickedArea = 'random_area';
+                  Navigator.pushNamed(context, ParkingSlotsScreen.routeName);
 
                   setState(() {
                     loading2 = false;

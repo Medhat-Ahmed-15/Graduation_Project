@@ -16,9 +16,9 @@ class ParkingSlotsProvider with ChangeNotifier {
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //Function for fetching the data from firebase
-  Future<void> fetchParkingSlots() async {
+  Future<void> fetchParkingSlots(String area) async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/$area.json?auth=$_authToken';
     try {
       final response = await http.get(url);
       // print(json.decode(response.body));

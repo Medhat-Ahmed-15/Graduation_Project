@@ -8,7 +8,7 @@ import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:graduation_project/widgets/predictionTile.dart';
 import 'package:provider/provider.dart';
 
-import '../map_key.dart';
+import '../global_variables.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/SearchScreen';

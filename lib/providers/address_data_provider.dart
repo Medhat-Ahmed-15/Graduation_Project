@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
-import '../map_key.dart';
+import '../global_variables.dart';
 
 class AddressDataProvider extends ChangeNotifier {
   Address currentLocation;

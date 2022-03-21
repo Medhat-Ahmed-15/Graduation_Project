@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
-import 'package:graduation_project/map_key.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/models/http_exception.dart';
 import 'package:http/http.dart' as http;

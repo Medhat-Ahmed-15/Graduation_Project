@@ -8,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../global_variables.dart';
+
 class PredictionTile extends StatelessWidget {
   PlacePredictions currentPlacePredicted;
 
@@ -36,6 +38,8 @@ class PredictionTile extends StatelessWidget {
 
         if (result == 'Alexandria Sporting Club' ||
             result == 'Smouha Sporting Club') {
+          pickedArea = result;
+
           Navigator.of(context).pushNamed(ParkingSlotsScreen.routeName);
 
           Provider.of<AddressDataProvider>(context, listen: false)

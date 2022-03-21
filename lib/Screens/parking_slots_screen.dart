@@ -5,6 +5,8 @@ import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/parking_slots_card.dart';
 import 'package:provider/provider.dart';
 
+import '../global_variables.dart';
+
 class ParkingSlotsScreen extends StatefulWidget {
   static const routeName = '/parkingSlotsScreen';
 
@@ -14,6 +16,7 @@ class ParkingSlotsScreen extends StatefulWidget {
 
 class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
   var _isInit = true;
+  String area;
   bool _loadingSpinner = true;
 
   @override
@@ -23,8 +26,15 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
       setState(() {
         _loadingSpinner = true;
       });
+
+      if (pickedArea == 'Alexandria Sporting Club') {
+        area = 'Parking_Slots';
+      } else if (pickedArea == 'random_area') {
+        area = 'Parking Slots Random Area';
+      }
+
       Provider.of<ParkingSlotsProvider>(context)
-          .fetchParkingSlots()
+          .fetchParkingSlots(area)
           .then((_) => setState(() {
                 _loadingSpinner = false;
               }));

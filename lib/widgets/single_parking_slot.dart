@@ -1,13 +1,9 @@
 import 'package:dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/providers/color_provider.dart';
-import 'package:graduation_project/widgets/progressDialog.dart' as myDialog;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
-import 'package:graduation_project/providers/auth_provider.dart';
+import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
-import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:provider/provider.dart';
 
 class SingleParkingSlot extends StatefulWidget {
@@ -16,7 +12,10 @@ class SingleParkingSlot extends StatefulWidget {
 
   ParkingSlotBlueprintProvider parkingSlotBlueprintProvider;
 
-  SingleParkingSlot(this.index, this.parkingSlotBlueprintProvider);
+  List<String> recommendedSlotsIds;
+
+  SingleParkingSlot(
+      this.index, this.parkingSlotBlueprintProvider, this.recommendedSlotsIds);
 
   @override
   State<SingleParkingSlot> createState() => _SingleParkingSlotState();
@@ -28,6 +27,7 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
   @override
   Widget build(BuildContext context) {
     //Designing the single parking slot box
+
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return GestureDetector(
       child: Container(
@@ -113,6 +113,29 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
                     ),
                   ),
                 ),
+
+                //recommended logo
+                widget.recommendedSlotsIds.contains("\"" +
+                            widget.parkingSlotBlueprintProvider.id +
+                            "\"") &&
+                        widget.parkingSlotBlueprintProvider.availability ==
+                            false
+                    ? Container(
+                        margin: EdgeInsets.all(5),
+                        child: Align(
+                          alignment: widget.index % 2 == 0
+                              ? Alignment.bottomRight
+                              : Alignment.bottomLeft,
+                          child: Text(
+                            '👍',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20),
+                          ),
+                        ),
+                      )
+                    : Text(''),
               ],
             ),
           ),
