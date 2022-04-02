@@ -3,8 +3,7 @@
 import 'package:flutter/foundation.dart';
 
 class UserInfo {
-  String first_name;
-  String last_name;
+  String name;
   String id;
   String email;
   String password;
@@ -15,8 +14,7 @@ class UserInfo {
   String expiration_date;
 
   UserInfo(
-      {this.first_name,
-      this.last_name,
+      {this.name,
       this.id,
       this.email,
       this.password,

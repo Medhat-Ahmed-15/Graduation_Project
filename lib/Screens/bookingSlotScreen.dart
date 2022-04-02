@@ -2,7 +2,9 @@
 import 'dart:async';
 
 import 'package:dialogs/dialogs/choice_dialog.dart';
+import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
@@ -151,6 +153,26 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
     Navigator.of(context)
         .pushReplacementNamed(MapScreen.routeName, arguments: obj);
+
+    await sendEmail(
+        startingDate: startingDateAndTime,
+        endingDate: endingDateAndTime,
+        userName: currentUserOnline.name,
+        slotId: pickedParkingSlotDetails.id,
+        toEmail: currentUserOnline.email,
+        areaName: Provider.of<AddressDataProvider>(context, listen: false)
+            .currentPlacePredicted
+            .main_text);
+
+    Fluttertoast.showToast(
+        msg: 'A confirmation mail was sent 📧',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor:
+            Provider.of<ColorProvider>(context, listen: false).textColor,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   void calculateCost() {
@@ -200,6 +222,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             endDateTime: finalDateTime,
             parkingSlotId: parkingSlotId,
             paymentMethod: 'visa',
+            status: 'pending',
             startDateTime: initialtDateTime,
             totalCost: cost);
   }

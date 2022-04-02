@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -24,22 +25,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final addressController = TextEditingController();
   File _pickedImage;
 
-//didChangeDependencies*********************************************************
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _loadingSpinner = true;
-      });
-      Provider.of<AuthProvider>(context).fetchUsers().then((_) => setState(() {
-            _loadingSpinner = false;
-          }));
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-//build Non Editable Fields*********************************************************
-
   Widget buildNonEditableFields(
       UserInfo singleUserData, String flag, String umlImage) {
     return Row(
@@ -58,10 +43,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
         singleUserData == null
             ? Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
-                ),
-              )
+                child: LinearProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ))
             : Text(
                 flag == 'id' ? singleUserData.id : singleUserData.email,
                 style: TextStyle(
@@ -90,59 +74,51 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         const SizedBox(
           width: 10,
         ),
-        singleUserData == null
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
-                ),
-              )
-            : Container(
-                width: 200,
-                child: TextField(
-                  controller: addressController,
-                  cursorColor: Theme.of(context).primaryColor,
-                  style: TextStyle(
-                    color: colorProviderObj.textColor,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    contentPadding: const EdgeInsets.only(
-                        left: 15, bottom: 11, top: 11, right: 15),
-                    hintText: singleUserData.address,
-                    hintStyle: TextStyle(
-                      color: colorProviderObj.textColor,
-                    ),
-                  ),
-                ),
-              )
+        Container(
+          width: 200,
+          child: TextField(
+            controller: addressController,
+            cursorColor: Theme.of(context).primaryColor,
+            style: TextStyle(
+              color: colorProviderObj.textColor,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              contentPadding: const EdgeInsets.only(
+                  left: 15, bottom: 11, top: 11, right: 15),
+              hintText: singleUserData.address,
+              hintStyle: TextStyle(
+                color: colorProviderObj.textColor,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
 //update User Data Method*********************************************************
 
-  void updateUserData(
-      UserInfo singleUserData, AuthProvider authProviderObj) async {
+  void updateUserData(AuthProvider authProviderObj) async {
     var userId = Provider.of<AuthProvider>(context, listen: false).getUserID;
 
     String updatedAddress = addressController.text == ""
-        ? singleUserData.address
+        ? currentUserOnline.address
         : addressController.text;
     UserInfo updatedCurrentUserData = new UserInfo();
-    updatedCurrentUserData.first_name = singleUserData.first_name;
-    updatedCurrentUserData.last_name = singleUserData.last_name;
-    updatedCurrentUserData.id = singleUserData.id;
-    updatedCurrentUserData.email = singleUserData.email;
-    updatedCurrentUserData.password = singleUserData.password;
+    updatedCurrentUserData.name = currentUserOnline.name;
+    updatedCurrentUserData.id = currentUserOnline.id;
+    updatedCurrentUserData.email = currentUserOnline.email;
+    updatedCurrentUserData.password = currentUserOnline.password;
     updatedCurrentUserData.address = updatedAddress;
-    updatedCurrentUserData.card_holder = singleUserData.card_holder;
+    updatedCurrentUserData.card_holder = currentUserOnline.card_holder;
     updatedCurrentUserData.credit_card_number =
-        singleUserData.credit_card_number;
-    updatedCurrentUserData.expiration_date = singleUserData.expiration_date;
-    updatedCurrentUserData.security_code = singleUserData.security_code;
+        currentUserOnline.credit_card_number;
+    updatedCurrentUserData.expiration_date = currentUserOnline.expiration_date;
+    updatedCurrentUserData.security_code = currentUserOnline.security_code;
 
     setState(() {
       _saveLoadinfSpinner = true;
@@ -182,7 +158,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
 
-    final singleUserData = Provider.of<AuthProvider>(context).singleUserInfo;
+    // final singleUserData = Provider.of<AuthProvider>(context).singleUserInfo;
     final authProviderObj = Provider.of<AuthProvider>(context);
 
     final appBar = AppBar(
@@ -192,13 +168,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         _saveLoadinfSpinner == true
             ? Container(
                 margin: EdgeInsets.all(10),
-                child: CircularProgressIndicator(
-                  color: const Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                ),
-              )
+                child: CircularProgressIndicator(color: Colors.white))
             : IconButton(
                 onPressed: () {
-                  updateUserData(singleUserData, authProviderObj);
+                  updateUserData(authProviderObj);
                 },
                 icon: Icon(Icons.save))
       ],
@@ -261,14 +234,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           const Expanded(
                             child: Text(''),
                           ),
-                          singleUserData == null
+                          currentUserOnline == null
                               ? Center(
-                                  child: CircularProgressIndicator(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )
+                                  child: LinearProgressIndicator(
+                                  color: Theme.of(context).primaryColor,
+                                ))
                               : Text(
-                                  '${singleUserData.first_name} ${singleUserData.last_name}',
+                                  currentUserOnline.name,
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900,
@@ -298,12 +270,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     child: Column(
                       children: [
                         buildNonEditableFields(
-                            singleUserData, 'id', 'assets/images/id.png'),
+                            currentUserOnline, 'id', 'assets/images/id.png'),
                         const SizedBox(
                           height: 15,
                         ),
-                        buildNonEditableFields(
-                            singleUserData, 'email', 'assets/images/email.png'),
+                        buildNonEditableFields(currentUserOnline, 'email',
+                            'assets/images/email.png'),
                       ],
                     ),
                   ),
@@ -326,7 +298,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
-                        buildEditableFieldsContainer(singleUserData,
+                        buildEditableFieldsContainer(currentUserOnline,
                             colorProviderObj, 'assets/images/address.png'),
                       ],
                     ),

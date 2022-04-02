@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:provider/provider.dart';
@@ -66,15 +67,36 @@ class MainDrawer extends StatelessWidget {
                   .centerLeft, //THIS CONTROLS HOW THE CHILD OF THE CONTAINER IS ALIGNNED
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundColor: colorProviderObj.generalCardColor,
-                    radius: 40,
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 30,
-                      backgroundImage: AssetImage(
-                        'assets/images/person.png',
-                      ),
+                  Container(
+                    height: 100,
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: colorProviderObj.generalCardColor,
+                          radius: 40,
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 30,
+                            backgroundImage: AssetImage(
+                              'assets/images/person.png',
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushReplacementNamed(
+                                UserProfileScreen.routeName);
+                          },
+                          child: Text(
+                            'Visit Profile',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(
@@ -82,27 +104,25 @@ class MainDrawer extends StatelessWidget {
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Profile Name',
+                        'Hello,',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
-                            color: colorProviderObj.textColor),
+                            color: Theme.of(context).primaryColor),
                       ),
-                      FlatButton(
+                      Container(
+                        width: 160,
                         child: Text(
-                          'Visit Profile',
+                          currentUserOnline.name.split(' ')[0],
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              color: Theme.of(context).primaryColor),
+                              fontSize: 20.0,
+                              color: colorProviderObj.textColor),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed(
-                              UserProfileScreen.routeName);
-                        },
-                      )
+                      ),
                     ],
                   ),
                 ],

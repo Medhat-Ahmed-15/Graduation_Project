@@ -48,6 +48,14 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
         .checkThemeMethodInThisScreen();
   }
 
+  Future<void> _refrefreshScreen() async {
+    await Provider.of<ParkingSlotsProvider>(context, listen: false)
+        .fetchParkingSlots(area)
+        .then((value) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
@@ -59,38 +67,45 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
     return Scaffold(
         drawer: MainDrawer(),
         appBar: appBar,
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                // gradient: LinearGradient(
-                //   colors: [
-                //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                //   ],
-                //   begin: Alignment.topLeft,
-                //   end: Alignment.topRight,
-                //   stops: [0, 1],
-                // ),
-                color: colorProviderObj.generalCardColor,
+        body: RefreshIndicator(
+          color: Theme.of(context).primaryColor,
+          backgroundColor: colorProviderObj.genralBackgroundColor,
+          strokeWidth: 5,
+          edgeOffset: 0,
+          onRefresh: _refrefreshScreen,
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  // gradient: LinearGradient(
+                  //   colors: [
+                  //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
+                  //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
+                  //   ],
+                  //   begin: Alignment.topLeft,
+                  //   end: Alignment.topRight,
+                  //   stops: [0, 1],
+                  // ),
+                  color: colorProviderObj.generalCardColor,
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: 250,
-                height: 250,
-                margin: EdgeInsets.all(20.0),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage("assets/images/parkingSlotsArea.png"),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  margin: EdgeInsets.all(20.0),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage("assets/images/parkingSlotsArea.png"),
+                    ),
                   ),
                 ),
               ),
-            ),
-            ParkingSlotscard(_loadingSpinner)
-          ],
+              ParkingSlotscard(_loadingSpinner)
+            ],
+          ),
         ));
   }
 }

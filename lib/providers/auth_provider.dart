@@ -101,6 +101,8 @@ class AuthProvider with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+
+    fetchCurrentUserOnline();
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -132,11 +134,13 @@ class AuthProvider with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+
+    fetchCurrentUserOnline();
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  Future<void> fetchUsers() async {
+  Future<void> fetchCurrentUserOnline() async {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
@@ -153,11 +157,7 @@ class AuthProvider with ChangeNotifier {
       userKey = singleUserDataRespone.keys.first.toString();
 
       UserInfo currentSingleUserInfo = new UserInfo();
-      currentSingleUserInfo.first_name =
-          singleUserDataRespone.values.first['name'];
-
-      currentSingleUserInfo.last_name =
-          singleUserDataRespone.values.first['name'];
+      currentSingleUserInfo.name = singleUserDataRespone.values.first['name'];
 
       currentSingleUserInfo.email = singleUserDataRespone.values.first['email'];
 
@@ -170,16 +170,8 @@ class AuthProvider with ChangeNotifier {
       currentSingleUserInfo.id = singleUserDataRespone.values.first['id'];
 
       singleUserInfo = currentSingleUserInfo;
-
-      // print(singleUserInfo.first_name +
-      //     ' ' +
-      //     singleUserInfo.last_name +
-      //     ' ' +
-      //     singleUserInfo.email +
-      //     ' ' +
-      //     singleUserInfo.password +
-      //     ' ' +
-      //     singleUserInfo.address);
+      currentUserOnline =
+          currentSingleUserInfo; //dee el mafrood haga zayada ana bs bagarb lw a assign el value la global variable
 
       notifyListeners();
     } catch (error) {
@@ -197,8 +189,7 @@ class AuthProvider with ChangeNotifier {
       await http.put(
           url, //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
           body: json.encode({
-            'first_name': updatedUserData.first_name,
-            'last_name': updatedUserData.last_name,
+            'name': updatedUserData.name,
             'id': updatedUserData.id,
             'email': updatedUserData.email,
             'password': updatedUserData.password,
@@ -210,6 +201,7 @@ class AuthProvider with ChangeNotifier {
           }));
 
       notifyListeners();
+      fetchCurrentUserOnline();
     } catch (error) {
       throw error;
     }
@@ -257,6 +249,7 @@ class AuthProvider with ChangeNotifier {
     _expiryDate = expiryDate;
     notifyListeners();
     _autoSignOut();
+    fetchCurrentUserOnline();
     return true;
   }
 

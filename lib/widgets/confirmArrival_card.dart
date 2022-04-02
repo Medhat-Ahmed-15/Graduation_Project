@@ -158,10 +158,13 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
                       await Provider.of<RequestParkingSlotDetailsProvider>(
                               context,
                               listen: false)
-                          .cancelRequest(context);
+                          .cancelRequest(
+                              Provider.of<RequestParkingSlotDetailsProvider>(
+                                      context,
+                                      listen: false)
+                                  .getRecorderRequestId);
 
                       Navigator.pop(context);
-
                       Fluttertoast.showToast(
                           msg: 'Request cancelled',
                           toastLength: Toast.LENGTH_LONG,

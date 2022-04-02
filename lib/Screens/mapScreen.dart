@@ -91,8 +91,8 @@ class _MapScreenState extends State<MapScreen> {
 
 //sending to Machine Learning current position
 
-    await Provider.of<MachineLeraningProvider>(context, listen: false)
-        .sendCurrentLocation(position);
+    // await Provider.of<MachineLeraningProvider>(context, listen: false)
+    //     .sendCurrentLocation(position);
 
     setState(() {
       loading = false;
@@ -142,7 +142,10 @@ class _MapScreenState extends State<MapScreen> {
         //Deleting request
         await Provider.of<RequestParkingSlotDetailsProvider>(context,
                 listen: false)
-            .cancelRequest(context);
+            .cancelRequest(Provider.of<RequestParkingSlotDetailsProvider>(
+                    context,
+                    listen: false)
+                .getRecorderRequestId);
 
         Navigator.pop(context);
 
@@ -210,26 +213,23 @@ class _MapScreenState extends State<MapScreen> {
             false, //this line is for avoiding the user to go to the previous page when he is in the map screen
         child: Stack(
           children: [
-            RefreshIndicator(
-              onRefresh: () => locatePosition(),
-              child: GoogleMap(
-                padding: EdgeInsets.only(bottom: 350.0),
-                zoomGesturesEnabled: true,
-                zoomControlsEnabled: true,
-                myLocationEnabled: true,
-                markers: markersSet,
-                circles: circlesSet,
-                polylines: polyLineSet,
-                initialCameraPosition: _kGooglePlex,
-                mapType: MapType.normal,
-                myLocationButtonEnabled: true,
-                onMapCreated: (GoogleMapController controller) {
-                  _controllerGoogleMap.complete(controller);
-                  newGoogleMapController = controller;
+            GoogleMap(
+              padding: EdgeInsets.only(bottom: 350.0),
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              myLocationEnabled: true,
+              markers: markersSet,
+              circles: circlesSet,
+              polylines: polyLineSet,
+              initialCameraPosition: _kGooglePlex,
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              onMapCreated: (GoogleMapController controller) {
+                _controllerGoogleMap.complete(controller);
+                newGoogleMapController = controller;
 
-                  locatePosition();
-                },
-              ),
+                locatePosition();
+              },
             ),
 
             // *******************************************************Floating Cancel Button ************************************************************************************************************
