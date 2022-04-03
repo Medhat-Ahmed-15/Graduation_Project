@@ -1,21 +1,27 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Assistants/assistant_function.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
-import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_project/widgets/confirmationDialog.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong_to_osgrid/latlong_to_osgrid.dart';
 
 class ConfirmArrivalCard extends StatefulWidget {
   ArgumentsPassedFromBookingScreen resultAfterBooking;
   Function resetApp;
-  ConfirmArrivalCard(this.resultAfterBooking, this.resetApp);
+  Function cancelTheTimer;
+
+  ConfirmArrivalCard(
+      this.resultAfterBooking, this.resetApp, this.cancelTheTimer);
 
   @override
   State<ConfirmArrivalCard> createState() => _ConfirmArrivalCardState();
@@ -23,6 +29,122 @@ class ConfirmArrivalCard extends StatefulWidget {
 
 class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
   bool loading;
+  LatLongConverter converter = LatLongConverter();
+
+  Future<void> confirmArrival(ColorProvider colorProviderObj) async {
+    setState(() {
+      loading = true;
+    });
+//****************************************************************************************************************************************************************** */
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      loading = false;
+    });
+
+    LatLng latlngCurrentUserPosition =
+        LatLng(position.latitude, position.longitude);
+
+    var userCurrentLatDegree =
+        converter.getDegreeFromDecimal(31.212863095189515);
+    var userCurrentLngDegree =
+        converter.getDegreeFromDecimal(29.934277210345886);
+
+    var slotLatDegree = converter.getDegreeFromDecimal(31.212890622629782);
+    var slotLngDegree = converter.getDegreeFromDecimal(29.93428928028626);
+
+    double distance = Geolocator.distanceBetween(
+      userCurrentLatDegree[0].toDouble(),
+      userCurrentLngDegree[0].toDouble(),
+      slotLatDegree[0].toDouble(),
+      slotLngDegree[0].toDouble(),
+    );
+
+    Fluttertoast.showToast(
+        msg: 'Distance:  ${distance.toString()}',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor:
+            Provider.of<ColorProvider>(context, listen: false).textColor,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    //**************************************************************************************************************************************************************** */
+
+    if (0.5 >= 0.0 && 0.5 <= 1.0) {
+      print('arrived');
+      widget.cancelTheTimer();
+
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              ConfirmationDialog(isLoading: true));
+
+      await Future.delayed(Duration(seconds: 15));
+
+      await Provider.of<RequestParkingSlotDetailsProvider>(context,
+              listen: false)
+          .updateRecordedRequest('arrived');
+      Navigator.pop(context);
+
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) =>
+              ConfirmationDialog(isLoading: false));
+
+      widget.resetApp();
+    } else {
+      Fluttertoast.showToast(
+          msg:
+              'You have to reach to your parking slot first before confirming arrival ❗',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: colorProviderObj.genralBackgroundColor,
+          textColor: colorProviderObj.textColor,
+          fontSize: 16.0);
+    }
+  }
+
+  Future<void> cancelrequest() async {
+    //Cancel Request
+    showDialog(
+        context: context,
+        //myDIalog is jaust prefix i made it while importing the libraries up
+        builder: (BuildContext context) => ProgressDialog(
+              message: 'Cancelling Request',
+            ));
+
+    //switching availability
+    widget.resultAfterBooking.pickedParkingSlotDetails.switchAvailability(
+        Provider.of<AuthProvider>(context, listen: false).token,
+        'empty',
+        'empty',
+        'empty');
+
+    //Deleting request
+    await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
+        .cancelRequest(Provider.of<RequestParkingSlotDetailsProvider>(context,
+                listen: false)
+            .getRecorderRequestId);
+
+    Navigator.pop(context);
+    sendCancellationEmail(
+        currentUserOnline.name,
+        widget.resultAfterBooking.pickedParkingSlotDetails.id,
+        currentUserOnline.email);
+
+    widget.resetApp();
+
+    // setState(() {
+    //   showCancelButton = false;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
@@ -66,35 +188,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
 
                   FlatButton(
                     onPressed: () async {
-                      setState(() {
-                        loading = true;
-                      });
-
-                      Position position = await Geolocator.getCurrentPosition(
-                          desiredAccuracy: LocationAccuracy.high);
-
-                      LatLng latlngPosition =
-                          LatLng(position.latitude, position.longitude);
-
-                      String address = await Provider.of<AddressDataProvider>(
-                              context,
-                              listen: false)
-                          .convertToReadableAddress(position);
-
-                      setState(() {
-                        loading = false;
-                      });
-
-                      Fluttertoast.showToast(
-                          msg:
-                              'Address: $address   Latitude: ${position.latitude}  Longitude: ${position.longitude}',
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 5,
-                          backgroundColor:
-                              colorProviderObj.genralBackgroundColor,
-                          textColor: colorProviderObj.textColor,
-                          fontSize: 16.0);
+                      confirmArrival(colorProviderObj);
                     },
                     child: Container(
                       height: 50,
@@ -136,51 +230,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
 
                   //Close Icon//////////////////////////////////////////////////////////////////////////////////////////////
                   FlatButton(
-                    onPressed: () async {
-                      //Cancel Request
-                      showDialog(
-                          context: context,
-                          //myDIalog is jaust prefix i made it while importing the libraries up
-                          builder: (BuildContext context) => ProgressDialog(
-                                message: 'Cancelling Request',
-                              ));
-
-                      //switching availability
-                      widget.resultAfterBooking.pickedParkingSlotDetails
-                          .switchAvailability(
-                              Provider.of<AuthProvider>(context, listen: false)
-                                  .token,
-                              'empty',
-                              'empty',
-                              'empty');
-
-                      //Deleting request
-                      await Provider.of<RequestParkingSlotDetailsProvider>(
-                              context,
-                              listen: false)
-                          .cancelRequest(
-                              Provider.of<RequestParkingSlotDetailsProvider>(
-                                      context,
-                                      listen: false)
-                                  .getRecorderRequestId);
-
-                      Navigator.pop(context);
-                      Fluttertoast.showToast(
-                          msg: 'Request cancelled',
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 5,
-                          backgroundColor: const Color.fromRGBO(44, 62, 80, 1)
-                              .withOpacity(1),
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-
-                      widget.resetApp();
-
-                      // setState(() {
-                      //   showCancelButton = false;
-                      // });
-                    },
+                    onPressed: cancelrequest,
                     child: CircleAvatar(
                       backgroundColor: colorProviderObj.genralBackgroundColor,
                       child: Icon(

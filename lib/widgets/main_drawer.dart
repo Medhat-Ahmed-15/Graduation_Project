@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Screens/history_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
@@ -139,6 +140,12 @@ class MainDrawer extends StatelessWidget {
             buildListTile('assets/images/setting.png', 'Settings', context, () {
               Navigator.of(context)
                   .pushReplacementNamed(SettingsScreen.routeName);
+            }),
+
+            //>>
+            buildListTile('assets/images/history.png', 'History', context, () {
+              Navigator.of(context)
+                  .pushReplacementNamed(HistoryScreen.routeName);
             }),
 
             //>>

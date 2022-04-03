@@ -324,9 +324,9 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: Align(
                   alignment: Alignment.center,
                   child: loading == true
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(
-                            color: colorProviderObj.textColor,
+                            color: Colors.white,
                           ),
                         )
                       : const Text(

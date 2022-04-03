@@ -40,7 +40,7 @@ dependencies:
   provider: ^4.0.0
   shared_preferences: ^2.0.8
   google_maps_flutter: ^1.0.3
-  geolocator: ^6.1.1
+  geolocator: ^6.2.1
   flutter_polyline_points: ^0.2.4 
   fluttertoast: ^8.0.8
   flutter_custom_clippers: ^2.0.0
@@ -48,6 +48,7 @@ dependencies:
   dotted_line: ^3.1.0
   font_awesome_flutter: ^9.2.0
   image_picker: ^0.6.5+3
+  latlong_to_osgrid: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter_icons:
   image_path: "assets/images/icon.png"
   adaptive_icon_background: "#17202A"
   adaptive_icon_foreground: "assets/images/icon.png"
+  
 
 
   
@@ -117,6 +119,9 @@ flutter:
     - assets/images/recommended.png
     - assets/images/best.png
     - assets/images/right_arrow.png
+    - assets/images/check.png
+    - assets/images/wait.png
+    - assets/images/history.png
     
 
 

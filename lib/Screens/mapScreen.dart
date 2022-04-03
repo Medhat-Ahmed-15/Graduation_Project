@@ -69,12 +69,14 @@ class _MapScreenState extends State<MapScreen> {
       loading = true;
     });
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.best);
 
     currentPosition = position;
 
     //get latitude and longitude from that position
     LatLng latlngPosition = LatLng(position.latitude, position.longitude);
+    print('current lat: ${position.latitude}');
+    print('current lng: ${position.longitude}');
 
     //locating camera towards this position
     CameraPosition cameraPosition =
@@ -174,7 +176,7 @@ class _MapScreenState extends State<MapScreen> {
           });
           await getPlaceDirection();
 
-          cancelRequestTimer = Timer(const Duration(seconds: 15), () {
+          cancelRequestTimer = Timer(const Duration(seconds: 500), () {
             if (alreadyCancelled != true) {
               cancelRequest();
             }
@@ -183,6 +185,10 @@ class _MapScreenState extends State<MapScreen> {
       }
     }
     _isInit = false;
+  }
+
+  void cancelTheTimer() {
+    cancelRequestTimer.cancel();
   }
 
   Future<void> checkThemeMode(BuildContext context) async {
@@ -240,7 +246,8 @@ class _MapScreenState extends State<MapScreen> {
 
             showConfirmationCard == false
                 ? SearchParkingAreaCard(getPlaceDirection, loading)
-                : ConfirmArrivalCard(resultAfterBooking, resetApp),
+                : ConfirmArrivalCard(
+                    resultAfterBooking, resetApp, cancelTheTimer),
           ],
         ),
       ),

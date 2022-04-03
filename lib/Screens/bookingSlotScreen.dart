@@ -154,7 +154,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     Navigator.of(context)
         .pushReplacementNamed(MapScreen.routeName, arguments: obj);
 
-    await sendEmail(
+    await sendConfirmationEmail(
         startingDate: startingDateAndTime,
         endingDate: endingDateAndTime,
         userName: currentUserOnline.name,
@@ -164,15 +164,15 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             .currentPlacePredicted
             .main_text);
 
-    Fluttertoast.showToast(
-        msg: 'A confirmation mail was sent 📧',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor:
-            Provider.of<ColorProvider>(context, listen: false).textColor,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: 'A confirmation mail was sent 📧',
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 5,
+    //     backgroundColor:
+    //         Provider.of<ColorProvider>(context, listen: false).textColor,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
   }
 
   void calculateCost() {
@@ -242,6 +242,10 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
     pickedParkingSlotDetails = ModalRoute.of(context).settings.arguments
         as ParkingSlotBlueprintProvider;
+    print(pickedParkingSlotDetails.id);
+    print(pickedParkingSlotDetails.availability);
+    print(pickedParkingSlotDetails.latitude);
+    print(pickedParkingSlotDetails.longitude);
 
     return Scaffold(
       drawer: MainDrawer(),

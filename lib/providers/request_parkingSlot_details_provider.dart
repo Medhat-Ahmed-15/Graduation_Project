@@ -99,7 +99,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
   Future<void> updateRecordedRequest(String status) async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$_recordedrequestId.json?auth=$_authToken';
 
     try {
       await http.patch(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/Screens/complete_profile_screen.dart';
+import 'package:graduation_project/Screens/history_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
@@ -103,6 +104,7 @@ class MyApp extends StatelessWidget {
               SettingsScreen.routeName: (ctx) => SettingsScreen(),
               SignupScreen.routeName: (ctx) => SignupScreen(),
               CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
+              HistoryScreen.routeName: (ctx) => HistoryScreen(),
             },
           ),
         ));
