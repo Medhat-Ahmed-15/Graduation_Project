@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
@@ -65,6 +66,7 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
     );
 
     return Scaffold(
+        backgroundColor: colorProviderObj.generalCardColor,
         drawer: MainDrawer(),
         appBar: appBar,
         body: RefreshIndicator(
@@ -75,25 +77,15 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
           onRefresh: _refrefreshScreen,
           child: Stack(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  // gradient: LinearGradient(
-                  //   colors: [
-                  //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-                  //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-                  //   ],
-                  //   begin: Alignment.topLeft,
-                  //   end: Alignment.topRight,
-                  //   stops: [0, 1],
-                  // ),
-                  color: colorProviderObj.generalCardColor,
-                ),
-              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  width: 250,
-                  height: 250,
+                  width: MediaQuery.of(context).size.height.round() <= 781
+                      ? 180
+                      : 250,
+                  height: MediaQuery.of(context).size.height.round() <= 781
+                      ? 180
+                      : 250,
                   margin: EdgeInsets.all(20.0),
                   decoration: const BoxDecoration(
                     image: DecorationImage(

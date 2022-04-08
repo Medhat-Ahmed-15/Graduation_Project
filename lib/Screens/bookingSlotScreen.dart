@@ -258,415 +258,381 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         as ParkingSlotBlueprintProvider;
 
     return Scaffold(
-      drawer: MainDrawer(),
-      appBar: appBar,
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   colors: [
-              //     Color.fromRGBO(23, 32, 42, 1).withOpacity(1),
-              //     Color.fromRGBO(44, 62, 80, 1).withOpacity(1),
-              //   ],
-              //   begin: Alignment.topLeft,
-              //   end: Alignment.topRight,
-              //   stops: [0, 1],
-              // ),
-              color: colorProviderObj.generalCardColor,
+        backgroundColor: colorProviderObj.generalCardColor,
+        drawer: MainDrawer(),
+        appBar: appBar,
+        body: Column(
+          children: [
+            ClipPath(
+              clipper: OvalBottomBorderClipper(),
+              child: Container(
+                height: MediaQuery.of(context).size.height.round() <= 781
+                    ? 180
+                    : 250.0,
+                decoration: BoxDecoration(
+                  color: colorProviderObj.genralBackgroundColor,
+                ),
+                child: Column(children: [
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    width: 70,
+                    height: 70,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage("assets/images/location.png"),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(0),
+                    child: Center(
+                      child: Text(
+                        Provider.of<AddressDataProvider>(context, listen: false)
+                            .currentPlacePredicted
+                            .main_text,
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w900,
+                            color: colorProviderObj.textColor),
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Container()),
+                  Text(
+                    'Slot Id: ' + pickedParkingSlotDetails.id,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15),
+                  ),
+                  Expanded(child: Container()),
+                ]),
+              ),
             ),
-          ),
-          Column(
-            children: [
-              ClipPath(
-                clipper: OvalBottomBorderClipper(),
-                child: Container(
-                  height: 250.0,
-                  decoration: BoxDecoration(
-                    color: colorProviderObj.genralBackgroundColor,
-                  ),
-                  child: Column(children: [
-                    Container(
-                      margin: EdgeInsets.all(20),
-                      width: 70,
-                      height: 70,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/images/location.png"),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(0),
-                      child: Center(
-                        child: Text(
-                          Provider.of<AddressDataProvider>(context,
-                                  listen: false)
-                              .currentPlacePredicted
-                              .main_text,
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w900,
-                              color: colorProviderObj.textColor),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      'Slot Id: ' + pickedParkingSlotDetails.id,
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15),
-                    )
-                  ]),
+            // Divider(
+            //   color: colorProviderObj.generalCardColor,
+            // ),
+            Expanded(child: Container()),
+
+            Container(
+              child: Center(
+                child: Text(
+                  'Pick your initial Date and Time',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: colorProviderObj.textColor),
                 ),
               ),
-              const SizedBox(
-                height: 25,
-              ),
-              Container(
-                child: Center(
-                  child: Text(
-                    'Pick your initial Date and Time',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: colorProviderObj.textColor),
-                  ),
+            ),
+            Expanded(child: Container()),
+
+            //**INITIAL DATE AND TIME/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Container()),
+
+                Image.asset(
+                  'assets/images/calendar.png',
+                  height: 40.0,
+                  width: 40.0,
                 ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
 
-              //**INITIAL DATE AND TIME/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/images/calendar.png',
-                      height: 40.0,
-                      width: 40.0,
+                //initial Date****************
+                FlatButton(
+                  onPressed: () {
+                    setDateValuesAftePicked('initialDate', context);
+                  },
+                  child: Container(
+                    width: 110,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 2,
+                          offset: Offset(0.2, 0.2),
+                        ),
+                      ],
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-
-                    //initial Date****************
-                    FlatButton(
-                      onPressed: () {
-                        setDateValuesAftePicked('initialDate', context);
-                      },
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
                       child: Container(
-                        width: 110,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              spreadRadius: 2,
-                              offset: Offset(0.2, 0.2),
-                            ),
-                          ],
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
+                        color: colorProviderObj.genralBackgroundColor
+                            .withOpacity(1),
                         child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Container(
-                            color: colorProviderObj.genralBackgroundColor
-                                .withOpacity(1),
-                            child: Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    startingDate == null
-                                        ? 'Initial Date'
-                                        : DateFormat.yMd().format(startingDate),
-                                    style: TextStyle(
-                                        color: colorProviderObj.textColor)),
-                              ),
-                            ),
+                          padding: EdgeInsets.all(0.0),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                                startingDate == null
+                                    ? 'Initial Date'
+                                    : DateFormat.yMd().format(startingDate),
+                                style: TextStyle(
+                                    color: colorProviderObj.textColor)),
                           ),
                         ),
                       ),
                     ),
-                    Expanded(child: Container()),
-                    Image.asset(
-                      'assets/images/clock.png',
-                      height: 50.0,
-                      width: 50.0,
-                    ),
-                    //initial Time****************
-                    FlatButton(
-                      onPressed: () {
-                        setTimeValuesAftePicked('initialTime', context);
-                      },
-                      child: Container(
-                        width: 110,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              spreadRadius: 2,
-                              offset: Offset(0.2, 0.2),
-                            ),
-                          ],
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                Expanded(child: Container()),
+                Image.asset(
+                  'assets/images/clock.png',
+                  height: 50.0,
+                  width: 50.0,
+                ),
+                //initial Time****************
+                FlatButton(
+                  onPressed: () {
+                    setTimeValuesAftePicked('initialTime', context);
+                  },
+                  child: Container(
+                    width: 110,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 2,
+                          offset: Offset(0.2, 0.2),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Container(
-                            color: colorProviderObj.genralBackgroundColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    startingTime == null
-                                        ? 'Initial Time'
-                                        : startingTime.hour.toString() +
-                                            ":" +
-                                            startingTime.minute.toString(),
-                                    style: TextStyle(
-                                        color: colorProviderObj.textColor)),
-                              ),
-                            ),
-                          ),
+                      ],
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        color: colorProviderObj.genralBackgroundColor,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              startingTime == null
+                                  ? 'Initial Time'
+                                  : startingTime.hour.toString() +
+                                      ":" +
+                                      startingTime.minute.toString(),
+                              style:
+                                  TextStyle(color: colorProviderObj.textColor)),
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ),
+              ],
+            ),
+
+            Expanded(child: Container()),
+
+            Container(
+              height: 2,
+              width: 300,
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 2.0,
+                    spreadRadius: 1,
+                    offset: Offset(0.2, 0.2),
+                  ),
+                ],
+                color: colorProviderObj.generalCardColor,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            //**FINAL DATE AND TIME/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            Expanded(child: Container()),
+
+            Container(
+              child: Center(
+                child: Text(
+                  'Pick your final Date and Time',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: colorProviderObj.textColor),
                 ),
               ),
+            ),
+            Expanded(child: Container()),
 
-              const SizedBox(
-                height: 20,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Container()),
+
+                Image.asset(
+                  'assets/images/calendar.png',
+                  height: 40.0,
+                  width: 40.0,
+                ),
+
+                //Final Date****************
+                FlatButton(
+                  onPressed: () {
+                    setDateValuesAftePicked('finalDate', context);
+                  },
+                  child: Container(
+                    width: 110,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 2,
+                          offset: Offset(0.2, 0.2),
+                        ),
+                      ],
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        color: colorProviderObj.genralBackgroundColor,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              endingDate == null
+                                  ? 'Final Date'
+                                  : DateFormat.yMd().format(endingDate),
+                              style:
+                                  TextStyle(color: colorProviderObj.textColor)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Expanded(child: Container()),
+                Image.asset(
+                  'assets/images/clock.png',
+                  height: 50.0,
+                  width: 50.0,
+                ),
+                //FInal Time****************
+                FlatButton(
+                  onPressed: () {
+                    setTimeValuesAftePicked('finalTime', context);
+                  },
+                  child: Container(
+                    width: 110,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 2.0,
+                          spreadRadius: 2,
+                          offset: Offset(0.2, 0.2),
+                        ),
+                      ],
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        color: colorProviderObj.genralBackgroundColor,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              endingTime == null
+                                  ? 'Final Time'
+                                  : endingTime.hour.toString() +
+                                      ":" +
+                                      endingTime.minute.toString(),
+                              style:
+                                  TextStyle(color: colorProviderObj.textColor)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            Expanded(child: Container()),
+
+            Container(
+              height: 2,
+              width: 300,
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 2.0,
+                    spreadRadius: 1,
+                    offset: Offset(0.2, 0.2),
+                  ),
+                ],
+                color: colorProviderObj.generalCardColor,
+                borderRadius: BorderRadius.circular(5.0),
               ),
-              Container(
-                height: 2,
+            ),
+
+            //**BOOKING BUTTON/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            Expanded(child: Container()),
+
+            FlatButton(
+              onPressed: () {
+                calculateCost();
+
+                final choice = ChoiceDialog(
+                  dialogBackgroundColor: colorProviderObj.generalCardColor,
+                  title: 'Total Cost: $totalCost EG',
+                  titleColor: Theme.of(context).primaryColor,
+                  message:
+                      'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
+                  messageColor: colorProviderObj.textColor,
+                  buttonOkText: 'Confirm',
+                  buttonOkOnPressed: () {
+                    requestAndUpdateBookingSlot(pickedParkingSlotDetails);
+                    saveParkingRequestDetails();
+                  },
+                );
+                choice.show(context, barrierColor: Colors.white);
+                //;
+              },
+              child: Container(
+                height: 50,
                 width: 300,
                 decoration: BoxDecoration(
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
-                      blurRadius: 2.0,
-                      spreadRadius: 1,
+                      blurRadius: 10.0,
+                      spreadRadius: 5,
                       offset: Offset(0.2, 0.2),
                     ),
                   ],
-                  color: colorProviderObj.generalCardColor,
+                  color: colorProviderObj.genralBackgroundColor,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-              ),
-              //**FINAL DATE AND TIME/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-              const SizedBox(
-                height: 25,
-              ),
-              Container(
-                child: Center(
+                child: Align(
+                  alignment: Alignment.center,
                   child: Text(
-                    'Pick your final Date and Time',
+                    'Book parking slot',
                     style: TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: colorProviderObj.textColor),
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 25,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/images/calendar.png',
-                      height: 40.0,
-                      width: 40.0,
-                    ),
-
-                    //Final Date****************
-                    FlatButton(
-                      onPressed: () {
-                        setDateValuesAftePicked('finalDate', context);
-                      },
-                      child: Container(
-                        width: 110,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              spreadRadius: 2,
-                              offset: Offset(0.2, 0.2),
-                            ),
-                          ],
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Container(
-                            color: colorProviderObj.genralBackgroundColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    endingDate == null
-                                        ? 'Final Date'
-                                        : DateFormat.yMd().format(endingDate),
-                                    style: TextStyle(
-                                        color: colorProviderObj.textColor)),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Container()),
-                    Image.asset(
-                      'assets/images/clock.png',
-                      height: 50.0,
-                      width: 50.0,
-                    ),
-                    //FInal Time****************
-                    FlatButton(
-                      onPressed: () {
-                        setTimeValuesAftePicked('finalTime', context);
-                      },
-                      child: Container(
-                        width: 110,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              spreadRadius: 2,
-                              offset: Offset(0.2, 0.2),
-                            ),
-                          ],
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Container(
-                            color: colorProviderObj.genralBackgroundColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    endingTime == null
-                                        ? 'Final Time'
-                                        : endingTime.hour.toString() +
-                                            ":" +
-                                            endingTime.minute.toString(),
-                                    style: TextStyle(
-                                        color: colorProviderObj.textColor)),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 2,
-                width: 300,
-                decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 2.0,
-                      spreadRadius: 1,
-                      offset: Offset(0.2, 0.2),
-                    ),
-                  ],
-                  color: colorProviderObj.generalCardColor,
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-
-              //**BOOKING BUTTON/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-              const SizedBox(
-                height: 70,
-              ),
-
-              FlatButton(
-                onPressed: () {
-                  calculateCost();
-
-                  final choice = ChoiceDialog(
-                    dialogBackgroundColor: colorProviderObj.generalCardColor,
-                    title: 'Total Cost: $totalCost EG',
-                    titleColor: Theme.of(context).primaryColor,
-                    message:
-                        'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
-                    messageColor: colorProviderObj.textColor,
-                    buttonOkText: 'Confirm',
-                    buttonOkOnPressed: () {
-                      requestAndUpdateBookingSlot(pickedParkingSlotDetails);
-                      saveParkingRequestDetails();
-                    },
-                  );
-                  choice.show(context, barrierColor: Colors.white);
-                  //;
-                },
-                child: Container(
-                  height: 50,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 10.0,
-                        spreadRadius: 5,
-                        offset: Offset(0.2, 0.2),
-                      ),
-                    ],
-                    color: colorProviderObj.genralBackgroundColor,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Book parking slot',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+            ),
+            Expanded(child: Container()),
+          ],
+        ));
   }
 }

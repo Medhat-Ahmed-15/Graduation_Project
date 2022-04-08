@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/parking_slots_grid.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class ParkingSlotscard extends StatelessWidget {
         right: 0.0,
         bottom: 0.0,
         child: Container(
-          height: 530,
+          height: MediaQuery.of(context).size.height.round() <= 781 ? 450 : 530,
           decoration: BoxDecoration(
             color: colorProviderObj.genralBackgroundColor,
             borderRadius: const BorderRadius.only(

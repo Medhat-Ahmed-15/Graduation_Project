@@ -54,59 +54,45 @@ class PredictionTile extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         }
       },
-      child: Container(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              width: 10.0,
-            ),
-            Row(
+      child: Row(
+        children: [
+          Icon(
+            Icons.add_location,
+            color: Theme.of(context).primaryColor,
+          ),
+          const SizedBox(
+            width: 14.0,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.add_location,
-                  color: Theme.of(context).primaryColor,
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  currentPlacePredicted.main_text,
+                  style: TextStyle(
+                      fontSize: 16.0, color: Theme.of(context).primaryColor),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(
-                  width: 14.0,
+                  height: 10.0,
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        currentPlacePredicted.main_text,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryColor),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        currentPlacePredicted.secondary_text,
-                        style: TextStyle(
-                            fontSize: 12.0, color: colorProviderObj.textColor),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                )
+                Text(
+                  currentPlacePredicted.secondary_text,
+                  style: TextStyle(
+                      fontSize: 12.0, color: colorProviderObj.textColor),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
               ],
             ),
-            const SizedBox(
-              width: 10.0,
-            ),
-          ],
-        ),
-      )),
+          )
+        ],
+      ),
     );
   }
 }
