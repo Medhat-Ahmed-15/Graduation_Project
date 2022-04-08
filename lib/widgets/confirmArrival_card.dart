@@ -10,6 +10,7 @@ import 'package:graduation_project/widgets/confirmationDialog.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
+import 'package:graduation_project/widgets/verificationDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -31,11 +32,12 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
   bool loading;
   LatLongConverter converter = LatLongConverter();
 
-  Future<void> confirmArrival(ColorProvider colorProviderObj) async {
+  //**************************************************************************************************************************************************************** */
+
+  Future<void> confirmArraival(ColorProvider colorProviderObj) async {
     setState(() {
       loading = true;
     });
-//****************************************************************************************************************************************************************** */
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
@@ -46,23 +48,19 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
     LatLng latlngCurrentUserPosition =
         LatLng(position.latitude, position.longitude);
 
-    var userCurrentLatDegree =
-        converter.getDegreeFromDecimal(31.212863095189515);
-    var userCurrentLngDegree =
-        converter.getDegreeFromDecimal(29.934277210345886);
-
-    var slotLatDegree = converter.getDegreeFromDecimal(31.212890622629782);
-    var slotLngDegree = converter.getDegreeFromDecimal(29.93428928028626);
+    print('My current lat in Confirm Arrival  ${position.latitude.toDouble()}');
+    print(
+        'My current lng in Confirm Arrival  ${position.longitude.toDouble()}');
 
     double distance = Geolocator.distanceBetween(
-      userCurrentLatDegree[0].toDouble(),
-      userCurrentLngDegree[0].toDouble(),
-      slotLatDegree[0].toDouble(),
-      slotLngDegree[0].toDouble(),
+      position.latitude.toDouble(),
+      position.longitude.toDouble(),
+      30.889783,
+      29.3835925,
     );
 
     Fluttertoast.showToast(
-        msg: 'Distance:  ${distance.toString()}',
+        msg: 'Distance:  ${distance.toStringAsFixed(2)}',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 5,
@@ -70,10 +68,9 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
             Provider.of<ColorProvider>(context, listen: false).textColor,
         textColor: Colors.white,
         fontSize: 16.0);
+    print('Distance:  ${distance.toStringAsFixed(2)}');
 
-    //**************************************************************************************************************************************************************** */
-
-    if (0.5 >= 0.0 && 0.5 <= 1.0) {
+    if (distance >= 0.0 && distance <= 100.0) {
       print('arrived');
       widget.cancelTheTimer();
 
@@ -109,6 +106,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
           fontSize: 16.0);
     }
   }
+//****************************************************************************************************************************************************************** */
 
   Future<void> cancelrequest() async {
     //Cancel Request
@@ -187,8 +185,23 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
                   //Confirm Arrival button////////////////////////////////////////////////////////////////////////////////
 
                   FlatButton(
+                    //the process of calling confirmArrival which in it calculating the distance is done after making sure that the verification code is entered correctly.. then I call confirm arrival inside verification dialog
+
                     onPressed: () async {
-                      confirmArrival(colorProviderObj);
+                      Fluttertoast.showToast(
+                          msg: 'Please enter the code we sent to your email',
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 5,
+                          backgroundColor:
+                              colorProviderObj.genralBackgroundColor,
+                          textColor: colorProviderObj.textColor,
+                          fontSize: 16.0);
+                      showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (context) =>
+                              VerificationDialog(confirmArraival));
                     },
                     child: Container(
                       height: 50,

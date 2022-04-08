@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'dart:math';
 
 class BookingSlotScreen extends StatefulWidget {
   static const routeName = '/BookingSlotScreen';
@@ -31,17 +32,19 @@ class BookingSlotScreen extends StatefulWidget {
 }
 
 class _BookingSlotScreenState extends State<BookingSlotScreen> {
-  DateTime startingDate;
   TimeOfDay startingTime;
-  DateTime endingDate;
   TimeOfDay endingTime;
-
+  DateTime endingDate;
   DateTime endDateTime;
   DateTime startDateTime;
+  DateTime startingDate;
+
   int totalCost;
   ParkingSlotBlueprintProvider pickedParkingSlotDetails;
 
   Timer cancelRequestTimer;
+
+  Random random = Random();
 
   void setDateValuesAftePicked(String flag, BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: false);
@@ -154,25 +157,36 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     Navigator.of(context)
         .pushReplacementNamed(MapScreen.routeName, arguments: obj);
 
+    int randomId1 = random.nextInt(10);
+    int randomId2 = random.nextInt(10);
+    int randomId3 = random.nextInt(10);
+    int randomId4 = random.nextInt(10);
+
+    setVerificationCodeInStorage(randomId1, randomId2, randomId3, randomId4);
+
     await sendConfirmationEmail(
         startingDate: startingDateAndTime,
         endingDate: endingDateAndTime,
         userName: currentUserOnline.name,
         slotId: pickedParkingSlotDetails.id,
         toEmail: currentUserOnline.email,
+        randomId1: randomId1,
+        randomId2: randomId2,
+        randomId3: randomId3,
+        randomId4: randomId4,
         areaName: Provider.of<AddressDataProvider>(context, listen: false)
             .currentPlacePredicted
             .main_text);
 
-    // Fluttertoast.showToast(
-    //     msg: 'A confirmation mail was sent 📧',
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.BOTTOM,
-    //     timeInSecForIosWeb: 5,
-    //     backgroundColor:
-    //         Provider.of<ColorProvider>(context, listen: false).textColor,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0);
+    Fluttertoast.showToast(
+        msg: 'A confirmation mail was sent 📧',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 5,
+        backgroundColor:
+            Provider.of<ColorProvider>(context, listen: false).textColor,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   void calculateCost() {
@@ -242,10 +256,6 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
     pickedParkingSlotDetails = ModalRoute.of(context).settings.arguments
         as ParkingSlotBlueprintProvider;
-    print(pickedParkingSlotDetails.id);
-    print(pickedParkingSlotDetails.availability);
-    print(pickedParkingSlotDetails.latitude);
-    print(pickedParkingSlotDetails.longitude);
 
     return Scaffold(
       drawer: MainDrawer(),

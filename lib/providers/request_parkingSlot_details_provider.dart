@@ -19,7 +19,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
     return _recordedrequestId;
   }
 
-  List<RequestedParkingSlotDetailsBluePrint> get getRecordedIdsList {
+  List<RequestedParkingSlotDetailsBluePrint> get getRecordedrequetsList {
     return [..._recordedRequestsList];
   }
 
@@ -66,7 +66,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
 //Fetch Request////////////////////////////////////////////////
 
-  Future<void> recordedRequests() async {
+  Future<void> fetchRecordedRequests() async {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
     try {
@@ -74,20 +74,26 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<RequestedParkingSlotDetailsBluePrint> recordedRequests = [];
       extractedData.forEach((key, slotData) {
-        recordedRequests.add(
-          RequestedParkingSlotDetailsBluePrint(
-            userId: slotData['userId'],
-            paymentMethod: slotData['paymentMethod'],
-            endDateTime: slotData['endDateTime'],
-            parkingAreaAddressName: slotData['id'],
-            parkingSlotId: slotData['latitude'],
-            totalCost: slotData['longitude'],
-            status: slotData['status'],
-            startDateTime: slotData['start_time'],
-            destinationLocMap: slotData['destinationLocMap'],
-          ),
-        );
+        print('Key: $key');
+        if (slotData['status'] != 'pending') {
+          recordedRequests.add(
+            RequestedParkingSlotDetailsBluePrint(
+              requestId: key,
+              userId: slotData['userId'],
+              paymentMethod: slotData['paymentMethod'],
+              endDateTime: slotData['endDateTime'],
+              parkingAreaAddressName: slotData['parkingAreaAddressName'],
+              parkingSlotId: slotData['parkingSlotId'],
+              status: slotData['status'],
+              totalCost: slotData['totalCost'],
+              startDateTime: slotData['startDateTime'],
+              latitude: slotData['destinationLocMap']['latitude'],
+              longitude: slotData['destinationLocMap']['longitude'],
+            ),
+          );
+        }
       });
+
       _recordedRequestsList = recordedRequests;
       notifyListeners();
     } catch (error) {
@@ -119,5 +125,10 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$requestId.json?auth=$_authToken';
 
     await http.delete(url);
+  }
+
+  void removeRequestFromList(int index) {
+    _recordedRequestsList.removeAt(index);
+    notifyListeners();
   }
 }

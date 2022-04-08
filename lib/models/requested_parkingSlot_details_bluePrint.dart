@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 class RequestedParkingSlotDetailsBluePrint {
+  String requestId;
   String userId;
   String paymentMethod;
   String parkingAreaAddressName;
@@ -7,13 +8,16 @@ class RequestedParkingSlotDetailsBluePrint {
   int totalCost;
   String startDateTime;
   String endDateTime;
-  Map destinationLocMap;
+  String latitude;
+  String longitude;
   String status;
 
   RequestedParkingSlotDetailsBluePrint({
+    this.requestId,
     this.userId,
     this.paymentMethod,
-    this.destinationLocMap,
+    this.latitude,
+    this.longitude,
     this.status,
     this.endDateTime,
     this.parkingAreaAddressName,

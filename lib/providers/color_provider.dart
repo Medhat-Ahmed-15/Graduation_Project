@@ -26,7 +26,7 @@ class ColorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void checkThemeMethodInThisScreen() async {
+  Future<void> checkThemeMethodInThisScreen() async {
     final tunnelToStorage = await SharedPreferences.getInstance();
 
     if (!tunnelToStorage.containsKey('switchStatus')) {

@@ -49,6 +49,7 @@ dependencies:
   font_awesome_flutter: ^9.2.0
   image_picker: ^0.6.5+3
   latlong_to_osgrid: ^1.0.1
+  otp_text_field: ^1.1.1
 
 dev_dependencies:
   flutter_test:

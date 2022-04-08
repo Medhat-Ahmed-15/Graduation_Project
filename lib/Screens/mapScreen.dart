@@ -206,6 +206,7 @@ class _MapScreenState extends State<MapScreen> {
     displayRoute();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       drawer: MainDrawer(),
       appBar: showHamburgerIcon == true
