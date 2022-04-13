@@ -144,10 +144,7 @@ class _MapScreenState extends State<MapScreen> {
         //Deleting request
         await Provider.of<RequestParkingSlotDetailsProvider>(context,
                 listen: false)
-            .cancelRequest(Provider.of<RequestParkingSlotDetailsProvider>(
-                    context,
-                    listen: false)
-                .getRecorderRequestId);
+            .cancelRequest();
 
         Navigator.pop(context);
 

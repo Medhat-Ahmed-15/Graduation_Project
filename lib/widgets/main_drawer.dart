@@ -143,10 +143,15 @@ class MainDrawer extends StatelessWidget {
             }),
 
             //>>
-            buildListTile('assets/images/history.png', 'History', context, () {
-              Navigator.of(context)
-                  .pushReplacementNamed(HistoryScreen.routeName);
-            }),
+            buildListTile(
+                'assets/images/history.png',
+                'History',
+                context,
+                // () {
+                //   Navigator.of(context)
+                //       .pushReplacementNamed(HistoryScreen.routeName);
+                // },
+                null),
 
             //>>
             buildListTile(

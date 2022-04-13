@@ -55,19 +55,19 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
     double distance = Geolocator.distanceBetween(
       position.latitude.toDouble(),
       position.longitude.toDouble(),
-      30.889783,
-      29.3835925,
+      31.2280703,
+      29.944847,
     );
 
-    Fluttertoast.showToast(
-        msg: 'Distance:  ${distance.toStringAsFixed(2)}',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor:
-            Provider.of<ColorProvider>(context, listen: false).textColor,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: 'Distance:  ${distance.toStringAsFixed(2)}',
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 5,
+    //     backgroundColor:
+    //         Provider.of<ColorProvider>(context, listen: false).textColor,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
     print('Distance:  ${distance.toStringAsFixed(2)}');
 
     if (distance >= 0.0 && distance <= 100.0) {
@@ -80,7 +80,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
           builder: (BuildContext context) =>
               ConfirmationDialog(isLoading: true));
 
-      await Future.delayed(Duration(seconds: 15));
+      await Future.delayed(Duration(seconds: 5));
 
       await Provider.of<RequestParkingSlotDetailsProvider>(context,
               listen: false)
@@ -126,9 +126,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
 
     //Deleting request
     await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
-        .cancelRequest(Provider.of<RequestParkingSlotDetailsProvider>(context,
-                listen: false)
-            .getRecorderRequestId);
+        .cancelRequest();
 
     Navigator.pop(context);
     sendCancellationEmail(

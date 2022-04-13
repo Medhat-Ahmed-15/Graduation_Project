@@ -120,9 +120,9 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
 //Delete Request////////////////////////////////////////////////
 
-  Future<void> cancelRequest(String requestId) async {
+  Future<void> cancelRequest() async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$requestId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$_recordedrequestId.json?auth=$_authToken';
 
     await http.delete(url);
   }
