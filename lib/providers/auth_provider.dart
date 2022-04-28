@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/UserInfo.dart';
 import 'package:graduation_project/models/http_exception.dart';
@@ -81,6 +80,10 @@ class AuthProvider with ChangeNotifier {
       }
       _token = responseData['idToken'];
       _userId = responseData['localId'];
+
+      currentUserId = _userId;
+      authToken = _token;
+
       _expiryDate = DateTime.now().add(Duration(
           seconds: int.parse(responseData[
               'expiresIn']))); //must be calculated because the only thing we get back  is expiresIn which only contains a string but in that string we have the number the seconds So we'll have to parse that string and turn it into a number but then after turning it into a number, we have to derive a date from that. So expiry date should be a datetime object so we take the dateTime of now and add to it the amount of seconds that will expire in to generate a future date the token will expire in it
@@ -246,6 +249,9 @@ class AuthProvider with ChangeNotifier {
 
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
+
+    currentUserId = _userId;
+    authToken = _token;
     _expiryDate = expiryDate;
     notifyListeners();
     _autoSignOut();
@@ -260,6 +266,9 @@ class AuthProvider with ChangeNotifier {
     _token = null;
     _expiryDate = null;
     _userId = null;
+
+    currentUserId = null;
+    authToken = null;
 
     if (logOutTimer != null) {
       logOutTimer.cancel();

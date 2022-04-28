@@ -207,12 +207,10 @@ class _SigninScreenState extends State<SigninScreen> {
                     width: 300,
                     child: TextField(
                       onTap: () {
-                        setState(() {
-                          emailInputTextColor = colorProviderObj.textColor;
-                          emailFillColor = colorProviderObj.generalCardColor;
-                          emailBorderColor = Theme.of(context).primaryColor;
-                          emailIconColor = Theme.of(context).primaryColor;
-                        });
+                        emailInputTextColor = colorProviderObj.textColor;
+                        emailFillColor = colorProviderObj.generalCardColor;
+                        emailBorderColor = Theme.of(context).primaryColor;
+                        emailIconColor = Theme.of(context).primaryColor;
                       },
                       controller: _emailAddressController,
                       keyboardType: TextInputType.text,
@@ -259,12 +257,10 @@ class _SigninScreenState extends State<SigninScreen> {
                     width: 270,
                     child: TextField(
                       onTap: () {
-                        setState(() {
-                          passwordInputTextColor = colorProviderObj.textColor;
-                          passwordFillColor = colorProviderObj.generalCardColor;
-                          passwordBorderColor = Theme.of(context).primaryColor;
-                          passwordIconColor = Theme.of(context).primaryColor;
-                        });
+                        passwordInputTextColor = colorProviderObj.textColor;
+                        passwordFillColor = colorProviderObj.generalCardColor;
+                        passwordBorderColor = Theme.of(context).primaryColor;
+                        passwordIconColor = Theme.of(context).primaryColor;
                       },
                       controller: _passwordController,
                       obscureText: hidePasswordText,

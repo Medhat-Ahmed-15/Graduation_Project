@@ -31,6 +31,7 @@ class ColorProvider with ChangeNotifier {
 
     if (!tunnelToStorage.containsKey('switchStatus')) {
       switchToLightThemeMode();
+      return;
     }
 
     final extractedUserData =

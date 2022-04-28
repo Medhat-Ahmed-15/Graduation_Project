@@ -1,8 +1,8 @@
 import 'package:dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
-import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -146,8 +146,11 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
           //go to bookingParkingSlotScreen
           print('I AM GOING TO BOOK NOW');
 
-          Navigator.of(context).pushNamed(BookingSlotScreen.routeName,
-              arguments: widget.parkingSlotBlueprintProvider);
+          pickedParkingSlot = widget.parkingSlotBlueprintProvider;
+
+          Navigator.of(context).pushNamed(
+            BookingSlotScreen.routeName,
+          );
         }
         // else if (Provider.of<AuthProvider>(context, listen: false)
         //         .getUserID ==

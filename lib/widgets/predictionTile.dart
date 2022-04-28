@@ -32,18 +32,14 @@ class PredictionTile extends StatelessWidget {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
     return FlatButton(
       onPressed: () async {
-        var result =
-            await Provider.of<AddressDataProvider>(context, listen: false)
-                .getParkingAreaDetails(currentPlacePredicted.place_id, context);
+        var result = await AddressDataProvider.getParkingAreaDetails(
+            currentPlacePredicted.place_id, context);
 
         if (result == 'Alexandria Sporting Club' ||
             result == 'Smouha Sporting Club') {
           pickedArea = result;
 
           Navigator.of(context).pushNamed(ParkingSlotsScreen.routeName);
-
-          Provider.of<AddressDataProvider>(context, listen: false)
-              .updateThePredictedPlaceAfterItIsPicked(currentPlacePredicted);
         } else if (result == 'failed') {
           showToast(
               "Something went wrong, Please check you internet connection and try again",

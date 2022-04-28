@@ -50,6 +50,7 @@ dependencies:
   image_picker: ^0.6.5+3
   latlong_to_osgrid: ^1.0.1
   otp_text_field: ^1.1.1
+  maps_toolkit: ^1.1.0+2
 
 dev_dependencies:
   flutter_test:

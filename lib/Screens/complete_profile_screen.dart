@@ -231,12 +231,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       width: 300,
                       child: TextField(
                         onTap: () {
-                          setState(() {
-                            nameInputTextColor = colorProviderObj.textColor;
-                            nameFillColor = colorProviderObj.generalCardColor;
-                            nameBorderColor = Theme.of(context).primaryColor;
-                            nameIconColor = Theme.of(context).primaryColor;
-                          });
+                          nameInputTextColor = colorProviderObj.textColor;
+                          nameFillColor = colorProviderObj.generalCardColor;
+                          nameBorderColor = Theme.of(context).primaryColor;
+                          nameIconColor = Theme.of(context).primaryColor;
                         },
                         controller: _nameController,
                         keyboardType: TextInputType.text,
@@ -283,13 +281,10 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                       width: 300,
                       child: TextField(
                         onTap: () {
-                          setState(() {
-                            addressInputTextColor = colorProviderObj.textColor;
-                            addressFillColor =
-                                colorProviderObj.generalCardColor;
-                            addressBorderColor = Theme.of(context).primaryColor;
-                            addressIconColor = Theme.of(context).primaryColor;
-                          });
+                          addressInputTextColor = colorProviderObj.textColor;
+                          addressFillColor = colorProviderObj.generalCardColor;
+                          addressBorderColor = Theme.of(context).primaryColor;
+                          addressIconColor = Theme.of(context).primaryColor;
                         },
                         controller: _addressController,
                         keyboardType: TextInputType.text,

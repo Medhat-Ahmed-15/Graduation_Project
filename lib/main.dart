@@ -54,21 +54,6 @@ class MyApp extends StatelessWidget {
                 ParkingSlotsProvider(authProviderObj.token,
                     previusParkingSlotsProviderObj.slots),
           ),
-
-          //Providing all address Data
-          ChangeNotifierProvider(
-            create: (context) => AddressDataProvider(),
-          ),
-
-          //Providing all Request Parking Slot Details Data
-          ChangeNotifierProxyProvider<AuthProvider,
-              RequestParkingSlotDetailsProvider>(
-            create: (ctx) => RequestParkingSlotDetailsProvider('', ''),
-            update: (ctx, authProviderObj,
-                    previusRequestParkingSlotDetailsProviderObj) =>
-                RequestParkingSlotDetailsProvider(
-                    authProviderObj.token, authProviderObj.getUserID),
-          ),
         ],
         child: Consumer<AuthProvider>(
           builder: (ctx, authProviderObj, _) => MaterialApp(

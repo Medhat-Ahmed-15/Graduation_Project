@@ -1,9 +1,9 @@
 // ignore_for_file: file_names
 
+import 'package:maps_toolkit/maps_toolkit.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/global_variables.dart';
-import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/confirmationDialog.dart';
@@ -12,17 +12,16 @@ import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/verificationDialog.dart';
 import 'package:provider/provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong_to_osgrid/latlong_to_osgrid.dart';
 
 class ConfirmArrivalCard extends StatefulWidget {
-  ArgumentsPassedFromBookingScreen resultAfterBooking;
+  String flag;
   Function resetApp;
   Function cancelTheTimer;
 
-  ConfirmArrivalCard(
-      this.resultAfterBooking, this.resetApp, this.cancelTheTimer);
+  ConfirmArrivalCard(this.flag, this.resetApp, this.cancelTheTimer);
 
   @override
   State<ConfirmArrivalCard> createState() => _ConfirmArrivalCardState();
@@ -45,19 +44,15 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
       loading = false;
     });
 
-    LatLng latlngCurrentUserPosition =
-        LatLng(position.latitude, position.longitude);
+    final currentPosition = LatLng(position.latitude, position.longitude);
+    final bookedSlotPosition =
+        LatLng(pickedParkingSlot.latitude, pickedParkingSlot.longitude);
 
-    print('My current lat in Confirm Arrival  ${position.latitude.toDouble()}');
-    print(
-        'My current lng in Confirm Arrival  ${position.longitude.toDouble()}');
+    print('My current lat in Confirm Arrival  $currentPosition');
+    print('My current lng in Confirm Arrival  $bookedSlotPosition');
 
-    double distance = Geolocator.distanceBetween(
-      position.latitude.toDouble(),
-      position.longitude.toDouble(),
-      31.2280703,
-      29.944847,
-    );
+    double distance = SphericalUtil.computeDistanceBetween(
+        currentPosition, bookedSlotPosition);
 
     // Fluttertoast.showToast(
     //     msg: 'Distance:  ${distance.toStringAsFixed(2)}',
@@ -82,9 +77,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
 
       await Future.delayed(Duration(seconds: 5));
 
-      await Provider.of<RequestParkingSlotDetailsProvider>(context,
-              listen: false)
-          .updateRecordedRequest('arrived');
+      await RequestParkingSlotDetailsProvider.updateRecordedRequest('arrived');
       Navigator.pop(context);
 
       showDialog(
@@ -118,21 +111,18 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
             ));
 
     //switching availability
-    widget.resultAfterBooking.pickedParkingSlotDetails.switchAvailability(
+    pickedParkingSlot.switchAvailability(
         Provider.of<AuthProvider>(context, listen: false).token,
         'empty',
         'empty',
         'empty');
 
     //Deleting request
-    await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
-        .cancelRequest();
+    await RequestParkingSlotDetailsProvider.cancelRequest();
 
     Navigator.pop(context);
     sendCancellationEmail(
-        currentUserOnline.name,
-        widget.resultAfterBooking.pickedParkingSlotDetails.id,
-        currentUserOnline.email);
+        currentUserOnline.name, pickedParkingSlot.id, currentUserOnline.email);
 
     widget.resetApp();
 

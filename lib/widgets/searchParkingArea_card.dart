@@ -151,12 +151,8 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
                           : Container(
                               width: 200,
                               child: Text(
-                                Provider.of<AddressDataProvider>(context)
-                                            .currentLocation !=
-                                        null
-                                    ? Provider.of<AddressDataProvider>(context)
-                                        .currentLocation
-                                        .placeName
+                                pickedCurrentLocation != null
+                                    ? pickedCurrentLocation.placeName
                                     : 'Add Home',
                                 style: TextStyle(
                                     color: colorProviderObj.textColor),

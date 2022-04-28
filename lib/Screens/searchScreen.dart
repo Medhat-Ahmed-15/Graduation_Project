@@ -30,7 +30,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     var colorProviderObj = Provider.of<ColorProvider>(context, listen: true);
-    var objAddressDataProvider = Provider.of<AddressDataProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -115,13 +114,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                      objAddressDataProvider.currentLocation ==
-                                              null
-                                          ? 'Please wait...'
-                                          : objAddressDataProvider
-                                              .currentLocation.placeName,
-                                      style: TextStyle(
-                                          color: colorProviderObj.textColor)),
+                                    pickedCurrentLocation == null
+                                        ? 'Please wait...'
+                                        : pickedCurrentLocation.placeName,
+                                    style: TextStyle(
+                                        color: colorProviderObj.textColor),
+                                  ),
                                 ),
                               ),
                             ),
@@ -165,10 +163,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 });
                                 List<PlacePredictions>
                                     returnedListFromAddressContainer =
-                                    await Provider.of<AddressDataProvider>(
-                                            context,
-                                            listen: false)
-                                        .findNearByPlaces(val);
+                                    await AddressDataProvider.findNearByPlaces(
+                                        val);
 
                                 setState(() {
                                   loading = false;

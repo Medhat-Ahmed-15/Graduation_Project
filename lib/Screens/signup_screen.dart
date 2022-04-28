@@ -246,12 +246,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     width: 300,
                     child: TextField(
                       onTap: () {
-                        setState(() {
-                          emailInputTextColor = colorProviderObj.textColor;
-                          emailFillColor = colorProviderObj.generalCardColor;
-                          emailBorderColor = Theme.of(context).primaryColor;
-                          emailIconColor = Theme.of(context).primaryColor;
-                        });
+                        emailInputTextColor = colorProviderObj.textColor;
+                        emailFillColor = colorProviderObj.generalCardColor;
+                        emailBorderColor = Theme.of(context).primaryColor;
+                        emailIconColor = Theme.of(context).primaryColor;
                       },
                       controller: _emailAddressController,
                       keyboardType: TextInputType.text,
@@ -298,12 +296,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     width: 270,
                     child: TextField(
                       onTap: () {
-                        setState(() {
-                          passwordInputTextColor = colorProviderObj.textColor;
-                          passwordFillColor = colorProviderObj.generalCardColor;
-                          passwordBorderColor = Theme.of(context).primaryColor;
-                          passwordIconColor = Theme.of(context).primaryColor;
-                        });
+                        passwordInputTextColor = colorProviderObj.textColor;
+                        passwordFillColor = colorProviderObj.generalCardColor;
+                        passwordBorderColor = Theme.of(context).primaryColor;
+                        passwordIconColor = Theme.of(context).primaryColor;
                       },
                       controller: _passwordController,
                       obscureText: hidePasswordText,
@@ -366,16 +362,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     width: 270,
                     child: TextField(
                       onTap: () {
-                        setState(() {
-                          confirmPasswordInputTextColor =
-                              colorProviderObj.textColor;
-                          confirmPasswordFillColor =
-                              colorProviderObj.generalCardColor;
-                          confirmPasswordBorderColor =
-                              Theme.of(context).primaryColor;
-                          confirmPasswordIconColor =
-                              Theme.of(context).primaryColor;
-                        });
+                        confirmPasswordInputTextColor =
+                            colorProviderObj.textColor;
+                        confirmPasswordFillColor =
+                            colorProviderObj.generalCardColor;
+                        confirmPasswordBorderColor =
+                            Theme.of(context).primaryColor;
+                        confirmPasswordIconColor =
+                            Theme.of(context).primaryColor;
                       },
                       controller: _confirmPasswordController,
                       obscureText: hideConfirmPasswordText,

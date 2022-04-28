@@ -28,7 +28,8 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
         _loadingSpinner = true;
       });
 
-      if (pickedArea == 'Alexandria Sporting Club') {
+      if (pickedArea == 'Alexandria Sporting Club' ||
+          pickedArea == 'Smouha Sporting Club') {
         area = 'Parking_Slots';
       } else if (pickedArea == 'random_area') {
         area = 'Parking Slots Random Area';

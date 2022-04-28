@@ -6,14 +6,10 @@ import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/address.dart';
-import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
-import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
-import 'package:graduation_project/widgets/dividerWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'dart:math';
 
 class BookingSlotScreen extends StatefulWidget {
@@ -40,9 +35,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
   DateTime startingDate;
 
   int totalCost;
-  ParkingSlotBlueprintProvider pickedParkingSlotDetails;
 
-  Timer cancelRequestTimer;
+  //Timer cancelRequestTimer;
 
   Random random = Random();
 
@@ -112,8 +106,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     });
   }
 
-  void requestAndUpdateBookingSlot(
-      ParkingSlotBlueprintProvider pickedParkingSlotDetails) async {
+  void requestAndUpdateBookingSlot() async {
     String startingDateAndTime = DateFormat.yMd().format(startingDate) +
         " " +
         startingTime.hour.toString() +
@@ -126,15 +119,12 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         ":" +
         endingTime.minute.toString();
 
-    String addressName =
-        Provider.of<AddressDataProvider>(context, listen: false)
-            .currentPlacePredicted
-            .main_text;
+    String addressName = pickedparkingSlotAreaLocation.placeName;
 
     Address destinationAddress = Address(
         placeName: addressName,
-        latitude: pickedParkingSlotDetails.latitude,
-        longitude: pickedParkingSlotDetails.longitude);
+        latitude: pickedParkingSlot.latitude,
+        longitude: pickedParkingSlot.longitude);
 
     showDialog(
         context: context,
@@ -142,41 +132,33 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
               message: 'Booking your slot, PLease wait...',
             ));
 
-    Provider.of<AddressDataProvider>(context, listen: false)
-        .updateDestinationLocationAddress(destinationAddress);
+    pickedParkingSlotLocation = destinationAddress;
 
-    await pickedParkingSlotDetails.switchAvailability(
+    await pickedParkingSlot.switchAvailability(
         Provider.of<AuthProvider>(context, listen: false).token,
         startingDateAndTime,
         endingDateAndTime,
         Provider.of<AuthProvider>(context, listen: false).getUserID);
-
-    ArgumentsPassedFromBookingScreen obj = ArgumentsPassedFromBookingScreen(
-        "returned after booking", pickedParkingSlotDetails);
-
-    Navigator.of(context)
-        .pushReplacementNamed(MapScreen.routeName, arguments: obj);
 
     int randomId1 = random.nextInt(10);
     int randomId2 = random.nextInt(10);
     int randomId3 = random.nextInt(10);
     int randomId4 = random.nextInt(10);
 
-    setVerificationCodeInStorage(randomId1, randomId2, randomId3, randomId4);
+    await setVerificationCodeInStorage(
+        randomId1, randomId2, randomId3, randomId4);
 
     await sendConfirmationEmail(
         startingDate: startingDateAndTime,
         endingDate: endingDateAndTime,
         userName: currentUserOnline.name,
-        slotId: pickedParkingSlotDetails.id,
+        slotId: pickedParkingSlot.id,
         toEmail: currentUserOnline.email,
         randomId1: randomId1,
         randomId2: randomId2,
         randomId3: randomId3,
         randomId4: randomId4,
-        areaName: Provider.of<AddressDataProvider>(context, listen: false)
-            .currentPlacePredicted
-            .main_text);
+        areaName: pickedparkingSlotAreaLocation.placeName);
 
     Fluttertoast.showToast(
         msg: 'A confirmation mail was sent 📧',
@@ -187,6 +169,9 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             Provider.of<ColorProvider>(context, listen: false).textColor,
         textColor: Colors.white,
         fontSize: 16.0);
+
+    Navigator.of(context).pushReplacementNamed(MapScreen.routeName,
+        arguments: 'returned after booking');
   }
 
   void calculateCost() {
@@ -214,31 +199,27 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
   void saveParkingRequestDetails() async {
     String userId = Provider.of<AuthProvider>(context, listen: false).getUserID;
-    String parkingAreaAddressName =
-        Provider.of<AddressDataProvider>(context, listen: false)
-            .currentPlacePredicted
-            .main_text;
-    String parkingSlotId = pickedParkingSlotDetails.id;
+    String parkingAreaAddressName = pickedparkingSlotAreaLocation.placeName;
+    String parkingSlotId = pickedParkingSlot.id;
     int cost = totalCost;
     String initialtDateTime = startDateTime.toString();
     String finalDateTime = endDateTime.toString();
 
     Map destinationLocMap = {
-      'latitude': pickedParkingSlotDetails.latitude.toString(),
-      'longitude': pickedParkingSlotDetails.longitude.toString(),
+      'latitude': pickedParkingSlot.latitude.toString(),
+      'longitude': pickedParkingSlot.longitude.toString(),
     };
 
-    await Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
-        .postRequestParkingDetails(
-            userId: userId,
-            parkingAreaAddressName: parkingAreaAddressName,
-            destinationLocMap: destinationLocMap,
-            endDateTime: finalDateTime,
-            parkingSlotId: parkingSlotId,
-            paymentMethod: 'visa',
-            status: 'pending',
-            startDateTime: initialtDateTime,
-            totalCost: cost);
+    await RequestParkingSlotDetailsProvider.postRequestParkingDetails(
+        userId: userId,
+        parkingAreaAddressName: parkingAreaAddressName,
+        destinationLocMap: destinationLocMap,
+        endDateTime: finalDateTime,
+        parkingSlotId: parkingSlotId,
+        paymentMethod: 'visa',
+        status: 'pending',
+        startDateTime: initialtDateTime,
+        totalCost: cost);
   }
 
   Future<void> checkThemeMode(BuildContext context) async {
@@ -253,9 +234,6 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       title: const Text('Book your slot'),
     );
-
-    pickedParkingSlotDetails = ModalRoute.of(context).settings.arguments
-        as ParkingSlotBlueprintProvider;
 
     return Scaffold(
         backgroundColor: colorProviderObj.generalCardColor,
@@ -288,9 +266,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     margin: EdgeInsets.all(0),
                     child: Center(
                       child: Text(
-                        Provider.of<AddressDataProvider>(context, listen: false)
-                            .currentPlacePredicted
-                            .main_text,
+                        pickedparkingSlotAreaLocation.placeName,
                         style: TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w900,
@@ -300,7 +276,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                   ),
                   Expanded(child: Container()),
                   Text(
-                    'Slot Id: ' + pickedParkingSlotDetails.id,
+                    'Slot Id: ' + pickedParkingSlot.id,
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w900,
@@ -597,7 +573,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                   messageColor: colorProviderObj.textColor,
                   buttonOkText: 'Confirm',
                   buttonOkOnPressed: () {
-                    requestAndUpdateBookingSlot(pickedParkingSlotDetails);
+                    requestAndUpdateBookingSlot();
                     saveParkingRequestDetails();
                   },
                 );

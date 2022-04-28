@@ -1,19 +1,13 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/requested_parkingSlot_details_bluePrint.dart';
-import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:http/http.dart' as http;
 
-class RequestParkingSlotDetailsProvider with ChangeNotifier {
-  final String _authToken;
-  final String _userId;
-  String _recordedrequestId;
-  List<RequestedParkingSlotDetailsBluePrint> _recordedRequestsList = [];
-
-  RequestParkingSlotDetailsProvider(this._authToken, this._userId);
+class RequestParkingSlotDetailsProvider {
+  static String _recordedrequestId;
+  static List<RequestedParkingSlotDetailsBluePrint> _recordedRequestsList = [];
 
   String get getRecorderRequestId {
     return _recordedrequestId;
@@ -25,7 +19,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
   //Add Request////////////////////////////////////////////////
 
-  Future<void> postRequestParkingDetails(
+  static Future<void> postRequestParkingDetails(
       {String userId,
       String paymentMethod,
       String parkingAreaAddressName,
@@ -36,7 +30,7 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
       String endDateTime,
       Map destinationLocMap}) async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId.json?auth=$authToken';
 
     try {
       var response = await http.post(
@@ -66,9 +60,9 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
 //Fetch Request////////////////////////////////////////////////
 
-  Future<void> fetchRecordedRequests() async {
+  static Future<void> fetchRecordedRequests() async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId.json?auth=$authToken';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -95,7 +89,6 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
       });
 
       _recordedRequestsList = recordedRequests;
-      notifyListeners();
     } catch (error) {
       throw (error);
     }
@@ -103,16 +96,14 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
 //Update Request////////////////////////////////////////////////
 
-  Future<void> updateRecordedRequest(String status) async {
+  static Future<void> updateRecordedRequest(String status) async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$_recordedrequestId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$_recordedrequestId.json?auth=$authToken';
 
     try {
       await http.patch(
           url, //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
           body: json.encode({'status': status}));
-
-      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -120,15 +111,14 @@ class RequestParkingSlotDetailsProvider with ChangeNotifier {
 
 //Delete Request////////////////////////////////////////////////
 
-  Future<void> cancelRequest() async {
+  static Future<void> cancelRequest() async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$_userId/$_recordedrequestId.json?auth=$_authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$_recordedrequestId.json?auth=$authToken';
 
     await http.delete(url);
   }
 
-  void removeRequestFromList(int index) {
+  static void removeRequestFromList(int index) {
     _recordedRequestsList.removeAt(index);
-    notifyListeners();
   }
 }

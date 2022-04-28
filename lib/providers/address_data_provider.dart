@@ -11,35 +11,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import '../global_variables.dart';
 
-class AddressDataProvider extends ChangeNotifier {
-  Address currentLocation;
-  Address destinationLocation;
-  PlacePredictions currentPlacePredicted;
-  List<PlacePredictions> placePredictionList = [];
-
-//updating the predicted place after clicking on the prediction tile  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-  void updateThePredictedPlaceAfterItIsPicked(PlacePredictions predictedPlace) {
-    currentPlacePredicted = predictedPlace;
-    notifyListeners();
-  }
-
-//updating current user Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-  void updateCurrentLocationAddress(Address pickUpAddress) {
-    currentLocation = pickUpAddress;
-    notifyListeners();
-  }
+class AddressDataProvider {
+  static Address destinationLocation;
+  static List<PlacePredictions> placePredictionList = [];
 
 //updating destination Location  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  void updateDestinationLocationAddress(Address destinationLocationAddress) {
+  static void updateDestinationLocationAddress(
+      Address destinationLocationAddress) {
     destinationLocation = destinationLocationAddress;
-    notifyListeners();
   }
 //Sending to this method any url to handle it and return the result  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  Future<dynamic> getRequest(String url) async {
+  static Future<dynamic> getRequest(String url) async {
     try {
       var response = await http.get(url);
 
@@ -57,7 +41,8 @@ class AddressDataProvider extends ChangeNotifier {
 
 //Finding Nearby places after starting entering a text in the 'whereTo' textField in search screen  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  Future<List<PlacePredictions>> findNearByPlaces(String placeName) async {
+  static Future<List<PlacePredictions>> findNearByPlaces(
+      String placeName) async {
     if (placeName.length > 1) {
       //this url link is for bringing nearby places according to the input coming from search
       String autoCompleteUrl =
@@ -81,7 +66,7 @@ class AddressDataProvider extends ChangeNotifier {
   }
 
 // Converting My Current address which contains of latitude and longitude to readable address I can understand  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  Future<String> convertToReadableAddress(Position position) async {
+  static Future<void> convertToReadableAddress(Position position) async {
     String placeAddress = "";
 
     String placeAddress1;
@@ -106,19 +91,18 @@ class AddressDataProvider extends ChangeNotifier {
       placeAddress =
           placeAddress1 + ", " + placeAddress2 + ", " + placeAddress4;
 
-      Address userCurrentAddress = new Address();
+      Address userCurrentAddress = Address();
       userCurrentAddress.longitude = position.longitude;
       userCurrentAddress.latitude = position.latitude;
       userCurrentAddress.placeName = placeAddress;
 
-      updateCurrentLocationAddress(userCurrentAddress);
+      pickedCurrentLocation = userCurrentAddress;
     }
-    return placeAddress;
   }
 
 //Getting Information of the destination address which is specifically latitude and longitude after choosing it >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  Future<String> getParkingAreaDetails(
+  static Future<String> getParkingAreaDetails(
       String placeId, BuildContext context) async {
     showDialog(
         context: context,
@@ -143,12 +127,14 @@ class AddressDataProvider extends ChangeNotifier {
       address.latitude = res['result']['geometry']['location']['lat'];
       address.longitude = res['result']['geometry']['location']['lng'];
 
+      pickedparkingSlotAreaLocation = address;
+
       return address.placeName;
     }
   }
 //obtaining information details between initial adress and destination address >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  Future<DirectionDetails> obtainPlaceDirectionDetailsBetweenTwoPoints(
+  static Future<DirectionDetails> obtainPlaceDirectionDetailsBetweenTwoPoints(
       LatLng initialPosition, LatLng finalPosition) async {
     String directionUrl =
         'https://maps.googleapis.com/maps/api/directions/json?origin=${initialPosition.longitude},${initialPosition.latitude}&destination=${finalPosition.longitude},${finalPosition.latitude}&key=$mapKey';

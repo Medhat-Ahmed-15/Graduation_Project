@@ -27,16 +27,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
         _loadingSpinner = true;
       });
 
-      Provider.of<RequestParkingSlotDetailsProvider>(context, listen: false)
-          .fetchRecordedRequests()
-          .then((value) {
+      RequestParkingSlotDetailsProvider.fetchRecordedRequests().then((value) {
         requestParkingSlotDetailsList =
             Provider.of<RequestParkingSlotDetailsProvider>(context,
                     listen: false)
                 .getRecordedrequetsList;
       }).then((value) => setState(() {
-                _loadingSpinner = false;
-              }));
+            _loadingSpinner = false;
+          }));
     }
     _isInit = false;
     super.didChangeDependencies();

@@ -1,27 +1,22 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
-import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:graduation_project/models/argumentsPassedFromBookingScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
-import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/confirmArrival_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:graduation_project/widgets/searchParkingArea_card.dart';
 import '../global_variables.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:http/http.dart' as http;
 
 class MapScreen extends StatefulWidget {
   static const routeName = '/MapScreen';
@@ -59,7 +54,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Timer cancelRequestTimer;
 
-  ArgumentsPassedFromBookingScreen resultAfterBooking;
+  String flag;
 
 //Locating current location
   Future<void> locatePosition() async {
@@ -71,12 +66,8 @@ class _MapScreenState extends State<MapScreen> {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
 
-    currentPosition = position;
-
     //get latitude and longitude from that position
     LatLng latlngPosition = LatLng(position.latitude, position.longitude);
-    print('current lat: ${position.latitude}');
-    print('current lng: ${position.longitude}');
 
     //locating camera towards this position
     CameraPosition cameraPosition =
@@ -87,9 +78,8 @@ class _MapScreenState extends State<MapScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     //converting latlng to readable addresses
-    String address =
-        await Provider.of<AddressDataProvider>(context, listen: false)
-            .convertToReadableAddress(position);
+
+    await AddressDataProvider.convertToReadableAddress(position);
 
 //sending to Machine Learning current position
 
@@ -120,8 +110,7 @@ class _MapScreenState extends State<MapScreen> {
       //switching availability
       var sensorDetectSingleSlot =
           await Provider.of<ParkingSlotsProvider>(context, listen: false)
-              .fetchSingleParkingSlot(
-                  resultAfterBooking.pickedParkingSlotDetails.id);
+              .fetchSingleParkingSlot(pickedParkingSlot.id);
 
       if (sensorDetectSingleSlot == false) {
         showDialog(
@@ -133,7 +122,7 @@ class _MapScreenState extends State<MapScreen> {
 
         if (isInit == true) {
           //switching availability
-          resultAfterBooking.pickedParkingSlotDetails.switchAvailability(
+          pickedParkingSlot.switchAvailability(
               Provider.of<AuthProvider>(context, listen: false).token,
               'empty',
               'empty',
@@ -142,9 +131,7 @@ class _MapScreenState extends State<MapScreen> {
         isInit = false;
 
         //Deleting request
-        await Provider.of<RequestParkingSlotDetailsProvider>(context,
-                listen: false)
-            .cancelRequest();
+        await RequestParkingSlotDetailsProvider.cancelRequest();
 
         Navigator.pop(context);
 
@@ -165,8 +152,8 @@ class _MapScreenState extends State<MapScreen> {
 
   void displayRoute() async {
     if (_isInit == true) {
-      if (resultAfterBooking != null) {
-        if (resultAfterBooking.flag == 'returned after booking') {
+      if (flag != null) {
+        if (flag == 'returned after booking') {
           setState(() {
             showConfirmationCard = true;
             showHamburgerIcon = false;
@@ -197,8 +184,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     checkThemeMode(context);
 
-    resultAfterBooking = ModalRoute.of(context).settings.arguments
-        as ArgumentsPassedFromBookingScreen;
+    flag = ModalRoute.of(context).settings.arguments as String;
 
     displayRoute();
 
@@ -244,8 +230,7 @@ class _MapScreenState extends State<MapScreen> {
 
             showConfirmationCard == false
                 ? SearchParkingAreaCard(getPlaceDirection, loading)
-                : ConfirmArrivalCard(
-                    resultAfterBooking, resetApp, cancelTheTimer),
+                : ConfirmArrivalCard(flag, resetApp, cancelTheTimer),
           ],
         ),
       ),
@@ -253,11 +238,12 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> getPlaceDirection() async {
-    var initialPos = Provider.of<AddressDataProvider>(context, listen: false)
-        .currentLocation;
+    var initialPos = pickedCurrentLocation;
 
-    var finalPos = Provider.of<AddressDataProvider>(context, listen: false)
-        .destinationLocation;
+    var finalPos = pickedParkingSlotLocation;
+
+    print('initialPos:   ${initialPos.latitude}   ${initialPos.longitude}');
+    print('finalPos:   ${finalPos.latitude}   ${finalPos.longitude}');
 
     var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
     var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);
@@ -272,11 +258,11 @@ class _MapScreenState extends State<MapScreen> {
     pLineCoordinates.clear();
 
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng pointLatLng) {
+      for (var pointLatLng in result.points) {
         pLineCoordinates
             //So basically, we have done here that now we have a list of latitude and longitude which will allow us to draw a line on map.
             .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-      });
+      }
     }
 
     polyLineSet.clear();
