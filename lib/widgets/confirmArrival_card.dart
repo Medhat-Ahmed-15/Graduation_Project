@@ -70,14 +70,15 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
       widget.cancelTheTimer();
 
       showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) =>
-              ConfirmationDialog(isLoading: true));
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => ConfirmationDialog(isLoading: true),
+      );
 
       await Future.delayed(Duration(seconds: 5));
 
-      await RequestParkingSlotDetailsProvider.updateRecordedRequest('arrived');
+      await RequestParkingSlotDetailsProvider.updateRecordedRequest(
+          'arrived', singleRecordedRequestDetailsId);
       Navigator.pop(context);
 
       showDialog(

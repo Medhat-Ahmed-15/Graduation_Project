@@ -15,3 +15,4 @@ ParkingSlotBlueprintProvider pickedParkingSlot;
 
 String authToken;
 String currentUserId;
+String singleRecordedRequestDetailsId;

@@ -161,10 +161,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           value: isSwitched,
                           onChanged: toggleSwitch,
                           activeColor: Theme.of(context).primaryColor,
-                          activeTrackColor: Colors.red[200],
+                          activeTrackColor: const Color.fromRGBO(44, 62, 80, 1)
+                              .withOpacity(1),
                           inactiveThumbColor: Theme.of(context).primaryColor,
                           inactiveTrackColor:
-                              const Color.fromRGBO(44, 62, 80, 1)
+                              const Color.fromRGBO(236, 240, 241, 1)
                                   .withOpacity(1),
                         )
                       ],

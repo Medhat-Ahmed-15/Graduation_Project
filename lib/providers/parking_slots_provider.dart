@@ -46,7 +46,7 @@ class ParkingSlotsProvider with ChangeNotifier {
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  //Function for fetching  single parking slot data from firebase
+  //Function for fetching  single parking slot sensorDetect data from firebase
 
   Future<bool> fetchSingleParkingSlot(String parkingSlotId) async {
     String url =
@@ -66,4 +66,45 @@ class ParkingSlotsProvider with ChangeNotifier {
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  //Function for fetching  single parking slot  data from firebase
+
+  Future<ParkingSlotBlueprintProvider> fetchSingleParkingSlotData(
+      String parkingSlotId) async {
+    String url =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$parkingSlotId.json?auth=$_authToken';
+    try {
+      final response = await http.get(url);
+
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+      print('extractedData $extractedData');
+
+      ParkingSlotBlueprintProvider slotData = ParkingSlotBlueprintProvider(
+          availability: extractedData['availability'],
+          endDateTime: extractedData['end_time'],
+          id: extractedData['id'],
+          latitude: extractedData['latitude'],
+          longitude: extractedData['longitude'],
+          sensorDetect: extractedData['sensorDetect'],
+          startDateTtime: extractedData['start_time'],
+          userId: extractedData['userId'],
+          vip: extractedData['vip']);
+
+      // //print('  availability' + '  ' + extractedData['availability']);
+      // print('  endDateTime' + '  ' + extractedData['endDateTime']);
+      // print('  id' + '  ' + extractedData['id']);
+      // print('  latitude' + '  ' + extractedData['latitude']);
+      // print('  longitude' + '  ' + extractedData['longitude']);
+      // print('  sensorDetect' + '  ' + extractedData['sensorDetect']);
+      // print('  startDateTtime' + '  ' + extractedData['startDateTtime']);
+      // print('  userId' + '  ' + extractedData['userId']);
+      // //print('  vip' + '  ' + extractedData['vip']);
+
+      return (slotData);
+    } catch (error) {
+      throw (error);
+    }
+  }
 }

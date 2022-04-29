@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/Screens/auth_screen.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/Screens/complete_profile_screen.dart';
-import 'package:graduation_project/Screens/history_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
+import 'package:graduation_project/Screens/tabs_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
-import 'package:graduation_project/models/address.dart';
-import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
-import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +85,7 @@ class MyApp extends StatelessWidget {
               SettingsScreen.routeName: (ctx) => SettingsScreen(),
               SignupScreen.routeName: (ctx) => SignupScreen(),
               CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
-              HistoryScreen.routeName: (ctx) => HistoryScreen(),
+              TabsScreen.routName: (ctx) => TabsScreen(),
             },
           ),
         ));

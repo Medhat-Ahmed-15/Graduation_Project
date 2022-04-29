@@ -35,7 +35,10 @@ class ParkingSlotscard extends StatelessWidget {
                   child: CircularProgressIndicator(
                       color: Theme.of(context).primaryColor),
                 )
-              : ParkingSlotsGrid(),
+              : Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: ParkingSlotsGrid(),
+                ),
         ));
   }
 }

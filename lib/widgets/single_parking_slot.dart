@@ -40,7 +40,7 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
               offset: Offset(0.2, 0.2),
             ),
           ],
-          color: Theme.of(context).primaryColor,
+          color: colorProviderObj.generalCardColor,
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: Padding(
@@ -64,19 +64,20 @@ class _SingleParkingSlotState extends State<SingleParkingSlot> {
                       //fit: BoxFit.fitHeight,
                     )
                   : const DecorationImage(
-                      image: ExactAssetImage('assets/images/parkingSign.png'),
+                      image:
+                          ExactAssetImage('assets/images/parkingSlotsArea.png'),
                       // fit: BoxFit.fitHeight,
                     ),
-              border: Border(
-                left:
-                    BorderSide(color: Theme.of(context).primaryColor, width: 2),
-                bottom:
-                    BorderSide(color: Theme.of(context).primaryColor, width: 2),
-                top:
-                    BorderSide(color: Theme.of(context).primaryColor, width: 2),
-                right:
-                    BorderSide(color: Theme.of(context).primaryColor, width: 2),
-              ),
+              // border: Border(
+              //   left:
+              //       BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              //   bottom:
+              //       BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              //   top:
+              //       BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              //   right:
+              //       BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              // ),
             ),
             child: Stack(
               children: [

@@ -8,16 +8,16 @@ class RequestedParkingSlotDetailsBluePrint {
   int totalCost;
   String startDateTime;
   String endDateTime;
-  String latitude;
-  String longitude;
+  String slotLatitude;
+  String slotLongitude;
   String status;
 
   RequestedParkingSlotDetailsBluePrint({
     this.requestId,
     this.userId,
     this.paymentMethod,
-    this.latitude,
-    this.longitude,
+    this.slotLatitude,
+    this.slotLongitude,
     this.status,
     this.endDateTime,
     this.parkingAreaAddressName,

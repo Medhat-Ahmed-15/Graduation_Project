@@ -95,9 +95,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Theme.of(context).primaryColor,
-                                blurRadius: 4.0,
-                                spreadRadius: 1,
-                                offset: const Offset(0.7, 0.7),
                               ),
                             ],
                             color: Theme.of(context).primaryColor,
@@ -145,9 +142,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Theme.of(context).primaryColor,
-                                blurRadius: 4.0,
-                                spreadRadius: 1,
-                                offset: const Offset(0.7, 0.7),
                               ),
                             ],
                             color: Theme.of(context).primaryColor,

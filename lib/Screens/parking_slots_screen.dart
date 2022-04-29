@@ -79,23 +79,52 @@ class _ParkingSlotsScreenState extends State<ParkingSlotsScreen> {
           child: Stack(
             children: [
               Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  width: MediaQuery.of(context).size.height.round() <= 781
-                      ? 180
-                      : 250,
-                  height: MediaQuery.of(context).size.height.round() <= 781
-                      ? 180
-                      : 250,
-                  margin: EdgeInsets.all(20.0),
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage("assets/images/parkingSlotsArea.png"),
-                    ),
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pickedparkingSlotAreaLocation.placeName,
+                        style: TextStyle(
+                            color: colorProviderObj.textColor,
+                            fontSize: 42,
+                            fontWeight: FontWeight.w900),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Parking Area.',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ],
                   ),
                 ),
               ),
+              // Align(
+              //   alignment: Alignment.topCenter,
+              //   child: Container(
+              //     width: MediaQuery.of(context).size.height.round() <= 781
+              //         ? 180
+              //         : 250,
+              //     height: MediaQuery.of(context).size.height.round() <= 781
+              //         ? 180
+              //         : 250,
+              //     margin: EdgeInsets.all(20.0),
+              //     decoration: const BoxDecoration(
+              //       image: DecorationImage(
+              //         fit: BoxFit.fill,
+              //         image: AssetImage("assets/images/parkingSlotsArea.png"),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               ParkingSlotscard(_loadingSpinner)
             ],
           ),

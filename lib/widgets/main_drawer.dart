@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/Screens/history_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/Screens/settings_screen.dart';
+import 'package:graduation_project/Screens/tabs_screen.dart';
 import 'package:graduation_project/Screens/user_profile_screen.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
@@ -117,7 +117,9 @@ class MainDrawer extends StatelessWidget {
                       Container(
                         width: 160,
                         child: Text(
-                          currentUserOnline.name.split(' ')[0],
+                          currentUserOnline == null
+                              ? 'User'
+                              : currentUserOnline.name.split(' ')[0],
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,
@@ -144,14 +146,13 @@ class MainDrawer extends StatelessWidget {
 
             //>>
             buildListTile(
-                'assets/images/history.png',
-                'History',
-                context,
-                // () {
-                //   Navigator.of(context)
-                //       .pushReplacementNamed(HistoryScreen.routeName);
-                // },
-                null),
+              'assets/images/booking.png',
+              'Requests',
+              context,
+              () {
+                Navigator.of(context).pushReplacementNamed(TabsScreen.routName);
+              },
+            ),
 
             //>>
             buildListTile(

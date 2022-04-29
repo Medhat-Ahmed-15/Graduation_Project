@@ -12,6 +12,7 @@ import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
+import 'package:graduation_project/widgets/successfullyBookedDialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -160,18 +161,21 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
         randomId4: randomId4,
         areaName: pickedparkingSlotAreaLocation.placeName);
 
-    Fluttertoast.showToast(
-        msg: 'A confirmation mail was sent 📧',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor:
-            Provider.of<ColorProvider>(context, listen: false).textColor,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    // Fluttertoast.showToast(
+    //     msg: 'A confirmation mail was sent 📧',
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     timeInSecForIosWeb: 5,
+    //     backgroundColor:
+    //         Provider.of<ColorProvider>(context, listen: false).textColor,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
 
-    Navigator.of(context).pushReplacementNamed(MapScreen.routeName,
-        arguments: 'returned after booking');
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => SuccessfullyBookedDialog(),
+    );
   }
 
   void calculateCost() {
@@ -291,15 +295,13 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             // ),
             Expanded(child: Container()),
 
-            Container(
-              child: Center(
-                child: Text(
-                  'Pick your initial Date and Time',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: colorProviderObj.textColor),
-                ),
+            Center(
+              child: Text(
+                'Pick your initial Date and Time',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: colorProviderObj.textColor),
               ),
             ),
             Expanded(child: Container()),
@@ -313,8 +315,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
                 Image.asset(
                   'assets/images/calendar.png',
-                  height: 40.0,
-                  width: 40.0,
+                  height: 35.0,
+                  width: 35.0,
                 ),
 
                 //initial Date****************
@@ -322,37 +324,33 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                   onPressed: () {
                     setDateValuesAftePicked('initialDate', context);
                   },
-                  child: Container(
-                    width: 110,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 2,
-                          offset: Offset(0.2, 0.2),
-                        ),
-                      ],
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Container(
-                        color: colorProviderObj.genralBackgroundColor
-                            .withOpacity(1),
-                        child: Padding(
-                          padding: EdgeInsets.all(0.0),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                                startingDate == null
-                                    ? 'Initial Date'
-                                    : DateFormat.yMd().format(startingDate),
-                                style: TextStyle(
-                                    color: colorProviderObj.textColor)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      width: 110,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 2.0,
+                            spreadRadius: 2,
+                            offset: Offset(0.2, 0.2),
                           ),
+                        ],
+                        color: colorProviderObj.genralBackgroundColor,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(0.0),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              startingDate == null
+                                  ? 'Initial Date'
+                                  : DateFormat.yMd().format(startingDate),
+                              style:
+                                  TextStyle(color: colorProviderObj.textColor)),
                         ),
                       ),
                     ),
@@ -361,44 +359,41 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                 Expanded(child: Container()),
                 Image.asset(
                   'assets/images/clock.png',
-                  height: 50.0,
-                  width: 50.0,
+                  height: 35.0,
+                  width: 35.0,
                 ),
                 //initial Time****************
                 FlatButton(
                   onPressed: () {
                     setTimeValuesAftePicked('initialTime', context);
                   },
-                  child: Container(
-                    width: 110,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 2,
-                          offset: Offset(0.2, 0.2),
-                        ),
-                      ],
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      width: 110,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 2.0,
+                            spreadRadius: 2,
+                            offset: Offset(0.2, 0.2),
+                          ),
+                        ],
                         color: colorProviderObj.genralBackgroundColor,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                              startingTime == null
-                                  ? 'Initial Time'
-                                  : startingTime.hour.toString() +
-                                      ":" +
-                                      startingTime.minute.toString(),
-                              style:
-                                  TextStyle(color: colorProviderObj.textColor)),
-                        ),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                            startingTime == null
+                                ? 'Initial Time'
+                                : startingTime.hour.toString() +
+                                    ":" +
+                                    startingTime.minute.toString(),
+                            style:
+                                TextStyle(color: colorProviderObj.textColor)),
                       ),
                     ),
                   ),
@@ -427,15 +422,13 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
             //**FINAL DATE AND TIME/////////////////////////////////////////////////////////////////////////////////////////////////////////////
             Expanded(child: Container()),
 
-            Container(
-              child: Center(
-                child: Text(
-                  'Pick your final Date and Time',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      color: colorProviderObj.textColor),
-                ),
+            Center(
+              child: Text(
+                'Pick your final Date and Time',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: colorProviderObj.textColor),
               ),
             ),
             Expanded(child: Container()),
@@ -447,8 +440,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
                 Image.asset(
                   'assets/images/calendar.png',
-                  height: 40.0,
-                  width: 40.0,
+                  height: 35.0,
+                  width: 35.0,
                 ),
 
                 //Final Date****************
@@ -457,24 +450,23 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     setDateValuesAftePicked('finalDate', context);
                   },
                   child: Container(
-                    width: 110,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 2,
-                          offset: Offset(0.2, 0.2),
-                        ),
-                      ],
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Container(
-                        color: colorProviderObj.genralBackgroundColor,
+                        width: 110,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              spreadRadius: 2,
+                              offset: Offset(0.2, 0.2),
+                            ),
+                          ],
+                          color: colorProviderObj.genralBackgroundColor,
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -492,8 +484,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                 Expanded(child: Container()),
                 Image.asset(
                   'assets/images/clock.png',
-                  height: 50.0,
-                  width: 50.0,
+                  height: 35.0,
+                  width: 35.0,
                 ),
                 //FInal Time****************
                 FlatButton(
@@ -501,24 +493,23 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     setTimeValuesAftePicked('finalTime', context);
                   },
                   child: Container(
-                    width: 110,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 2,
-                          offset: Offset(0.2, 0.2),
-                        ),
-                      ],
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
                       child: Container(
-                        color: colorProviderObj.genralBackgroundColor,
+                        width: 110,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              spreadRadius: 2,
+                              offset: Offset(0.2, 0.2),
+                            ),
+                          ],
+                          color: colorProviderObj.genralBackgroundColor,
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -587,8 +578,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black,
-                      blurRadius: 10.0,
-                      spreadRadius: 5,
+                      blurRadius: 2.0,
+                      spreadRadius: 2,
                       offset: Offset(0.2, 0.2),
                     ),
                   ],

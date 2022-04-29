@@ -6,15 +6,17 @@ import 'package:graduation_project/models/requested_parkingSlot_details_bluePrin
 import 'package:http/http.dart' as http;
 
 class RequestParkingSlotDetailsProvider {
-  static String _recordedrequestId;
-  static List<RequestedParkingSlotDetailsBluePrint> _recordedRequestsList = [];
+  static List<RequestedParkingSlotDetailsBluePrint> _scheduledRequestsList = [];
+  static List<RequestedParkingSlotDetailsBluePrint> _historyRequestsList = [];
 
-  String get getRecorderRequestId {
-    return _recordedrequestId;
+  static List<RequestedParkingSlotDetailsBluePrint>
+      get getScheduledRequestsList {
+    return [..._scheduledRequestsList];
   }
 
-  List<RequestedParkingSlotDetailsBluePrint> get getRecordedrequetsList {
-    return [..._recordedRequestsList];
+  static List<RequestedParkingSlotDetailsBluePrint>
+      get getHistoryRequestsListList {
+    return [..._historyRequestsList];
   }
 
   //Add Request////////////////////////////////////////////////
@@ -52,7 +54,7 @@ class RequestParkingSlotDetailsProvider {
 
       final responseDecoded =
           json.decode(response.body) as Map<String, dynamic>;
-      _recordedrequestId = responseDecoded['name'];
+      singleRecordedRequestDetailsId = responseDecoded['name'];
     } catch (error) {
       rethrow;
     }
@@ -66,11 +68,13 @@ class RequestParkingSlotDetailsProvider {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<RequestedParkingSlotDetailsBluePrint> recordedRequests = [];
+      final List<RequestedParkingSlotDetailsBluePrint> schudled = [];
+      final List<RequestedParkingSlotDetailsBluePrint> history = [];
       extractedData.forEach((key, slotData) {
         print('Key: $key');
-        if (slotData['status'] != 'pending') {
-          recordedRequests.add(
+        if (slotData['status'] == 'pending' ||
+            slotData['status'] == 'arrived') {
+          schudled.add(
             RequestedParkingSlotDetailsBluePrint(
               requestId: key,
               userId: slotData['userId'],
@@ -81,14 +85,31 @@ class RequestParkingSlotDetailsProvider {
               status: slotData['status'],
               totalCost: slotData['totalCost'],
               startDateTime: slotData['startDateTime'],
-              latitude: slotData['destinationLocMap']['latitude'],
-              longitude: slotData['destinationLocMap']['longitude'],
+              slotLatitude: slotData['destinationLocMap']['latitude'],
+              slotLongitude: slotData['destinationLocMap']['longitude'],
+            ),
+          );
+        } else if (slotData['status'] == 'left') {
+          history.add(
+            RequestedParkingSlotDetailsBluePrint(
+              requestId: key,
+              userId: slotData['userId'],
+              paymentMethod: slotData['paymentMethod'],
+              endDateTime: slotData['endDateTime'],
+              parkingAreaAddressName: slotData['parkingAreaAddressName'],
+              parkingSlotId: slotData['parkingSlotId'],
+              status: slotData['status'],
+              totalCost: slotData['totalCost'],
+              startDateTime: slotData['startDateTime'],
+              slotLatitude: slotData['destinationLocMap']['latitude'],
+              slotLongitude: slotData['destinationLocMap']['longitude'],
             ),
           );
         }
       });
 
-      _recordedRequestsList = recordedRequests;
+      _scheduledRequestsList = schudled;
+      _historyRequestsList = history;
     } catch (error) {
       throw (error);
     }
@@ -96,9 +117,10 @@ class RequestParkingSlotDetailsProvider {
 
 //Update Request////////////////////////////////////////////////
 
-  static Future<void> updateRecordedRequest(String status) async {
+  static Future<void> updateRecordedRequest(
+      String status, String recordedRequestId) async {
     String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$_recordedrequestId.json?auth=$authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$recordedRequestId.json?auth=$authToken';
 
     try {
       await http.patch(
@@ -113,12 +135,12 @@ class RequestParkingSlotDetailsProvider {
 
   static Future<void> cancelRequest() async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$_recordedrequestId.json?auth=$authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$singleRecordedRequestDetailsId.json?auth=$authToken';
 
     await http.delete(url);
   }
 
-  static void removeRequestFromList(int index) {
-    _recordedRequestsList.removeAt(index);
-  }
+  // static void removeRequestFromList(int index) {
+  //   _recordedRequestsList.removeAt(index);
+  // }
 }

@@ -153,7 +153,7 @@ class _MapScreenState extends State<MapScreen> {
   void displayRoute() async {
     if (_isInit == true) {
       if (flag != null) {
-        if (flag == 'returned after booking') {
+        if (flag == 'coming from tabs screen') {
           setState(() {
             showConfirmationCard = true;
             showHamburgerIcon = false;
@@ -162,7 +162,7 @@ class _MapScreenState extends State<MapScreen> {
 
           cancelRequestTimer = Timer(const Duration(seconds: 500), () {
             if (alreadyCancelled != true) {
-              cancelRequest();
+              //cancelRequest();
             }
           });
         }
@@ -304,14 +304,14 @@ class _MapScreenState extends State<MapScreen> {
     newGoogleMapController
         .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
 
-    Marker pickUpMArker = Marker(
+    Marker initLoc = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         infoWindow:
             InfoWindow(title: initialPos.placeName, snippet: 'my Location'),
         position: pickUpLatLng,
         markerId: MarkerId('pickUpId'));
 
-    Marker dropOffLocMarker = Marker(
+    Marker finalLoc = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         infoWindow:
             InfoWindow(title: finalPos.placeName, snippet: 'DropOff Location'),
@@ -319,8 +319,8 @@ class _MapScreenState extends State<MapScreen> {
         markerId: MarkerId('dropOffId'));
 
     setState(() {
-      markersSet.add(pickUpMArker);
-      markersSet.add(dropOffLocMarker);
+      markersSet.add(initLoc);
+      markersSet.add(finalLoc);
     });
   }
 }
