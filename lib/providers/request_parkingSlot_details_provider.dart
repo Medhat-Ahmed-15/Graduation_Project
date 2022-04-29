@@ -70,8 +70,10 @@ class RequestParkingSlotDetailsProvider {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<RequestedParkingSlotDetailsBluePrint> schudled = [];
       final List<RequestedParkingSlotDetailsBluePrint> history = [];
+      if (extractedData == null) {
+        return;
+      }
       extractedData.forEach((key, slotData) {
-        print('Key: $key');
         if (slotData['status'] == 'pending' ||
             slotData['status'] == 'arrived') {
           schudled.add(
