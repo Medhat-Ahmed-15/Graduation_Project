@@ -33,24 +33,27 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  dialogs: ^0.0.7
-  flutter_lints: ^1.0.0
-  http: ^0.12.0+2
-  provider: ^4.0.0
-  shared_preferences: ^2.0.8
-  google_maps_flutter: ^1.0.3
-  geolocator: ^6.2.1
-  flutter_polyline_points: ^0.2.4 
-  fluttertoast: ^8.0.8
-  flutter_custom_clippers: ^2.0.0
-  date_time_picker: ^2.1.0
-  dotted_line: ^3.1.0
-  font_awesome_flutter: ^9.2.0
-  image_picker: ^0.6.5+3
-  latlong_to_osgrid: ^1.0.1
-  otp_text_field: ^1.1.1
-  maps_toolkit: ^1.1.0+2
+  cupertino_icons: 
+  dialogs: 
+  flutter_lints: 
+  http: 
+  provider: 
+  shared_preferences: 
+  google_maps_flutter: 2.1.0
+  geolocator: 7.7.1
+  flutter_polyline_points: 
+  fluttertoast: 
+  flutter_custom_clippers: 
+  date_time_picker: 
+  dotted_line: 
+  font_awesome_flutter: 
+  latlong_to_osgrid: 
+  otp_text_field: 
+  maps_toolkit: 
+  flutter_stripe: 
+  plugin_platform_interface: 
+  geolocator_platform_interface: 
+  stripe_platform_interface: 
 
 dev_dependencies:
   flutter_test:

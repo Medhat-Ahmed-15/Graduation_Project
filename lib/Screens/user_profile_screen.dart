@@ -8,7 +8,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker/image_picker.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = '/userProfileScreen';
@@ -139,18 +139,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   //pick Image *********************************************************
 
-  void _pickImage() async {
-    final pickedImagefile = await ImagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality:
-            50, //since 2n el  default size of the captured image is a littlt bit high so I made the quality  50
-        maxWidth: 150 //to ensure that the image is small
-        );
-    setState(() {
-      _pickedImage = pickedImagefile;
-    });
-    //widget._pickedImageFunction(pickedImagefile);
-  }
+  // void _pickImage() async {
+  //   final pickedImagefile = await ImagePicker.pickImage(
+  //       source: ImageSource.gallery,
+  //       imageQuality:
+  //           50, //since 2n el  default size of the captured image is a littlt bit high so I made the quality  50
+  //       maxWidth: 150 //to ensure that the image is small
+  //       );
+  //   setState(() {
+  //     _pickedImage = pickedImagefile;
+  //   });
+  //   //widget._pickedImageFunction(pickedImagefile);
+  // }
 
   //build*********************************************************
 
@@ -221,7 +221,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                           FlatButton(
                             onPressed:
-                                _pickImage, //=================================================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+                                null, // _pickImage, //=================================================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
                             child: Text(
                               'Edit',
                               style: TextStyle(
