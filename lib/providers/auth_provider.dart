@@ -63,7 +63,7 @@ class AuthProvider with ChangeNotifier {
         'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$mapKey';
 
     try {
-      final response = await http.post(url,
+      final response = await http.post(Uri.parse(url),
           body: json.encode({
             'email': email,
             'password': password,
@@ -122,7 +122,7 @@ class AuthProvider with ChangeNotifier {
         'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
     try {
-      var response = await http.post(url,
+      var response = await http.post(Uri.parse(url),
           body: json.encode({
             'name': name,
             'id': _userId,
@@ -148,7 +148,7 @@ class AuthProvider with ChangeNotifier {
         'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
     try {
-      var response = await http.get(url);
+      var response = await http.get(Uri.parse(url));
 
       var singleUserDataRespone =
           json.decode(response.body) as Map<String, dynamic>;
@@ -190,7 +190,8 @@ class AuthProvider with ChangeNotifier {
 
     try {
       await http.put(
-          url, //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
+          Uri.parse(
+              url), //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
           body: json.encode({
             'name': updatedUserData.name,
             'id': updatedUserData.id,

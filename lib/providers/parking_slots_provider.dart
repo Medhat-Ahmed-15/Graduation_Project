@@ -20,7 +20,7 @@ class ParkingSlotsProvider with ChangeNotifier {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/$area.json?auth=$_authToken';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<ParkingSlotBlueprintProvider> loadedSlots = [];
@@ -52,7 +52,7 @@ class ParkingSlotsProvider with ChangeNotifier {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$parkingSlotId.json?auth=$_authToken';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
@@ -75,7 +75,7 @@ class ParkingSlotsProvider with ChangeNotifier {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$parkingSlotId.json?auth=$_authToken';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
 
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
 

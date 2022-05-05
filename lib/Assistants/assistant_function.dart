@@ -19,7 +19,7 @@ Future<void> sendConfirmationEmail(
   final url = 'https://api.emailjs.com/api/v1.0/email/send';
 
   try {
-    final response = await http.post(url,
+    final response = await http.post(Uri.parse(url),
         headers: {
           'origin': 'http://localhost:3000',
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ Future<void> sendCancellationEmail(
   final url = 'https://api.emailjs.com/api/v1.0/email/send';
 
   try {
-    final response = await http.post(url,
+    final response = await http.post(Uri.parse(url),
         headers: {
           'origin': 'http://localhost:3000',
           'Content-Type': 'application/json',

@@ -36,7 +36,7 @@ class RequestParkingSlotDetailsProvider {
 
     try {
       var response = await http.post(
-        url,
+        Uri.parse(url),
         body: json.encode(
           {
             'userId': userId,
@@ -66,7 +66,7 @@ class RequestParkingSlotDetailsProvider {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId.json?auth=$authToken';
     try {
-      final response = await http.get(url);
+      final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<RequestedParkingSlotDetailsBluePrint> schudled = [];
       final List<RequestedParkingSlotDetailsBluePrint> history = [];
@@ -126,7 +126,8 @@ class RequestParkingSlotDetailsProvider {
 
     try {
       await http.patch(
-          url, //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
+          Uri.parse(
+              url), //firebase supports patch requests and sending a patch request will tell firebase to merge the data which is incoming with the existing data at that address I am sending to
           body: json.encode({'status': status}));
     } catch (error) {
       throw error;
@@ -139,7 +140,7 @@ class RequestParkingSlotDetailsProvider {
     final String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$singleRecordedRequestDetailsId.json?auth=$authToken';
 
-    await http.delete(url);
+    await http.delete(Uri.parse(url));
   }
 
   // static void removeRequestFromList(int index) {

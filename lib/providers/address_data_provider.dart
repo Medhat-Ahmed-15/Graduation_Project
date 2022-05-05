@@ -25,7 +25,7 @@ class AddressDataProvider {
 
   static Future<dynamic> getRequest(String url) async {
     try {
-      var response = await http.get(url);
+      var response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         String jSonData = response.body;

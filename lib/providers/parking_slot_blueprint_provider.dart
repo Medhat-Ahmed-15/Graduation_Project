@@ -35,7 +35,7 @@ class ParkingSlotBlueprintProvider with ChangeNotifier {
     availability = !availability;
 
     var response = await http.patch(
-      url,
+      Uri.parse(url),
       body: json.encode(
         {
           'availability': availability,
