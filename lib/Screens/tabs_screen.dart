@@ -8,7 +8,7 @@ import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
 class TabsScreen extends StatefulWidget {
-  static final routName = '/tabs_screen';
+  static final routeName = '/tabs_screen';
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }

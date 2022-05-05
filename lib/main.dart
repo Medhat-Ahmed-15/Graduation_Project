@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
 import 'package:graduation_project/Screens/complete_profile_screen.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
@@ -17,7 +18,10 @@ import 'Screens/searchScreen.dart';
 import 'Screens/signin_screen.dart';
 import 'Screens/signup_screen.dart';
 
-void main() {
+void main() async {
+  Stripe.publishableKey =
+      'pk_test_51KuxNhHCnZqk0tlCtoEMfNpRrhxN9gwRopxB2U8U8uvhTWATPU7Wf7KAwzqv92WnCDS6Y2Zkbdci535s7IQPDOeq00q30zNGJ9';
+
   runApp(MyApp());
 }
 
@@ -85,7 +89,7 @@ class MyApp extends StatelessWidget {
               SettingsScreen.routeName: (ctx) => SettingsScreen(),
               SignupScreen.routeName: (ctx) => SignupScreen(),
               CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
-              TabsScreen.routName: (ctx) => TabsScreen(),
+              TabsScreen.routeName: (ctx) => TabsScreen(),
             },
           ),
         ));

@@ -150,7 +150,8 @@ class MainDrawer extends StatelessWidget {
               'Requests',
               context,
               () {
-                Navigator.of(context).pushReplacementNamed(TabsScreen.routName);
+                Navigator.of(context)
+                    .pushReplacementNamed(TabsScreen.routeName);
               },
             ),
 

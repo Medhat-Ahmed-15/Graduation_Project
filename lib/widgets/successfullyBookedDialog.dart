@@ -59,7 +59,7 @@ class SuccessfullyBookedDialog extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).pushNamed(TabsScreen.routName);
+                Navigator.of(context).pushNamed(TabsScreen.routeName);
               },
               child: const Padding(
                 padding: EdgeInsets.all(8.0),

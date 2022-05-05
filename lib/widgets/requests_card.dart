@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/address.dart';
@@ -25,6 +26,7 @@ class RequestsCardWidget extends StatefulWidget {
 class _RequestsCardWidgetState extends State<RequestsCardWidget> {
   bool expanded = false;
   bool loading = false;
+  bool loadingLeave = false;
 
   Future<void> checkThemeMode(BuildContext context) async {
     await Provider.of<ColorProvider>(context, listen: false)
@@ -210,19 +212,40 @@ class _RequestsCardWidgetState extends State<RequestsCardWidget> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   height: 90,
-                                  child: const Align(
+                                  child: Align(
                                     alignment: Alignment.center,
                                     child: Padding(
                                       padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Leave',
-                                        style: TextStyle(
-                                          color: Colors.redAccent,
-                                        ),
-                                      ),
+                                      child: loadingLeave == true
+                                          ? Center(
+                                              child: Container(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    const CircularProgressIndicator(
+                                                  color: Colors.redAccent,
+                                                ),
+                                              ),
+                                            )
+                                          : const Text(
+                                              'Leave',
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                              ),
+                                            ),
                                     ),
                                   )),
-                              onPressed: () {},
+                              onPressed: () async {
+                                setState(() {
+                                  loadingLeave = true;
+                                });
+                                await initPaymentSheet(context,
+                                    email: "example@gmail.com", amount: 200000);
+
+                                setState(() {
+                                  loadingLeave = false;
+                                });
+                              },
                             ),
                           )
                         : Expanded(

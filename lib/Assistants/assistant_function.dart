@@ -1,7 +1,9 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 Future<void> sendConfirmationEmail(
     {String startingDate,
@@ -44,6 +46,9 @@ Future<void> sendConfirmationEmail(
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
 Future<void> sendCancellationEmail(
     String userName, String slotId, String toEmail) async {
   final url = 'https://api.emailjs.com/api/v1.0/email/send';
@@ -70,6 +75,7 @@ Future<void> sendCancellationEmail(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 Future<void> setVerificationCodeInStorage(
     int randomId1, int randomId2, int randomId3, int randomId4) async {
   final prefs = await SharedPreferences.getInstance();
@@ -85,6 +91,9 @@ Future<void> setVerificationCodeInStorage(
       .setString('verificationCode', verificationCode)
       .then((value) => print(value));
 }
+
+//////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 Future<String> getVerificationCodeFromStorage() async {
   try {
@@ -103,5 +112,61 @@ Future<String> getVerificationCodeFromStorage() async {
     return randomId1 + randomId2 + randomId3 + randomId4;
   } catch (error) {
     print('catchError  $error');
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+Future<void> initPaymentSheet(context,
+    {@required String email, @required int amount}) async {
+  try {
+    // 1. create payment intent on the server
+    final response = await http.post(
+        Uri.parse(
+            'https://us-central1-rakane-13d27.cloudfunctions.net/stripePaymentIntentRequest'),
+        body: {
+          'email': email,
+          'amount': amount.toString(),
+        });
+
+    final jsonResponse = jsonDecode(response.body);
+    log(jsonResponse.toString());
+
+    //2. initialize the payment sheet
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: jsonResponse['paymentIntent'],
+        merchantDisplayName: 'Flutter Stripe Store Demo',
+        customerId: jsonResponse['customer'],
+        customerEphemeralKeySecret: jsonResponse['ephemeralKey'],
+        style: ThemeMode.dark,
+        applePay: true,
+        googlePay: true,
+        testEnv: false,
+        merchantCountryCode: 'EG',
+        primaryButtonColor: Theme.of(context).primaryColor,
+      ),
+    );
+
+    await Stripe.instance.presentPaymentSheet();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Payment completed!')),
+    );
+  } catch (e) {
+    if (e is StripeException) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error from Stripe: ${e.error.localizedMessage}'),
+        ),
+      );
+      print('Error from Stripe: ${e.error.localizedMessage}');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+      print('Error from Stripe: ${e.error.localizedMessage}');
+    }
   }
 }
