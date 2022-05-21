@@ -112,14 +112,11 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
             ));
 
     //switching availability
-    pickedParkingSlot.switchAvailability(
-        Provider.of<AuthProvider>(context, listen: false).token,
-        'empty',
-        'empty',
-        'empty');
+    switchParkingAvailability('empty', 'empty', 'empty', pickedParkingSlot.id);
 
     //Deleting request
-    await RequestParkingSlotDetailsProvider.cancelRequest();
+    await RequestParkingSlotDetailsProvider.deleteRecordedRequestDetatils(
+        singleRecordedRequestDetailsId);
 
     Navigator.pop(context);
     sendCancellationEmail(

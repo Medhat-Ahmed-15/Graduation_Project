@@ -112,13 +112,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     updatedCurrentUserData.name = currentUserOnline.name;
     updatedCurrentUserData.id = currentUserOnline.id;
     updatedCurrentUserData.email = currentUserOnline.email;
-    updatedCurrentUserData.password = currentUserOnline.password;
     updatedCurrentUserData.address = updatedAddress;
-    updatedCurrentUserData.card_holder = currentUserOnline.card_holder;
-    updatedCurrentUserData.credit_card_number =
-        currentUserOnline.credit_card_number;
-    updatedCurrentUserData.expiration_date = currentUserOnline.expiration_date;
-    updatedCurrentUserData.security_code = currentUserOnline.security_code;
 
     setState(() {
       _saveLoadinfSpinner = true;

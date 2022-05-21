@@ -14,11 +14,8 @@ class ParkingSlotsGrid extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(30),
       itemCount: parkingSlotsList.length,
-      itemBuilder: (context, index) => ChangeNotifierProvider.value(
-        value: parkingSlotsList[index],
-        child: SingleParkingSlot(
-            index, parkingSlotsList[index], recommendedSlotsListIds),
-      ),
+      itemBuilder: (context, index) => SingleParkingSlot(
+          index, parkingSlotsList[index], recommendedSlotsListIds),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,

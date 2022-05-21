@@ -5,6 +5,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
 import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
@@ -104,51 +105,6 @@ class _MapScreenState extends State<MapScreen> {
     });
 
     locatePosition();
-  }
-
-  Future<void> cancelRequest() async {
-    if (alreadyCancelled != true) {
-      //switching availability
-      var sensorDetectSingleSlot =
-          await Provider.of<ParkingSlotsProvider>(context, listen: false)
-              .fetchSingleParkingSlot(pickedParkingSlot.id);
-
-      if (sensorDetectSingleSlot == false) {
-        showDialog(
-            context: context,
-            //myDIalog is jaust prefix i made it while importing the libraries up
-            builder: (BuildContext context) => ProgressDialog(
-                  message: 'Cancelling Request',
-                ));
-
-        if (isInit == true) {
-          //switching availability
-          pickedParkingSlot.switchAvailability(
-              Provider.of<AuthProvider>(context, listen: false).token,
-              'empty',
-              'empty',
-              'empty');
-        }
-        isInit = false;
-
-        //Deleting request
-        await RequestParkingSlotDetailsProvider.cancelRequest();
-
-        Navigator.pop(context);
-
-        Fluttertoast.showToast(
-            msg: 'Request cancelled',
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 5,
-            backgroundColor:
-                Provider.of<ColorProvider>(context, listen: false).textColor,
-            textColor: Colors.white,
-            fontSize: 16.0);
-
-        resetApp();
-      }
-    }
   }
 
   void displayRoute() async {

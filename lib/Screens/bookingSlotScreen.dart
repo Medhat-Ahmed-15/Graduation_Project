@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'dart:async';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dialogs/dialogs/choice_dialog.dart';
 import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
@@ -28,6 +29,7 @@ class BookingSlotScreen extends StatefulWidget {
 }
 
 class _BookingSlotScreenState extends State<BookingSlotScreen> {
+  bool loading = false;
   TimeOfDay startingTime;
   TimeOfDay endingTime;
   DateTime endingDate;
@@ -107,7 +109,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     });
   }
 
-  void requestAndUpdateBookingSlot() async {
+  Future<void> requestAndUpdateBookingSlot() async {
     String startingDateAndTime = DateFormat.yMd().format(startingDate) +
         " " +
         startingTime.hour.toString() +
@@ -135,11 +137,8 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
 
     pickedParkingSlotLocation = destinationAddress;
 
-    await pickedParkingSlot.switchAvailability(
-        Provider.of<AuthProvider>(context, listen: false).token,
-        startingDateAndTime,
-        endingDateAndTime,
-        Provider.of<AuthProvider>(context, listen: false).getUserID);
+    await switchParkingAvailability(startingDateAndTime, endingDateAndTime,
+        currentUserOnline.id, pickedParkingSlot.id);
 
     int randomId1 = random.nextInt(10);
     int randomId2 = random.nextInt(10);
@@ -201,7 +200,7 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
     totalCost = ((timeInMinutesBetween / 60) * 0.5).round();
   }
 
-  void saveParkingRequestDetails() async {
+  Future<void> saveParkingRequestDetails() async {
     String userId = Provider.of<AuthProvider>(context, listen: false).getUserID;
     String parkingAreaAddressName = pickedparkingSlotAreaLocation.placeName;
     String parkingSlotId = pickedParkingSlot.id;
@@ -563,9 +562,24 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                       'Starting Date \n ${startingDate.year}/${startingDate.month}/${startingDate.day} - ${startingTime.hour}:${startingTime.minute}\n\n Ending Date \n ${endingDate.year}/${endingDate.month}/${endingDate.day} - ${endingTime.hour}:${endingTime.minute}',
                   messageColor: colorProviderObj.textColor,
                   buttonOkText: 'Confirm',
-                  buttonOkOnPressed: () {
-                    requestAndUpdateBookingSlot();
-                    saveParkingRequestDetails();
+                  buttonOkOnPressed: () async {
+                    await requestAndUpdateBookingSlot();
+                    await saveParkingRequestDetails();
+                    await setPickedParkingSlotIdAndAuthTokenInStorage(
+                        pickedParkingSlot.id);
+
+                    // bool response = await AndroidAlarmManager.oneShotAt(
+                    //     DateTime(endingDate.year, endingDate.month,
+                    //         endingDate.day, endingTime.hour, endingTime.minute),
+                    //     2,
+                    //     getSensorDetectResult);
+
+                    bool response = await AndroidAlarmManager.oneShot(
+                        const Duration(seconds: 20),
+                        2,
+                        getSensorDetectResultAtEndingTime);
+
+                    print('Response From AndroidAlarmManager: ${response}}');
                   },
                 );
                 choice.show(context, barrierColor: Colors.white);

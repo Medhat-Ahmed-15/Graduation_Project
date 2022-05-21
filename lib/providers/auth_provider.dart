@@ -112,12 +112,9 @@ class AuthProvider with ChangeNotifier {
   // Add user to firebase realtime database
 
   Future<void> addUserDataToRealTimeDataBase(
-      String name,
-      String address,
-      String card_holder,
-      String security_code,
-      String credit_card_number,
-      String expiration_date) async {
+    String name,
+    String address,
+  ) async {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$_userId.json?auth=$_token';
 
@@ -127,13 +124,14 @@ class AuthProvider with ChangeNotifier {
             'name': name,
             'id': _userId,
             'email': userEmail,
-            'password': userPassword,
+            //'password': userPassword,
             'address': address,
-            'card_holder': card_holder,
-            'security_code': security_code,
-            'credit_card_number': credit_card_number,
-            'expiration_date': expiration_date,
+            'fine': 0
           }));
+
+      final responseDecoded =
+          json.decode(response.body) as Map<String, dynamic>;
+      userKey = responseDecoded['name'];
     } catch (error) {
       throw error;
     }
@@ -161,20 +159,26 @@ class AuthProvider with ChangeNotifier {
 
       UserInfo currentSingleUserInfo = new UserInfo();
       currentSingleUserInfo.name = singleUserDataRespone.values.first['name'];
-
       currentSingleUserInfo.email = singleUserDataRespone.values.first['email'];
-
-      currentSingleUserInfo.password =
-          singleUserDataRespone.values.first['password'];
-
       currentSingleUserInfo.address =
           singleUserDataRespone.values.first['address'];
-
       currentSingleUserInfo.id = singleUserDataRespone.values.first['id'];
+      currentSingleUserInfo.fine = singleUserDataRespone.values.first['fine'];
 
       singleUserInfo = currentSingleUserInfo;
       currentUserOnline =
           currentSingleUserInfo; //dee el mafrood haga zayada ana bs bagarb lw a assign el value la global variable
+
+      final prefs = await SharedPreferences.getInstance();
+
+      final userData = json.encode({
+        'token': _token,
+        'userId': _userId,
+        'userKey': userKey,
+        'expiryDate': _expiryDate.toIso8601String(),
+      });
+
+      prefs.setString('userData', userData);
 
       notifyListeners();
     } catch (error) {
@@ -196,12 +200,8 @@ class AuthProvider with ChangeNotifier {
             'name': updatedUserData.name,
             'id': updatedUserData.id,
             'email': updatedUserData.email,
-            'password': updatedUserData.password,
             'address': updatedUserData.address,
-            'card_holder': updatedUserData.card_holder,
-            'security_code': updatedUserData.security_code,
-            'credit_card_number': updatedUserData.credit_card_number,
-            'expiration_date': updatedUserData.expiration_date,
+            'fine': updatedUserData.fine,
           }));
 
       notifyListeners();
@@ -279,14 +279,14 @@ class AuthProvider with ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    final userData = json.encode({
-      'token': null,
-      'userId': null,
-      'expiryDate': null,
-    });
+    // final userData = json.encode({
+    //   'token': null,
+    //   'userId': null,
+    //   'expiryDate': null,
+    // });
 
-    prefs.setString('userData', userData);
-    // prefs.clear();
+    // prefs.setString('userData', userData);
+    prefs.remove('userData');
   }
 
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -1,9 +1,60 @@
 import 'dart:convert';
+import 'package:graduation_project/Notifications/notifications.dart';
+import 'package:graduation_project/global_variables.dart';
+import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Future<Map<String, Object>> getUserDataFromStorage() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (!prefs.containsKey('userData')) {
+    return null;
+  }
+  final extractedUserData =
+      json.decode(prefs.getString('userData')) as Map<String, Object>;
+
+  return extractedUserData;
+}
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+Future<void> switchParkingAvailability(String startDateTime, String endDateTime,
+    String userId, String slotId) async {
+  final String url =
+      'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$slotId.json?auth=$authToken';
+
+  try {
+    final getResponse = await http.get(Uri.parse(url));
+
+    final extractedData = json.decode(getResponse.body) as Map<String, dynamic>;
+    bool oldAvailability = extractedData['availability'];
+    bool newAvailability = !oldAvailability;
+
+    await http.patch(
+      Uri.parse(url),
+      body: json.encode(
+        {
+          'availability': newAvailability,
+          'end_time': endDateTime,
+          'id': slotId,
+          'latitude': extractedData['latitude'],
+          'longitude': extractedData['longitude'],
+          'start_time': startDateTime,
+          'userId': userId,
+          'vip': extractedData['vip']
+        },
+      ),
+    );
+  } catch (error) {}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 Future<void> sendConfirmationEmail(
     {String startingDate,
@@ -92,6 +143,42 @@ Future<void> setVerificationCodeInStorage(
       .then((value) => print(value));
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+Future<void> setPickedParkingSlotIdAndAuthTokenInStorage(String id) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final pickedParkingSlotIdAndAuthToken = json.encode({
+    'pickedParkingSlotId': id,
+    'singleRecordedRequestDetailsId': singleRecordedRequestDetailsId,
+  });
+
+  prefs
+      .setString(
+          'pickedParkingSlotIdAndAuthToken', pickedParkingSlotIdAndAuthToken)
+      .then((value) => print(
+          'Response from setPickedParkingSlotIdAndAuthTokenInStorage: $value'));
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+Future<Map<String, dynamic>> getPickedParkingSlotIdFromStorage() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('pickedParkingSlotIdAndAuthToken')) {
+      return null;
+    }
+    final extractedVerificationCode =
+        json.decode(prefs.getString('pickedParkingSlotIdAndAuthToken'))
+            as Map<String, dynamic>;
+
+    return extractedVerificationCode;
+  } catch (error) {
+    print('catchError  $error');
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
@@ -173,5 +260,100 @@ Future<void> initPaymentSheet(context,
       );
       print('Error from Stripe: ${e.error.localizedMessage}');
     }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+
+Future<void> getSensorDetectResultAtEndingTime() async {
+  //since this function is called from alarm manager...so any variable I am gonna use must be from device storage
+  try {
+    var currentUserData = await getUserDataFromStorage();
+    var pickedSlotIdAndAuthToken = await getPickedParkingSlotIdFromStorage();
+
+    if (currentUserData['userId'] == null ||
+        DateTime.parse(currentUserData['expiryDate'])
+            .isBefore(DateTime.now())) {
+      return;
+    }
+
+    String pickedSlotId =
+        pickedSlotIdAndAuthToken['pickedParkingSlotId'].toString();
+    String authToken = currentUserData['token'];
+    String userKey = currentUserData['userKey'];
+    String recordedRequestId =
+        pickedSlotIdAndAuthToken['singleRecordedRequestDetailsId'].toString();
+    String currentUserId = currentUserData['userId'];
+
+    String urlForFetchinCurrentUser =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$currentUserId.json?auth=$authToken';
+
+    String urlForAccessingSpicificSlot =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$pickedSlotId.json?auth=$authToken';
+
+    String urlforFetchingRecordedrequestId =
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$recordedRequestId.json?auth=$authToken';
+
+    //*******************************************************************************
+    //*******************************************************************************
+
+    var responseForFetchinCurrentUser =
+        await http.get(Uri.parse(urlForFetchinCurrentUser));
+
+    var extractedDataForFetchinCurrentUser =
+        json.decode(responseForFetchinCurrentUser.body) as Map<String, dynamic>;
+
+    if (extractedDataForFetchinCurrentUser == null) {
+      return;
+    }
+
+    //*******************************************************************************
+    //*******************************************************************************
+
+    final responseForAccessingSpicificSlot =
+        await http.get(Uri.parse(urlForAccessingSpicificSlot));
+
+    final extractedDataForAccessingSpicificSlot = json
+        .decode(responseForAccessingSpicificSlot.body) as Map<String, dynamic>;
+
+    if (extractedDataForAccessingSpicificSlot['sensorDetect'] == false) {
+      //switching availability
+      await http.patch(
+        Uri.parse(urlForAccessingSpicificSlot),
+        body: json.encode(
+          {
+            'availability': false,
+            'end_time': 'empty',
+            'id': pickedSlotId,
+            'latitude': extractedDataForAccessingSpicificSlot['latitude'],
+            'longitude': extractedDataForAccessingSpicificSlot['longitude'],
+            'start_time': 'empty',
+            'userId': currentUserId,
+            'vip': extractedDataForAccessingSpicificSlot['vip']
+          },
+        ),
+      );
+
+      //Deleting request
+      await http.delete(Uri.parse(urlforFetchingRecordedrequestId));
+
+      await sendCancellationEmail(
+          extractedDataForFetchinCurrentUser.values.first['name'],
+          pickedSlotId,
+          extractedDataForFetchinCurrentUser.values.first['email']);
+
+      String urlForUpdatingFine =
+          'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$currentUserId/$userKey.json?auth=$authToken';
+
+      await http.patch(Uri.parse(urlForUpdatingFine),
+          body: json.encode({
+            'fine': 10,
+          }));
+
+      Notifications.createUserMissedHisSlotNotification();
+    }
+  } catch (error) {
+    throw (error);
   }
 }

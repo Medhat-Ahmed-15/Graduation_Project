@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
+import 'package:graduation_project/models/parking_slot_blueprint.dart';
 import 'package:http/http.dart' as http;
 
 class ParkingSlotsProvider with ChangeNotifier {
-  List<ParkingSlotBlueprintProvider> _slots = [];
+  List<ParkingSlotBlueprint> _slots = [];
   final String _authToken;
   ParkingSlotsProvider(this._authToken, this._slots);
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //Function for forwording the list  of slots to anywhere in the project after being fetched from firebase
-  List<ParkingSlotBlueprintProvider> get slots {
+  List<ParkingSlotBlueprint> get slots {
     return [..._slots];
   }
   //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -23,10 +23,10 @@ class ParkingSlotsProvider with ChangeNotifier {
       final response = await http.get(Uri.parse(url));
       // print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<ParkingSlotBlueprintProvider> loadedSlots = [];
+      final List<ParkingSlotBlueprint> loadedSlots = [];
       extractedData.forEach((key, slotData) {
         loadedSlots.add(
-          ParkingSlotBlueprintProvider(
+          ParkingSlotBlueprint(
               availability: slotData['availability'],
               sensorDetect: slotData['sensorDetect'],
               endDateTime: slotData['end_time'] as String,
@@ -70,7 +70,7 @@ class ParkingSlotsProvider with ChangeNotifier {
 
   //Function for fetching  single parking slot  data from firebase
 
-  Future<ParkingSlotBlueprintProvider> fetchSingleParkingSlotData(
+  Future<ParkingSlotBlueprint> fetchSingleParkingSlotData(
       String parkingSlotId) async {
     String url =
         'https://rakane-13d27-default-rtdb.firebaseio.com/Parking_Slots/$parkingSlotId.json?auth=$_authToken';
@@ -81,7 +81,7 @@ class ParkingSlotsProvider with ChangeNotifier {
 
       print('extractedData $extractedData');
 
-      ParkingSlotBlueprintProvider slotData = ParkingSlotBlueprintProvider(
+      ParkingSlotBlueprint slotData = ParkingSlotBlueprint(
           availability: extractedData['availability'],
           endDateTime: extractedData['end_time'],
           id: extractedData['id'],

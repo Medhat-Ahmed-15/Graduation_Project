@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
+import 'package:graduation_project/models/parking_slot_blueprint.dart';
 import 'package:provider/provider.dart';
 
 class SingleParkingSlot extends StatefulWidget {
   //according to this index i'm gonna decide wheather to make the box opened from left side or right side
   int index;
 
-  ParkingSlotBlueprintProvider parkingSlotBlueprintProvider;
+  ParkingSlotBlueprint parkingSlotBlueprintProvider;
 
   List<String> recommendedSlotsIds;
 

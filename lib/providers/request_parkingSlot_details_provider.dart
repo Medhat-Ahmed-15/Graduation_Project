@@ -136,11 +136,15 @@ class RequestParkingSlotDetailsProvider {
 
 //Delete Request////////////////////////////////////////////////
 
-  static Future<void> cancelRequest() async {
+  static Future<void> deleteRecordedRequestDetatils(
+      String recordedRequstId) async {
     final String url =
-        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$singleRecordedRequestDetailsId.json?auth=$authToken';
+        'https://rakane-13d27-default-rtdb.firebaseio.com/Parking-Slots-Request-Details/$currentUserId/$recordedRequstId.json?auth=$authToken';
 
     await http.delete(Uri.parse(url));
+
+    _scheduledRequestsList
+        .removeWhere((element) => element.requestId == recordedRequstId);
   }
 
   // static void removeRequestFromList(int index) {

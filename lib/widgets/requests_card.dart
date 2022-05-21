@@ -5,10 +5,12 @@ import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/global_variables.dart';
 import 'package:graduation_project/models/address.dart';
 import 'package:graduation_project/models/requested_parkingSlot_details_bluePrint.dart';
+import 'package:graduation_project/providers/auth_provider.dart';
 import 'package:graduation_project/providers/color_provider.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
+import 'package:graduation_project/models/parking_slot_blueprint.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
+import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
@@ -26,11 +28,35 @@ class RequestsCardWidget extends StatefulWidget {
 class _RequestsCardWidgetState extends State<RequestsCardWidget> {
   bool expanded = false;
   bool loading = false;
+  bool loadingCancel = false;
   bool loadingLeave = false;
 
   Future<void> checkThemeMode(BuildContext context) async {
     await Provider.of<ColorProvider>(context, listen: false)
         .checkThemeMethodInThisScreen();
+  }
+
+  Future<void> cancelrequest() async {
+    setState(() {
+      loadingCancel = true;
+    });
+
+    //switching availability
+    switchParkingAvailability('empty', 'empty', 'empty',
+        widget.recordedParkingSlotDetails.parkingSlotId);
+
+    //Deleting request
+    await RequestParkingSlotDetailsProvider.deleteRecordedRequestDetatils(
+        widget.recordedParkingSlotDetails.requestId);
+
+    await sendCancellationEmail(
+        currentUserOnline.name,
+        widget.recordedParkingSlotDetails.parkingSlotId,
+        currentUserOnline.email);
+
+    setState(() {
+      loadingCancel = false;
+    });
   }
 
   @override
@@ -266,19 +292,30 @@ class _RequestsCardWidgetState extends State<RequestsCardWidget> {
                                               BorderRadius.circular(10.0),
                                         ),
                                         height: 90,
-                                        child: const Align(
+                                        child: Align(
                                           alignment: Alignment.center,
                                           child: Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'Cancel',
-                                              style: TextStyle(
-                                                color: Colors.redAccent,
-                                              ),
-                                            ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: loadingCancel == true
+                                                ? Center(
+                                                    child: Container(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child:
+                                                          const CircularProgressIndicator(
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      color: Colors.redAccent,
+                                                    ),
+                                                  ),
                                           ),
                                         )),
-                                    onPressed: () {},
+                                    onPressed: cancelrequest,
                                   ),
                                 ),
                                 Expanded(

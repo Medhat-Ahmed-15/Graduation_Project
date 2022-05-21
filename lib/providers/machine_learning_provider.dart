@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'parking_slot_blueprint_provider.dart';
+import '../models/parking_slot_blueprint.dart';
 
 class MachineLeraningProvider with ChangeNotifier {
   List<String> recommendedSlotsIds = [];

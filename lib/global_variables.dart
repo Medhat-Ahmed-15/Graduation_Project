@@ -1,5 +1,5 @@
 import 'package:graduation_project/models/UserInfo.dart';
-import 'package:graduation_project/providers/parking_slot_blueprint_provider.dart';
+import 'package:graduation_project/models/parking_slot_blueprint.dart';
 
 import 'models/address.dart';
 
@@ -11,7 +11,7 @@ Address pickedCurrentLocation;
 Address pickedparkingSlotAreaLocation;
 Address pickedParkingSlotLocation;
 
-ParkingSlotBlueprintProvider pickedParkingSlot;
+ParkingSlotBlueprint pickedParkingSlot;
 
 String authToken;
 String currentUserId;

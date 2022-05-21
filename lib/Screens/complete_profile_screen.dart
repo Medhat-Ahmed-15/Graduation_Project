@@ -134,12 +134,9 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
 
       await Provider.of<AuthProvider>(context, listen: false)
           .addUserDataToRealTimeDataBase(
-              _nameController.text.trim(),
-              _addressController.text.trim(),
-              'card_holder',
-              'security_code',
-              'credit_card_number',
-              'expiration_date');
+        _nameController.text.trim(),
+        _addressController.text.trim(),
+      );
 
       Navigator.pushReplacementNamed(context, MapScreen.routeName);
     } catch (error) {
