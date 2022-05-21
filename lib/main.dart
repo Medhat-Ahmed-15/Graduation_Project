@@ -1,3 +1,5 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:graduation_project/Screens/bookingSlotScreen.dart';
@@ -13,7 +15,6 @@ import 'package:graduation_project/providers/machine_learning_provider.dart';
 import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/widgets/splash_screen.dart';
 import 'package:provider/provider.dart';
-
 import 'Screens/searchScreen.dart';
 import 'Screens/signin_screen.dart';
 import 'Screens/signup_screen.dart';
@@ -22,7 +23,28 @@ void main() async {
   Stripe.publishableKey =
       'pk_test_51KuxNhHCnZqk0tlCtoEMfNpRrhxN9gwRopxB2U8U8uvhTWATPU7Wf7KAwzqv92WnCDS6Y2Zkbdci535s7IQPDOeq00q30zNGJ9';
 
+  await AwesomeNotifications().initialize(
+    'resource://drawable/parking',
+    [
+      //User didn't come to the slot Notification channel **************************************************************************
+
+      NotificationChannel(
+        channelKey:
+            'User_Missed_Parking_Slot', //used to connect our notifications to the specific channels
+        channelName:
+            'User Missed His Parking Slot Notification', //will be displayed in Android's app’s notification settings.
+        defaultColor: const Color.fromRGBO(33, 147, 176, 255).withOpacity(1),
+        importance: NotificationImportance
+            .High, //to make sure that when our notification is displayed, it peeks out from the top of the screen
+        channelShowBadge: true,
+        //soundSource: 'resource://raw/res_custom_notification',
+      ),
+    ],
+  );
+
   runApp(MyApp());
+
+  await AndroidAlarmManager.initialize();
 }
 
 class MyApp extends StatelessWidget {

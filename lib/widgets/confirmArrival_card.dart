@@ -65,7 +65,7 @@ class _ConfirmArrivalCardState extends State<ConfirmArrivalCard> {
     //     fontSize: 16.0);
     print('Distance:  ${distance.toStringAsFixed(2)}');
 
-    if (distance >= 0.0 && distance <= 100.0) {
+    if (distance >= 0.0 && distance <= 1000.0) {
       print('arrived');
       widget.cancelTheTimer();
 

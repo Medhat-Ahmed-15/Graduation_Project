@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project/Notifications/notifications.dart';
 import 'package:graduation_project/Screens/parking_slots_screen.dart';
 import 'package:graduation_project/Screens/searchScreen.dart';
 import 'package:graduation_project/providers/address_data_provider.dart';
@@ -176,19 +178,22 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
               // ),
               FlatButton(
                 onPressed: () async {
-                  //Navigator.pushNamed(context, ParkingSlotsScreen.routeName);
+                  // setState(() {
+                  //   loading2 = true;
+                  // });
+                  // Provider.of<MachineLeraningProvider>(context, listen: false)
+                  //     .machineLearningResult();
+                  // pickedArea = 'random_area';
+                  // Navigator.pushNamed(context, ParkingSlotsScreen.routeName);
 
-                  setState(() {
-                    loading2 = true;
-                  });
-                  Provider.of<MachineLeraningProvider>(context, listen: false)
-                      .machineLearningResult();
-                  pickedArea = 'random_area';
-                  Navigator.pushNamed(context, ParkingSlotsScreen.routeName);
+                  // setState(() {
+                  //   loading2 = false;
+                  // });
 
-                  setState(() {
-                    loading2 = false;
-                  });
+                  bool response = await AndroidAlarmManager.oneShotAt(
+                      DateTime(2022, 05, 21, 6, 50), 2, sendMessage);
+
+                  print(response);
                 },
                 child: Align(
                   alignment: Alignment.center,
@@ -214,7 +219,7 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
                                 ),
                               )
                             : Text(
-                                'Park now',
+                                'Park Now',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Theme.of(context).primaryColor,
@@ -231,4 +236,8 @@ class _SearchParkingAreaCardState extends State<SearchParkingAreaCard> {
       ),
     );
   }
+}
+
+void sendMessage() {
+  Notifications.createUserMissedHisSlotNotification();
 }

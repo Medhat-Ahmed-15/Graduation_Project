@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -178,6 +179,56 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> checkThemeMode(BuildContext context) async {
     await Provider.of<ColorProvider>(context, listen: false)
         .checkThemeMethodInThisScreen();
+  }
+
+  //Notification********************************************************************************************************************
+  @override
+  void initState() {
+    super.initState();
+
+    //this request for enebling notifications is mainly for ios users since the default in ios is that it is disabled unlike android
+    AwesomeNotifications().isNotificationAllowed().then(
+      (isAllowed) {
+        if (!isAllowed) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Allow Notifications'),
+              content:
+                  const Text('Our app would like to send you notifications'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Don\'t Allow',
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => AwesomeNotifications()
+                      .requestPermissionToSendNotifications()
+                      .then((_) => Navigator.pop(context)),
+                  child: Text(
+                    'Allow',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+//A createdStream transports ReceivedNotification objects when notifications are created. In other words, if you press the “View Orders” button a notification will be created and you can listen to the createdStream to get the ReceivedNotification object and do something with it. The ReceivedNotification object holds all kinds of information about your notification.
+    AwesomeNotifications().createdStream.listen((notification) {
+      print('Notification created ${notification.channelKey}');
+    });
   }
 
   @override

@@ -53,7 +53,9 @@ dependencies:
   flutter_stripe: 
   plugin_platform_interface: 
   geolocator_platform_interface: 
-  stripe_platform_interface: 
+  stripe_platform_interface:
+  android_alarm_manager_plus: ^2.0.5
+  awesome_notifications: ^0.0.6+10
 
 dev_dependencies:
   flutter_test:
@@ -129,6 +131,7 @@ flutter:
     - assets/images/history.png
     - assets/images/booking.png
     - assets/images/schedule.png
+    - assets/images/alert.png
     
 
 

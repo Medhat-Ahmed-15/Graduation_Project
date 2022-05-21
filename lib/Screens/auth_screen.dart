@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/providers/color_provider.dart';
 import 'package:graduation_project/widgets/auth_card.dart';
-import 'package:graduation_project/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {

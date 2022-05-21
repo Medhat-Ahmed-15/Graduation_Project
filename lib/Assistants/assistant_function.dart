@@ -130,7 +130,7 @@ Future<void> initPaymentSheet(context,
           'amount': amount.toString(),
         });
 
-    final jsonResponse = jsonDecode(response.body);
+    var jsonResponse = jsonDecode(response.body);
     log(jsonResponse.toString());
 
     //2. initialize the payment sheet
@@ -149,7 +149,12 @@ Future<void> initPaymentSheet(context,
       ),
     );
 
-    await Stripe.instance.presentPaymentSheet();
+    await Stripe.instance.presentPaymentSheet(
+      parameters: PresentPaymentSheetParameters(
+          clientSecret: jsonResponse['paymentIntent'], confirmPayment: true),
+    );
+
+    jsonResponse = null;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Payment completed!')),
