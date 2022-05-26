@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:graduation_project/Assistants/assistant_function.dart';
 import 'package:graduation_project/Screens/mapScreen.dart';
 import 'package:graduation_project/global_variables.dart';
@@ -12,6 +14,7 @@ import 'package:graduation_project/providers/parking_slots_provider.dart';
 import 'package:graduation_project/providers/request_parkingSlot_details_provider.dart';
 import 'package:graduation_project/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 
@@ -265,8 +268,52 @@ class _RequestsCardWidgetState extends State<RequestsCardWidget> {
                                 setState(() {
                                   loadingLeave = true;
                                 });
-                                await initPaymentSheet(context,
-                                    email: "example@gmail.com", amount: 200000);
+                                var response = await initPaymentSheet(context,
+                                    email: currentUserOnline.email,
+                                    amount: int.parse(widget
+                                                .recordedParkingSlotDetails
+                                                .totalCost
+                                                .toString() +
+                                            '00') +
+                                        int.parse(currentUserOnline.penalty
+                                                .toString() +
+                                            '00'));
+
+                                if (response == true) {
+                                  AndroidAlarmManager.cancel(2);
+                                  singleRecordedRequestDetailsId = widget
+                                      .recordedParkingSlotDetails.requestId;
+
+                                  //switching availability
+                                  await switchParkingAvailability(
+                                      'empty',
+                                      'empty',
+                                      'empty',
+                                      widget.recordedParkingSlotDetails
+                                          .parkingSlotId);
+
+                                  await RequestParkingSlotDetailsProvider
+                                      .updateRecordedRequest('left',
+                                          singleRecordedRequestDetailsId);
+
+                                  var currentUserData =
+                                      await getUserDataFromStorage();
+                                  if (currentUserData['userId'] == null ||
+                                      DateTime.parse(
+                                              currentUserData['expiryDate'])
+                                          .isBefore(DateTime.now())) {
+                                    return;
+                                  }
+
+                                  String urlForUpdatingFine =
+                                      'https://rakane-13d27-default-rtdb.firebaseio.com/Users/$currentUserId/${currentUserData['userKey']}.json?auth=$authToken';
+
+                                  await http.patch(
+                                      Uri.parse(urlForUpdatingFine),
+                                      body: json.encode({
+                                        'penalty': 0,
+                                      }));
+                                }
 
                                 setState(() {
                                   loadingLeave = false;

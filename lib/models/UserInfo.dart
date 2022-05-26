@@ -7,13 +7,13 @@ class UserInfo {
   String id;
   String email;
   String address;
-  int fine;
+  int penalty;
 
   UserInfo({
     this.name,
     this.id,
     this.email,
     this.address,
-    this.fine,
+    this.penalty,
   });
 }

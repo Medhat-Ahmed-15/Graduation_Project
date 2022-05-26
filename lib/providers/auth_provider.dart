@@ -126,7 +126,7 @@ class AuthProvider with ChangeNotifier {
             'email': userEmail,
             //'password': userPassword,
             'address': address,
-            'fine': 0
+            'penalty': 0
           }));
 
       final responseDecoded =
@@ -163,7 +163,8 @@ class AuthProvider with ChangeNotifier {
       currentSingleUserInfo.address =
           singleUserDataRespone.values.first['address'];
       currentSingleUserInfo.id = singleUserDataRespone.values.first['id'];
-      currentSingleUserInfo.fine = singleUserDataRespone.values.first['fine'];
+      currentSingleUserInfo.penalty =
+          singleUserDataRespone.values.first['penalty'];
 
       singleUserInfo = currentSingleUserInfo;
       currentUserOnline =
@@ -201,7 +202,7 @@ class AuthProvider with ChangeNotifier {
             'id': updatedUserData.id,
             'email': updatedUserData.email,
             'address': updatedUserData.address,
-            'fine': updatedUserData.fine,
+            'penalty': updatedUserData.penalty,
           }));
 
       notifyListeners();

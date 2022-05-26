@@ -17,8 +17,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController pickUpTextEditingController = TextEditingController();
-  TextEditingController dropOffTextEditingController = TextEditingController();
+  TextEditingController currentLocationTextEditingController =
+      TextEditingController();
+  TextEditingController destinationTextEditingController =
+      TextEditingController();
   List<PlacePredictions> placePredictionList = [];
   bool loading = false;
 
@@ -166,7 +168,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       returnedListFromAddressContainer;
                                 });
                               },
-                              controller: dropOffTextEditingController,
+                              controller: destinationTextEditingController,
                               style:
                                   TextStyle(color: colorProviderObj.textColor),
                               decoration: InputDecoration(

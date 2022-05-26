@@ -574,12 +574,18 @@ class _BookingSlotScreenState extends State<BookingSlotScreen> {
                     //     2,
                     //     getSensorDetectResult);
 
-                    bool response = await AndroidAlarmManager.oneShot(
-                        const Duration(seconds: 20),
-                        2,
+                    bool response1 = await AndroidAlarmManager.oneShot(
+                        const Duration(seconds: 60),
+                        1,
                         getSensorDetectResultAtEndingTime);
 
-                    print('Response From AndroidAlarmManager: ${response}}');
+                    bool response2 = await AndroidAlarmManager.oneShot(
+                        const Duration(seconds: 240),
+                        2,
+                        getSensorDetectResultAfterEndingTime);
+
+                    print('Response From AndroidAlarmManager 1: ${response1}}');
+                    print('Response From AndroidAlarmManager 2: ${response2}}');
                   },
                 );
                 choice.show(context, barrierColor: Colors.white);
